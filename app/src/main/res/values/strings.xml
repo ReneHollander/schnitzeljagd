@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Schnitzeljagd</string>
+
+    <string name="action_scan_qrcode">Scan QR-Code</string>
+    <string name="action_submit_answer">Submit Answer</string>
+
+    <string name="action_force_update">Force Update</string>
+
+</resources>
