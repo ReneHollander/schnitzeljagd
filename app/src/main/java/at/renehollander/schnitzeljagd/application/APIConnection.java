@@ -2,9 +2,6 @@ package at.renehollander.schnitzeljagd.application;
 
 import android.util.Log;
 
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +10,8 @@ import java.util.Arrays;
 import java.util.UUID;
 
 import at.renehollander.schnitzeljagd.activity.MainActivity;
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
 public class APIConnection {
 
