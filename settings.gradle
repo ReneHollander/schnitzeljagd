@@ -1,1 +1,1 @@
-include ':app', ':zxing-android', ':socketio-helper'
+include ':app', ':zxing-android', ':socketio-wrapper'

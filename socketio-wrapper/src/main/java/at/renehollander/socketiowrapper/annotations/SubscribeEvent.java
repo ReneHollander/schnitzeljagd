@@ -1,4 +1,4 @@
-package at.renehollander.socketiohelper.annotations;
+package at.renehollander.socketiowrapper.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

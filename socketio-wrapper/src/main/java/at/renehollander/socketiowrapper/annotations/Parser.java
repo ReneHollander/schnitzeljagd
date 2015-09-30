@@ -1,4 +1,6 @@
-package at.renehollander.socketiohelper.annotations;
+package at.renehollander.socketiowrapper.annotations;
+
+import org.json.JSONObject;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,6 +12,9 @@ public interface Parser {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     @interface JSON {
+
+        Class<?> dataType() default JSONObject.class;
+
     }
 
     @Retention(RetentionPolicy.RUNTIME)

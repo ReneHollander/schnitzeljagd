@@ -14,4 +14,6 @@ dependencies {
 
     compile 'io.socket:socket.io-client:0.6.1'
     compile 'com.google.code.gson:gson:2.3.1'
+
+    compile 'org.javatuples:javatuples:1.2'
 }
