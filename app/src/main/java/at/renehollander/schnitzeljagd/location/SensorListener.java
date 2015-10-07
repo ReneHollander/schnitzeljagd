@@ -10,14 +10,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import java8.lang.FunctionalInterface;
 
 public class SensorListener implements SensorEventListener, LocationListener {
-
-    private float[] mGravity;
-    private float[] mGeomagnetic;
 
     private Location mLocation;
     private Location target;
@@ -26,12 +22,10 @@ public class SensorListener implements SensorEventListener, LocationListener {
         this.target = target;
 
         SensorManager mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        Sensor mSensorAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        Sensor mSensorRotationVector = mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         LocationManager mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        Sensor mSensorMagneticField = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-        mSensorManager.registerListener(this, mSensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
-        mSensorManager.registerListener(this, mSensorMagneticField, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, mSensorRotationVector, SensorManager.SENSOR_DELAY_FASTEST);
 
         for (final String provider : mLocationManager.getProviders(true)) {
             if (LocationManager.GPS_PROVIDER.equals(provider) || LocationManager.PASSIVE_PROVIDER.equals(provider) || LocationManager.NETWORK_PROVIDER.equals(provider)) {
@@ -49,31 +43,17 @@ public class SensorListener implements SensorEventListener, LocationListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-            mGravity = event.values;
-
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-            mGeomagnetic = event.values;
-
-        if (mGravity != null && mGeomagnetic != null) {
-            float R[] = new float[9];
-            float I[] = new float[9];
-
-            if (SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic)) {
-
-                // orientation contains azimut, pitch and roll
-                float orientation[] = new float[3];
-                SensorManager.getOrientation(R, orientation);
-
-                double azimut = Math.toDegrees(orientation[0]);
-                GeomagneticField geoField = new GeomagneticField((float) mLocation.getLatitude(), (float) mLocation.getLongitude(), (float) mLocation.getAltitude(), System.currentTimeMillis());
-                azimut += geoField.getDeclination();
-                Log.i("azimuth", String.valueOf(azimut));
-                float bearing = mLocation.bearingTo(target);
-                float direction = (float) (azimut - bearing);
-                if (changeListener != null) {
-                    changeListener.onChange(direction);
-                }
+        if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+            float[] rMat = new float[9];
+            float[] orientation = new float[3];
+            SensorManager.getRotationMatrixFromVector(rMat, event.values);
+            double azimut = Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]);
+            GeomagneticField geoField = new GeomagneticField((float) mLocation.getLatitude(), (float) mLocation.getLongitude(), (float) mLocation.getAltitude(), System.currentTimeMillis());
+            azimut += geoField.getDeclination();
+            float bearing = mLocation.bearingTo(target);
+            float direction = (float) (azimut - bearing);
+            if (changeListener != null) {
+                changeListener.onChange(direction);
             }
         }
     }
