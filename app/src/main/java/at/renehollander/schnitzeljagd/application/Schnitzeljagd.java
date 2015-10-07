@@ -14,13 +14,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Date;
 import java.util.UUID;
 
 import at.renehollander.schnitzeljagd.location.LocationChangeListener;
+import at.renehollander.schnitzeljagd.location.SensorListener;
 import at.renehollander.schnitzeljagd.objects.station.Station;
 import at.renehollander.schnitzeljagd.objects.station.StationDeserializer;
 import at.renehollander.schnitzeljagd.objects.submit.request.SubmitRequest;
@@ -35,8 +35,8 @@ public class Schnitzeljagd extends Application {
     //private static final int LOC_MIN_UPDATE_TIME = 1000 * 60;
     //private static final int LOC_MIN_LOC_DIFFERENCE = 250;
 
-    private static final int LOC_MIN_UPDATE_TIME = 1000 * 15;
-    private static final int LOC_MIN_LOC_DIFFERENCE = 25;
+    private static final int LOC_MIN_UPDATE_TIME = 1000 * 5;
+    private static final int LOC_MIN_LOC_DIFFERENCE = 0;
 
     private static final String PREFS_NAME = "SchnitzeljagdPrefs";
     private static final String TEAM_KEY_PREF = "teamKey";
@@ -194,6 +194,15 @@ public class Schnitzeljagd extends Application {
     }
 
     public void updateLocation(Location loc) {
+        Log.i("location", String.valueOf(loc));
+        Log.i("location", "Bearing: " + loc.getBearing());
+        Location loc2 = new Location("dummyprovider");
+        loc2.setLatitude(48.336273);
+        loc2.setLongitude(16.297766);
+        loc2.setTime(new Date().getTime());
+
+        System.out.println(loc.bearingTo(loc2));
+
         /*
         if (this.teamKey != null) {
             if (loc != null) {

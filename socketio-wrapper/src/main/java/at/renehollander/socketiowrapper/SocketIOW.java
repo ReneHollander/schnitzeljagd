@@ -26,6 +26,10 @@ public class SocketIOW {
         return socket;
     }
 
+    public void emit(String event, Object... data) {
+        this.getSocket().emit(event, data);
+    }
+
     public void register(Listener listener) {
         for (Method method : listener.getClass().getMethods()) {
             SubscribeEvent subscribeEvent = method.getAnnotation(SubscribeEvent.class);

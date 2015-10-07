@@ -7,5 +7,6 @@
     <string name="action_submit_answer">Submit Answer</string>
 
     <string name="action_force_update">Force Update</string>
+    <string name="action_compass">Compass</string>
 
 </resources>

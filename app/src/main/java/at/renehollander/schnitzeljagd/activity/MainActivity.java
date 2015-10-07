@@ -88,6 +88,9 @@ public class MainActivity extends Activity {
             getFragmentManager().beginTransaction().detach(Fragments.CONTENT_FRAGMENT).commit();
             getFragmentManager().beginTransaction().attach(Fragments.CONTENT_FRAGMENT).commit();
             return true;
+        } else if (id == R.id.action_compass) {
+            getFragmentManager().beginTransaction().replace(R.id.container, Fragments.COMPASS_FRAGMENT).commit();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
