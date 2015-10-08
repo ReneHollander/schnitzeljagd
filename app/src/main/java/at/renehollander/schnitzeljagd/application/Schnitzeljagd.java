@@ -193,7 +193,14 @@ public class Schnitzeljagd extends Application {
         */
     }
 
+    private Location currentLocation;
+
+    public Location getCurrentLocation() {
+        return currentLocation;
+    }
+
     public void updateLocation(Location loc) {
+        this.currentLocation = loc;
         Log.i("location", String.valueOf(loc));
         Log.i("location", "Bearing: " + loc.getBearing());
         Location loc2 = new Location("dummyprovider");

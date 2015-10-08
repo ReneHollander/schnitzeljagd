@@ -26,22 +26,32 @@ public class CompassFragment extends Fragment {
         return rootView;
     }
 
+    SensorListener sl;
+
     @Override
     public void onStart() {
         super.onStart();
-        Schnitzeljagd sj = (Schnitzeljagd) getActivity().getApplication();
 
         Location target = new Location("dummyprovider");
         target.setLatitude(48.305407);
         target.setLongitude(16.326075);
-        SensorListener sl = new SensorListener(this.getActivity(), target);
+
+        sl = new SensorListener(this.getActivity(), target);
+
         sl.setChangeListener((rotation) -> {
             orientationText.setText(Math.round(rotation) + "°");
             rotation *= -1;
             arrowImage.setRotation(rotation);
 
         });
+
+        sl.start();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
 
+        sl.stop();
+    }
 }
