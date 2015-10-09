@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import at.renehollander.schnitzeljagd.R;
-import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import at.renehollander.schnitzeljagd.location.SensorListener;
 
 public class CompassFragment extends Fragment {

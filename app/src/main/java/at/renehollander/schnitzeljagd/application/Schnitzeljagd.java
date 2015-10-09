@@ -5,7 +5,6 @@ import android.app.Application;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
@@ -15,8 +14,9 @@ import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.util.Date;
-import java.util.UUID;
 
+import at.renehollander.schnitzeljagd.activity.Activities;
+import at.renehollander.schnitzeljagd.fragment.Fragments;
 import at.renehollander.schnitzeljagd.location.LocationChangeListener;
 
 public class Schnitzeljagd extends Application {
@@ -25,6 +25,9 @@ public class Schnitzeljagd extends Application {
 
     private static final int LOC_MIN_UPDATE_TIME = 1000 * 5;
     private static final int LOC_MIN_LOC_DIFFERENCE = 0;
+
+    private Activities activities;
+    private Fragments fragments;
 
     private Credentials teamCredentials;
 
@@ -116,7 +119,7 @@ public class Schnitzeljagd extends Application {
             public void onSuccess(Station object) {
                 Schnitzeljagd.this.setCurrentStation(object);
                 if (fragmentManager != null) {
-                    fragmentManager.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                    fragmentManager.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                 }
                 if (pd != null) {
                     pd.dismiss();
@@ -128,7 +131,7 @@ public class Schnitzeljagd extends Application {
                 Log.e("QR", errorType + ", " + code + ", " + msg);
 
                 if (fragmentManager != null) {
-                    fragmentManager.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                    fragmentManager.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                 }
                 if (pd != null) {
                     pd.dismiss();
@@ -143,7 +146,7 @@ public class Schnitzeljagd extends Application {
                 Log.e("QR", "error updating current station", e);
 
                 if (fragmentManager != null) {
-                    fragmentManager.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                    fragmentManager.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                 }
                 if (pd != null) {
                     pd.dismiss();

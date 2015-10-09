@@ -54,7 +54,7 @@ public class QRCodeFragment extends BarCodeScannerFragment implements BarCodeSca
                     @Override
                     public void onError(ErrorType errorType, int code, String msg) {
                         Log.e("schnitzeljagd", errorType + ", " + code + ", " + msg);
-                        fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                        fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                         progressDialog.dismiss();
                         Util.displayErrorDialogFromJson(QRCodeFragment.this.getActivity(), Util.ERROR_SUBMITTING_TEAMKEY, msg);
                     }
@@ -62,7 +62,7 @@ public class QRCodeFragment extends BarCodeScannerFragment implements BarCodeSca
                     @Override
                     public void onException(Exception e) {
                         Log.e("schnitzeljagd", "", e);
-                        fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                        fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                         progressDialog.dismiss();
                         Util.displayErrorDialogFromThrowable(QRCodeFragment.this.getActivity(), Util.EXCEPTION_SUBMITTING_TEAMKEY, e);
                     }
@@ -82,7 +82,7 @@ public class QRCodeFragment extends BarCodeScannerFragment implements BarCodeSca
                                 sj.updateCurrentStation(QRCodeFragment.this.getActivity(), fm, progressDialog);
                             }
                         } else if (object.getType() == SubmitResponse.Type.WON) {
-                            fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                            fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                             progressDialog.dismiss();
                             Util.displayWonDialog(QRCodeFragment.this.getActivity());
                         }
@@ -91,7 +91,7 @@ public class QRCodeFragment extends BarCodeScannerFragment implements BarCodeSca
                     @Override
                     public void onError(ErrorType errorType, int code, String msg) {
                         Log.e("schnitzeljagd", errorType + ", " + code + ", " + msg);
-                        fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                        fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                         progressDialog.dismiss();
                         Util.displayErrorDialogFromJson(QRCodeFragment.this.getActivity(), Util.ERROR_SUBMITTING_QR, msg);
                     }
@@ -99,7 +99,7 @@ public class QRCodeFragment extends BarCodeScannerFragment implements BarCodeSca
                     @Override
                     public void onException(Exception e) {
                         Log.e("schnitzeljagd", "", e);
-                        fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                        fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                         progressDialog.dismiss();
                         Util.displayErrorDialogFromThrowable(QRCodeFragment.this.getActivity(), Util.EXCEPTION_SUBMITTING_QR, e);
                     }
@@ -111,7 +111,7 @@ public class QRCodeFragment extends BarCodeScannerFragment implements BarCodeSca
             }
         } catch (Exception e) {
             Log.e("qr", "error handling result", e);
-            fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+            fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
             progressDialog.dismiss();
             Util.displayErrorDialogFromThrowable(QRCodeFragment.this.getActivity(), Util.EXCEPTION_HANDLING_RESULT, e);
         }
@@ -121,7 +121,7 @@ public class QRCodeFragment extends BarCodeScannerFragment implements BarCodeSca
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+            fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
             return true;
         }
         return false;

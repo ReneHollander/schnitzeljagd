@@ -2,7 +2,6 @@ package at.renehollander.schnitzeljagd.location;
 
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 

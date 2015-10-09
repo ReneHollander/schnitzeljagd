@@ -7,9 +7,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
 
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import java8.lang.FunctionalInterface;

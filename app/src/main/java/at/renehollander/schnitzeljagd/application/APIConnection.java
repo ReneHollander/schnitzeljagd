@@ -9,7 +9,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.UUID;
 
-import at.renehollander.schnitzeljagd.activity.MainActivity;
+import at.renehollander.schnitzeljagd.activity.Activities;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
@@ -33,7 +33,7 @@ public class APIConnection {
             socket.connect();
         } catch (URISyntaxException e) {
             Log.e(TAG, "URISyntaxException", e);
-            MainActivity.instance().finish();
+            Activities.MAIN.finish();
             System.exit(1);
         }
     }

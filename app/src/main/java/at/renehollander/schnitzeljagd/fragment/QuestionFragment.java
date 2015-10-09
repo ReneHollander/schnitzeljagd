@@ -71,7 +71,7 @@ public class QuestionFragment extends Fragment implements Button.OnClickListener
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+            fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
             return true;
         }
         return false;
@@ -99,7 +99,7 @@ public class QuestionFragment extends Fragment implements Button.OnClickListener
                             sj.updateCurrentStation(QuestionFragment.this.getActivity(), fm, progressDialog);
                         }
                     } else if (object.getType() == SubmitResponse.Type.WON) {
-                        fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                        fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                         progressDialog.dismiss();
                         Util.displayWonDialog(QuestionFragment.this.getActivity());
                     }
@@ -108,7 +108,7 @@ public class QuestionFragment extends Fragment implements Button.OnClickListener
                 @Override
                 public void onError(ErrorType errorType, int code, String msg) {
                     Log.e("schnitzeljagd", errorType + ", " + code + ", " + msg);
-                    fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                    fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                     progressDialog.dismiss();
                     Util.displayErrorDialogFromJson(QuestionFragment.this.getActivity(), Util.ERROR_SUBMITTING_QUSTION, msg);
                 }
@@ -116,7 +116,7 @@ public class QuestionFragment extends Fragment implements Button.OnClickListener
                 @Override
                 public void onException(Exception e) {
                     Log.e("schnitzeljagd", "", e);
-                    fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                    fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                     progressDialog.dismiss();
                     Util.displayErrorDialogFromThrowable(QuestionFragment.this.getActivity(), Util.EXCEPTION_SUBMITTING_QUSTION, e);
                 }

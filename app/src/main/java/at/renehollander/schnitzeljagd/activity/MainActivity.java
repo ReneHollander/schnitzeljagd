@@ -22,10 +22,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        INSTANCE = this;
+        Activities.MAIN = this;
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction().add(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+            getFragmentManager().beginTransaction().add(R.id.container, Fragments.CONTENT).commit();
         }
     }
 
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
         //if (sj.getTeamKey() == null) {
         //    this.scanQr.setEnabled(true);
         //} else {
-            this.forceUpdate.setEnabled(true);
+        this.forceUpdate.setEnabled(true);
             /*
             if (sj.getCurrentStation() != null) {
                 if (sj.getCurrentStation() instanceof QrStation) {
@@ -74,20 +74,20 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_scan_qrcode) {
-            getFragmentManager().beginTransaction().replace(R.id.container, Fragments.QR_CODE_FRAGMENT).commit();
+            getFragmentManager().beginTransaction().replace(R.id.container, Fragments.QR_CODE).commit();
             return true;
         } else if (id == R.id.action_submit_answer) {
-            getFragmentManager().beginTransaction().replace(R.id.container, Fragments.QUESTION_FRAGMENT).commit();
+            getFragmentManager().beginTransaction().replace(R.id.container, Fragments.QUESTION).commit();
             return true;
         } else if (id == R.id.action_force_update) {
             final ProgressDialog progressDialog = Util.createProgressDialog(this);
             final Schnitzeljagd sj = (Schnitzeljagd) this.getApplication();
             sj.updateCurrentStation(this, null, progressDialog);
-            getFragmentManager().beginTransaction().detach(Fragments.CONTENT_FRAGMENT).commit();
-            getFragmentManager().beginTransaction().attach(Fragments.CONTENT_FRAGMENT).commit();
+            getFragmentManager().beginTransaction().detach(Fragments.CONTENT).commit();
+            getFragmentManager().beginTransaction().attach(Fragments.CONTENT).commit();
             return true;
         } else if (id == R.id.action_compass) {
-            getFragmentManager().beginTransaction().replace(R.id.container, Fragments.COMPASS_FRAGMENT).commit();
+            getFragmentManager().beginTransaction().replace(R.id.container, Fragments.COMPASS).commit();
             return true;
         }
 
@@ -122,7 +122,7 @@ public class MainActivity extends Activity {
                             @Override
                             public void onError(ErrorType errorType, int code, String msg) {
                                 Log.e("schnitzeljagd", errorType + ", " + code + ", " + msg);
-                                fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                                fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                                 progressDialog.dismiss();
                                 Util.displayErrorDialogFromJson(QRCodeFragment.this.getActivity(), Util.ERROR_SUBMITTING_TEAMKEY, msg);
                             }
@@ -130,7 +130,7 @@ public class MainActivity extends Activity {
                             @Override
                             public void onException(Exception e) {
                                 Log.e("schnitzeljagd", "", e);
-                                fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                                fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                                 progressDialog.dismiss();
                                 Util.displayErrorDialogFromThrowable(QRCodeFragment.this.getActivity(), Util.EXCEPTION_SUBMITTING_TEAMKEY, e);
                             }
@@ -150,7 +150,7 @@ public class MainActivity extends Activity {
                                         sj.updateCurrentStation(QRCodeFragment.this.getActivity(), fm, progressDialog);
                                     }
                                 } else if (object.getType() == SubmitResponse.Type.WON) {
-                                    fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                                    fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                                     progressDialog.dismiss();
                                     Util.displayWonDialog(QRCodeFragment.this.getActivity());
                                 }
@@ -159,7 +159,7 @@ public class MainActivity extends Activity {
                             @Override
                             public void onError(ErrorType errorType, int code, String msg) {
                                 Log.e("schnitzeljagd", errorType + ", " + code + ", " + msg);
-                                fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                                fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                                 progressDialog.dismiss();
                                 Util.displayErrorDialogFromJson(QRCodeFragment.this.getActivity(), Util.ERROR_SUBMITTING_QR, msg);
                             }
@@ -167,7 +167,7 @@ public class MainActivity extends Activity {
                             @Override
                             public void onException(Exception e) {
                                 Log.e("schnitzeljagd", "", e);
-                                fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                                fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                                 progressDialog.dismiss();
                                 Util.displayErrorDialogFromThrowable(QRCodeFragment.this.getActivity(), Util.EXCEPTION_SUBMITTING_QR, e);
                             }
@@ -179,7 +179,7 @@ public class MainActivity extends Activity {
                     }
                 } catch (Exception e) {
                     Log.e("qr", "error handling result", e);
-                    fm.beginTransaction().replace(R.id.container, Fragments.CONTENT_FRAGMENT).commit();
+                    fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
                     progressDialog.dismiss();
                     Util.displayErrorDialogFromThrowable(QRCodeFragment.this.getActivity(), Util.EXCEPTION_HANDLING_RESULT, e);
                 }
@@ -193,11 +193,5 @@ public class MainActivity extends Activity {
 
         }
 
-    }
-
-    private static MainActivity INSTANCE;
-
-    public static MainActivity instance() {
-        return INSTANCE;
     }
 }
