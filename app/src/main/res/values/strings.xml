@@ -9,4 +9,8 @@
     <string name="action_force_update">Force Update</string>
     <string name="action_compass">Compass</string>
 
+    <string name="hint_email">Team Name</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_login">LOGIN</string>
+
 </resources>

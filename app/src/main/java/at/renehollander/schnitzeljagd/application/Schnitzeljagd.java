@@ -10,13 +10,10 @@ import android.location.LocationManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.util.Date;
 
-import at.renehollander.schnitzeljagd.activity.Activities;
-import at.renehollander.schnitzeljagd.fragment.Fragments;
 import at.renehollander.schnitzeljagd.location.LocationChangeListener;
 
 public class Schnitzeljagd extends Application {
@@ -26,14 +23,9 @@ public class Schnitzeljagd extends Application {
     private static final int LOC_MIN_UPDATE_TIME = 1000 * 5;
     private static final int LOC_MIN_LOC_DIFFERENCE = 0;
 
-    private Activities activities;
-    private Fragments fragments;
-
     private Credentials teamCredentials;
 
     //private Station currentstation;
-
-    private LocationManager locationManager;
 
     private APIConnection apiConnection;
     private Gson gson;
@@ -44,17 +36,13 @@ public class Schnitzeljagd extends Application {
 
         this.teamCredentials = new Credentials(this, "Credentials");
 
-        this.apiConnection = new APIConnection(this);
+        if (this.getTeamCredentials().hasCredentials()) {
+            this.apiConnection = new APIConnection(this);
+            this.apiConnection.connect();
+        }
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        //gsonBuilder.registerTypeAdapter(Station.class, new StationDeserializer());
-        //gsonBuilder.registerTypeAdapter(SubmitResponse.class, new SubmitResponseDeserializer());
-        //gsonBuilder.registerTypeAdapter(SubmitRequest.class, new SubmitRequestSerializer());
-        this.gson = gsonBuilder.create();
 
-        this.apiConnection.connect();
-
-        this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Log.i("location", "provider=" + Schnitzeljagd.LOC_USED_LOCATION_PROVIDER + ", enabled=" + locationManager.isProviderEnabled(Schnitzeljagd.LOC_USED_LOCATION_PROVIDER));
         locationManager.requestLocationUpdates(Schnitzeljagd.LOC_USED_LOCATION_PROVIDER, LOC_MIN_UPDATE_TIME, LOC_MIN_LOC_DIFFERENCE, new LocationChangeListener(this));
         Location location = locationManager.getLastKnownLocation(Schnitzeljagd.LOC_USED_LOCATION_PROVIDER);

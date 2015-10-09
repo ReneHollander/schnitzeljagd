@@ -2,12 +2,14 @@ package at.renehollander.schnitzeljagd.application;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import at.renehollander.schnitzeljagd.activity.Activities;
 
 public class Util {
 
@@ -42,19 +44,13 @@ public class Util {
         builder.setTitle(title);
         builder.setMessage(text);
 
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            dialog.dismiss();
         });
 
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
+        activity.runOnUiThread(() -> {
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         });
     }
 
@@ -66,19 +62,13 @@ public class Util {
         builder.setTitle(title);
         builder.setMessage(msg);
 
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            dialog.dismiss();
         });
 
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
+        activity.runOnUiThread(() -> {
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         });
     }
 
@@ -92,19 +82,13 @@ public class Util {
         builder.setTitle(title);
         builder.setMessage(text);
 
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            dialog.dismiss();
         });
 
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
+        activity.runOnUiThread(() -> {
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         });
     }
 
@@ -115,19 +99,13 @@ public class Util {
 
         builder.setTitle("YOU MADE IT!");
         builder.setMessage("You made it!\nCongrats m80's");
-        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            dialog.dismiss();
         });
 
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            }
+        activity.runOnUiThread(() -> {
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         });
     }
 
@@ -139,6 +117,14 @@ public class Util {
         progressDialog.setIndeterminate(false);
         progressDialog.show();
         return progressDialog;
+    }
+
+    public static Schnitzeljagd getSchnitzeljagd() {
+        return (Schnitzeljagd) Activities.MAIN.getApplication();
+    }
+
+    public static void changeFragment(Activity activity, int id, Fragment target) {
+        activity.getFragmentManager().beginTransaction().add(id, target).commit();
     }
 
 }

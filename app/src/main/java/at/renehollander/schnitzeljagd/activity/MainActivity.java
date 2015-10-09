@@ -25,7 +25,11 @@ public class MainActivity extends Activity {
         Activities.MAIN = this;
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction().add(R.id.container, Fragments.CONTENT).commit();
+            if (!Util.getSchnitzeljagd().getTeamCredentials().hasCredentials()) {
+                Util.changeFragment(this, R.id.container, Fragments.LOGIN);
+            } else {
+                Util.changeFragment(this, R.id.container, Fragments.CONTENT);
+            }
         }
     }
 
