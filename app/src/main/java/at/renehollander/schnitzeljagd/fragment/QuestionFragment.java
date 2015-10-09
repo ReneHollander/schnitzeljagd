@@ -16,8 +16,6 @@ import android.widget.TextView;
 import at.renehollander.schnitzeljagd.R;
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import at.renehollander.schnitzeljagd.application.Util;
-import at.renehollander.schnitzeljagd.objects.station.QuestionStation;
-import at.renehollander.schnitzeljagd.objects.submit.request.SubmitQuestion;
 
 public class QuestionFragment extends Fragment implements Button.OnClickListener, View.OnKeyListener {
 
@@ -58,6 +56,7 @@ public class QuestionFragment extends Fragment implements Button.OnClickListener
     public void onStart() {
         super.onResume();
         Schnitzeljagd sj = (Schnitzeljagd) getActivity().getApplication();
+        /*
         if (sj.getCurrentStation() instanceof QuestionStation) {
             QuestionStation qs = (QuestionStation) sj.getCurrentStation();
             this.question.setText(qs.getQuestion());
@@ -66,6 +65,7 @@ public class QuestionFragment extends Fragment implements Button.OnClickListener
             this.answerRadios[2].setText(qs.getAnswers()[2]);
             this.answerRadios[3].setText(qs.getAnswers()[3]);
         }
+        */
     }
 
     @Override
@@ -88,8 +88,8 @@ public class QuestionFragment extends Fragment implements Button.OnClickListener
             final Schnitzeljagd sj = (Schnitzeljagd) getActivity().getApplication();
 
             int pos = this.findAnswerRadioPosById(checkedButtonId);
-            SubmitQuestion submitQuestion = new SubmitQuestion(pos);
             /*
+            SubmitQuestion submitQuestion = new SubmitQuestion(pos);
             sj.getRestApiClient().post(Static.submitUrl(sj.getTeamKey()), SubmitRequest.class, submitQuestion, SubmitResponse.class, new RestApiResponseCallback<SubmitResponse>() {
                 @Override
                 public void onSuccess(SubmitResponse object) {

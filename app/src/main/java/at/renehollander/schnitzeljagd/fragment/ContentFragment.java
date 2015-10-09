@@ -27,7 +27,7 @@ public class ContentFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Schnitzeljagd sj = (Schnitzeljagd) getActivity().getApplication();
-        this.contentView.loadData(sj.getCurrentStationContent(), "text/html", "utf8");
+        //this.contentView.loadData(sj.getCurrentStationContent(), "text/html", "utf8");
     }
 
 

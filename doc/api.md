@@ -1,6 +1,6 @@
 # Events
 ### `get_station`
-Event Name: `get_station`
+Event Name: `get_station`  
 Response Type: Acknowledge
 ##### Request:
 No data needed
@@ -20,8 +20,8 @@ No data needed
 ```
 
 ### `submit`
-Submits an answer to the server. If the answer is correct, the UUID of the next station will be sent. If there was an error or the answer is not correct an special error message will be sent.
-Event Name: `submit`
+Submits an answer to the server. If the answer is correct, the UUID of the next station will be sent. If there was an error or the answer is not correct an special error message will be sent.  
+Event Name: `submit`  
 Response Type: Acknowledge
 ##### Request:
 ```json
@@ -46,6 +46,23 @@ Error:
   }
 }
 ```
+
+### `locationupdate`
+Updates the current location of the device.  
+Event Name: `locationupdate`
+##### Request:
+```json
+{
+  "lat": "",
+  "long": "",
+  "orientation": "",
+  "heading": "",
+  "speed": ""
+}
+```
+##### Response:
+Correct Answer:
+No Response
 
 # Data Format
 ### `get_station` Response

@@ -14,38 +14,21 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.UUID;
 
 import at.renehollander.schnitzeljagd.location.LocationChangeListener;
-import at.renehollander.schnitzeljagd.location.SensorListener;
-import at.renehollander.schnitzeljagd.objects.station.Station;
-import at.renehollander.schnitzeljagd.objects.station.StationDeserializer;
-import at.renehollander.schnitzeljagd.objects.submit.request.SubmitRequest;
-import at.renehollander.schnitzeljagd.objects.submit.request.SubmitRequestSerializer;
-import at.renehollander.schnitzeljagd.objects.submit.response.SubmitResponse;
-import at.renehollander.schnitzeljagd.objects.submit.response.SubmitResponseDeserializer;
 
 public class Schnitzeljagd extends Application {
 
     public static final String LOC_USED_LOCATION_PROVIDER = LocationManager.GPS_PROVIDER;
 
-    //private static final int LOC_MIN_UPDATE_TIME = 1000 * 60;
-    //private static final int LOC_MIN_LOC_DIFFERENCE = 250;
-
     private static final int LOC_MIN_UPDATE_TIME = 1000 * 5;
     private static final int LOC_MIN_LOC_DIFFERENCE = 0;
 
-    private static final String PREFS_NAME = "SchnitzeljagdPrefs";
-    private static final String TEAM_KEY_PREF = "teamKey";
-    private static final String STATION_FILE = "station.ser";
+    private Credentials teamCredentials;
 
-    private UUID teamKey;
-    private Station currentstation;
-
-    private SharedPreferences settings;
+    //private Station currentstation;
 
     private LocationManager locationManager;
 
@@ -56,20 +39,14 @@ public class Schnitzeljagd extends Application {
     public void onCreate() {
         super.onCreate();
 
+        this.teamCredentials = new Credentials(this, "Credentials");
+
         this.apiConnection = new APIConnection(this);
 
-        this.settings = getSharedPreferences(PREFS_NAME, 0);
-
-        if (settings.contains(TEAM_KEY_PREF)) {
-            this.teamKey = UUID.fromString(settings.getString(TEAM_KEY_PREF, null));
-        } else {
-            this.teamKey = null;
-        }
-
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Station.class, new StationDeserializer());
-        gsonBuilder.registerTypeAdapter(SubmitResponse.class, new SubmitResponseDeserializer());
-        gsonBuilder.registerTypeAdapter(SubmitRequest.class, new SubmitRequestSerializer());
+        //gsonBuilder.registerTypeAdapter(Station.class, new StationDeserializer());
+        //gsonBuilder.registerTypeAdapter(SubmitResponse.class, new SubmitResponseDeserializer());
+        //gsonBuilder.registerTypeAdapter(SubmitRequest.class, new SubmitRequestSerializer());
         this.gson = gsonBuilder.create();
 
         this.apiConnection.connect();
@@ -95,22 +72,11 @@ public class Schnitzeljagd extends Application {
         return apiConnection;
     }
 
-    public void setTeamKey(UUID teamKey) {
-        this.teamKey = teamKey;
-        this.settings = getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(TEAM_KEY_PREF, teamKey.toString());
-        editor.commit();
-
-        Location location = locationManager.getLastKnownLocation(Schnitzeljagd.LOC_USED_LOCATION_PROVIDER);
-        this.updateLocation(location);
+    public Credentials getTeamCredentials() {
+        return teamCredentials;
     }
 
-    public UUID getTeamKey() {
-        return this.teamKey;
-    }
-
-
+    /*
     public void setCurrentStation(Station station) {
         try {
             this.currentstation = station;
@@ -135,6 +101,7 @@ public class Schnitzeljagd extends Application {
             return "<html><body><h2>" + this.currentstation.getName() + "</h2>" + this.currentstation.getContent() + "</body></html>";
         }
     }
+    */
 
     private boolean fileExistance(String fname) {
         File file = getBaseContext().getFileStreamPath(fname);

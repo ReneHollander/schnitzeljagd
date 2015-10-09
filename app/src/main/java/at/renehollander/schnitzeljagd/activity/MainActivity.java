@@ -12,8 +12,6 @@ import at.renehollander.schnitzeljagd.R;
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import at.renehollander.schnitzeljagd.application.Util;
 import at.renehollander.schnitzeljagd.fragment.Fragments;
-import at.renehollander.schnitzeljagd.objects.station.QrStation;
-import at.renehollander.schnitzeljagd.objects.station.QuestionStation;
 
 public class MainActivity extends Activity {
 
@@ -53,12 +51,11 @@ public class MainActivity extends Activity {
 
         Schnitzeljagd sj = (Schnitzeljagd) this.getApplication();
 
-        Log.d("teamkey", sj.getTeamKey() == null ? "null" : sj.getTeamKey().toString());
-
-        if (sj.getTeamKey() == null) {
-            this.scanQr.setEnabled(true);
-        } else {
+        //if (sj.getTeamKey() == null) {
+        //    this.scanQr.setEnabled(true);
+        //} else {
             this.forceUpdate.setEnabled(true);
+            /*
             if (sj.getCurrentStation() != null) {
                 if (sj.getCurrentStation() instanceof QrStation) {
                     this.submitAnswer.setEnabled(false);
@@ -68,7 +65,8 @@ public class MainActivity extends Activity {
                     this.submitAnswer.setEnabled(true);
                 }
             }
-        }
+            */
+        //}
         return true;
     }
 
