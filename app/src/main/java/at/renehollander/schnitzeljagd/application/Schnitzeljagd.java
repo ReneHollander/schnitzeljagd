@@ -166,8 +166,6 @@ public class Schnitzeljagd extends Application {
         loc2.setLongitude(16.297766);
         loc2.setTime(new Date().getTime());
 
-        System.out.println(loc.bearingTo(loc2));
-
         /*
         if (this.teamKey != null) {
             if (loc != null) {

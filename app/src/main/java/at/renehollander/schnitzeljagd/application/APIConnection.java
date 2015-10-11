@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.net.URI;
 
 import at.renehollander.socketiowrapper.SocketIOW;
+import at.renehollander.socketiowrapper.annotations.SubscribeEvent;
 import at.renehollander.socketiowrapper.interfaces.Listener;
 
 public class APIConnection implements Listener {
@@ -42,8 +43,14 @@ public class APIConnection implements Listener {
         socket.connect(credentials);
 
         socket.setConnectCallback(() -> {
-            System.out.println("connected!");
+            Log.d("networking", "connected");
+            socket.emit("ping", "");
         });
+    }
+
+    @SubscribeEvent(eventName = "pong")
+    public void onPong(SocketIOW socketIOW, Throwable error, String data) {
+        Log.d("networking", "pong");
     }
 
     public void disconnect() {

@@ -57,13 +57,14 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
         // TODO login
         sj.getApiConnection().disconnect();
         sj.getApiConnection().connect();
-        Util.addFragment(this.getActivity(), R.id.container, Fragments.CONTENT);
 
         View currentFocus = this.getActivity().getCurrentFocus();
         if (currentFocus != null) {
             InputMethodManager imm = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
         }
+
+        Util.replaceFragment(this.getActivity(), R.id.container, Fragments.CONTENT);
     }
 
     @Override
