@@ -3,13 +3,12 @@ var passportlocal = require('passport-local');
 var crypto = require('crypto');
 var expresssession = require('express-session');
 
-var sidKey = 'schnitzeljagd.sid';
-
 function Auth() {
     var instance = this;
     this.secret = crypto.randomBytes(64).toString('hex');
     this.sessionStore = new expresssession.MemoryStore();
     this.authStrategy = new passportlocal.Strategy(this.authenticate);
+    this.key = "schnitzeljagd.sid";
 
     passport.use(this.authStrategy);
     passport.serializeUser(function (user, done) {

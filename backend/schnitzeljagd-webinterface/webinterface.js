@@ -14,21 +14,23 @@ function Webinterface(expressApp, api, auth) {
     this.getExpressApp().set('view engine', 'jade');
 
     // uncomment after placing your favicon in /public
-    //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+    this.getExpressApp().use(favicon(path.join(__dirname, 'public', 'favicon.png')));
     this.getExpressApp().use(logger('dev'));
     this.getExpressApp().use(bodyParser.json());
     this.getExpressApp().use(bodyParser.urlencoded({extended: false}));
     this.getExpressApp().use(cookieParser());
     this.getExpressApp().use(express.static(path.join(__dirname, 'public')));
-
+    /*
     this.getExpressApp().use(auth.getExpressSession({
         secret: auth.getSecret(),
         key: auth.getKey(),
         store: auth.getSessionStore(),
-        resave: false,
-        saveUninitialized: false
+        resave: true,
+        saveUninitialized: true,
+        proxy: true
     }));
     this.getExpressApp().use(auth.getPassport().initialize());
+    */
 
     var instance = this;
     this.getExpressApp().use(function (req, res, next) {
@@ -71,11 +73,8 @@ function Webinterface(expressApp, api, auth) {
 }
 
 Webinterface.prototype.setupRoutes = function () {
-    var routes = require('./routes/index');
-    var users = require('./routes/users');
-
-    this.getExpressApp().use('/', routes);
-    this.getExpressApp().use('/users', users);
+    this.getExpressApp().use('/', require('./routes/index'));
+    this.getExpressApp().use('/map', require('./routes/map'));
 };
 
 Webinterface.prototype.getAPI = function () {

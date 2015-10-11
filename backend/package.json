@@ -14,7 +14,7 @@
     "express-session": "^1.11.3",
     "extend": "^3.0.0",
     "jade": "~1.11.0",
-    "mongodb": "^2.0.44",
+    "mongodb": "^2.0.45",
     "morgan": "~1.6.1",
     "node-uuid": "^1.4.3",
     "passport": "^0.3.0",
@@ -25,7 +25,7 @@
     "socket.io": "^1.3.7",
     "socketio-auth": "git+https://github.com/invisiblejs/socketio-auth.git#development",
     "sqlite3": "^3.1.0",
-    "tingodb": "^0.4.1",
+    "tingodb": "^0.4.2",
     "tungus": "0.0.5",
     "underscore": "^1.8.3"
   }

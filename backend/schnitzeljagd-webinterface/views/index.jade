@@ -1,5 +1,14 @@
-extends layout
+extends layout/base
 
 block content
-  h1= title
-  p Welcome to #{title}
+    section.content-header
+        h1
+            | Dashboard
+        ol.breadcrumb
+            li
+                a(href='/')
+                    i.fa.fa-dashboard
+                    |  Home
+            li.active Dashboard
+    section.content
+        | Dashboard!

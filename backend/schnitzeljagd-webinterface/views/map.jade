@@ -1,0 +1,14 @@
+extends layout/base
+block content
+    section.content
+        div(id='map', style='height: 862px;')
+
+        script(type='text/javascript').
+            $(function () {
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: 48.305277, lng: 16.326468},
+                    zoom: 16
+                });
+            });
+
+        script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAvLxvXHa-3HY58fI7fqK3wgfreF5PTB2I')
