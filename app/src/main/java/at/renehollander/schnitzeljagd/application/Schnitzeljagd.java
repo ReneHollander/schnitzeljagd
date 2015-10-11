@@ -36,8 +36,8 @@ public class Schnitzeljagd extends Application {
 
         this.teamCredentials = new Credentials(this, "Credentials");
 
+        this.apiConnection = new APIConnection(this);
         if (this.getTeamCredentials().hasCredentials()) {
-            this.apiConnection = new APIConnection(this);
             this.apiConnection.connect();
         }
 

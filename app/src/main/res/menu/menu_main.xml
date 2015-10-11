@@ -24,4 +24,11 @@
         android:enabled="true"
         android:orderInCategory="100"
         android:title="@string/action_compass"/>
+
+    <item
+        android:id="@+id/action_logindata"
+        android:enabled="true"
+        android:orderInCategory="100"
+        android:title="@string/action_logindata"/>
+
 </menu>

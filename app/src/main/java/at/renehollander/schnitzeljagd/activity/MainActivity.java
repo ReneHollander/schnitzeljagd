@@ -26,9 +26,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             if (!Util.getSchnitzeljagd().getTeamCredentials().hasCredentials()) {
-                Util.changeFragment(this, R.id.container, Fragments.LOGIN);
+                Util.addFragment(this, R.id.container, Fragments.LOGIN);
             } else {
-                Util.changeFragment(this, R.id.container, Fragments.CONTENT);
+                Util.addFragment(this, R.id.container, Fragments.CONTENT);
             }
         }
     }
@@ -92,6 +92,9 @@ public class MainActivity extends Activity {
             return true;
         } else if (id == R.id.action_compass) {
             getFragmentManager().beginTransaction().replace(R.id.container, Fragments.COMPASS).commit();
+            return true;
+        } else if (id == R.id.action_logindata) {
+            getFragmentManager().beginTransaction().replace(R.id.container, Fragments.LOGIN).commit();
             return true;
         }
 

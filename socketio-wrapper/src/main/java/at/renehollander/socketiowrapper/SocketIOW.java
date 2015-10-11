@@ -3,10 +3,9 @@ package at.renehollander.socketiowrapper;
 import java.lang.reflect.Method;
 import java.net.URI;
 
-import at.renehollander.socketiowrapper.annotations.Parser;
 import at.renehollander.socketiowrapper.annotations.SubscribeEvent;
 import at.renehollander.socketiowrapper.interfaces.Listener;
-import at.renehollander.socketiowrapper.internal.JSONParsingEventListener;
+import at.renehollander.socketiowrapper.internal.EventListener;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
@@ -49,8 +48,23 @@ public class SocketIOW implements Listener {
         return socket;
     }
 
-    public void emit(String event, Object... data) {
+    public void emit(String event, Object data) {
         this.getSocket().emit(event, data);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> void emit(String event, Object data, Acknowledge<T> acknowledge) {
+        this.getSocket().emit(event, new Object[]{data}, args -> {
+            if (args.length > 0) {
+                try {
+                    acknowledge.call((T) args[0], null);
+                } catch (ClassCastException e) {
+                    acknowledge.call(null, new IllegalStateException("answer from server is not the provided type"));
+                }
+            } else {
+                acknowledge.call(null, null);
+            }
+        });
     }
 
     public void disconnect() {
@@ -63,13 +77,9 @@ public class SocketIOW implements Listener {
             if (subscribeEvent == null) continue;
             String eventName = subscribeEvent.eventName();
 
-            Parser.JSON parserJSON = method.getAnnotation(Parser.JSON.class);
-            if (parserJSON == null) throw new IllegalArgumentException(method + " doesn't have a parser porvided");
-            else {
-                if (method.getParameterTypes().length != 3) throw new IllegalArgumentException(method + " has to wrong amount of arguments");
-                checkSocketIOWThrowableParameters(method);
-                getSocket().on(eventName, new JSONParsingEventListener(this, listener, method, parserJSON.dataType()));
-            }
+            if (method.getParameterTypes().length != 3) throw new IllegalArgumentException(method + " has to wrong amount of arguments");
+            checkSocketIOWThrowableParameters(method);
+            getSocket().on(eventName, new EventListener(this, listener, method, method.getParameterTypes()[2]));
         }
     }
 
@@ -137,6 +147,11 @@ public class SocketIOW implements Listener {
 
     }
 
+    @FunctionalInterface
+    public interface Acknowledge<T> {
+        void call(T data, Throwable error);
+    }
+
     private Callbacks.Connect connectCallback;
     private Callbacks.Disconnect disconnectCallback;
     private Callbacks.Error errorCallback;
@@ -188,7 +203,6 @@ public class SocketIOW implements Listener {
         this.reconnectingCallback = reconnectingCallback;
     }
 
-    @Parser.JSON(dataType = Object.class)
     @SubscribeEvent(eventName = Socket.EVENT_DISCONNECT)
     public void onDisconnect(SocketIOW socketIOW, Throwable error, Object object) {
         if (this.disconnectCallback != null) {
@@ -196,7 +210,6 @@ public class SocketIOW implements Listener {
         }
     }
 
-    @Parser.JSON(dataType = Object.class)
     @SubscribeEvent(eventName = Socket.EVENT_ERROR)
     public void onError(SocketIOW socketIOW, Throwable error, Object object) {
         if (this.errorCallback != null) {
@@ -205,7 +218,6 @@ public class SocketIOW implements Listener {
         }
     }
 
-    @Parser.JSON(dataType = Object.class)
     @SubscribeEvent(eventName = Socket.EVENT_CONNECT_ERROR)
     public void onConnectError(SocketIOW socketIOW, Throwable error, Object object) {
         if (this.connectErrorCallback != null) {
@@ -214,7 +226,6 @@ public class SocketIOW implements Listener {
         }
     }
 
-    @Parser.JSON(dataType = Object.class)
     @SubscribeEvent(eventName = Socket.EVENT_CONNECT_TIMEOUT)
     public void onConnectTimeout(SocketIOW socketIOW, Throwable error, Object object) {
         if (this.connectTimeoutCallback != null) {
@@ -222,7 +233,6 @@ public class SocketIOW implements Listener {
         }
     }
 
-    @Parser.JSON(dataType = Object.class)
     @SubscribeEvent(eventName = Socket.EVENT_RECONNECT)
     public void onReconnect(SocketIOW socketIOW, Throwable error, Object object) {
         if (this.reconnectCallback != null) {
@@ -230,7 +240,6 @@ public class SocketIOW implements Listener {
         }
     }
 
-    @Parser.JSON(dataType = Object.class)
     @SubscribeEvent(eventName = Socket.EVENT_RECONNECT_ERROR)
     public void onReconnectError(SocketIOW socketIOW, Throwable error, Object object) {
         if (this.reconnectErrorCallback != null) {
@@ -239,7 +248,6 @@ public class SocketIOW implements Listener {
         }
     }
 
-    @Parser.JSON(dataType = Object.class)
     @SubscribeEvent(eventName = Socket.EVENT_RECONNECT_FAILED)
     public void onReconnectFailed(SocketIOW socketIOW, Throwable error, Object object) {
         if (this.reconnectFailedCallback != null) {
@@ -247,7 +255,6 @@ public class SocketIOW implements Listener {
         }
     }
 
-    @Parser.JSON(dataType = Object.class)
     @SubscribeEvent(eventName = Socket.EVENT_RECONNECT_ATTEMPT)
     public void onReconnectAttempt(SocketIOW socketIOW, Throwable error, Object object) {
         if (this.reconnectAttemptCallback != null) {
@@ -255,7 +262,6 @@ public class SocketIOW implements Listener {
         }
     }
 
-    @Parser.JSON(dataType = Object.class)
     @SubscribeEvent(eventName = Socket.EVENT_RECONNECTING)
     public void onReconnecting(SocketIOW socketIOW, Throwable error, Object object) {
         if (this.reconnectingCallback != null) {

@@ -9,7 +9,7 @@ function Auth() {
     var instance = this;
     this.secret = crypto.randomBytes(64).toString('hex');
     this.sessionStore = new expresssession.MemoryStore();
-    this.authStrategy = new passportlocal.Strategy(this.authenticateNameAndPassword);
+    this.authStrategy = new passportlocal.Strategy(this.authenticate);
 
     passport.use(this.authStrategy);
     passport.serializeUser(function (user, done) {
@@ -44,13 +44,8 @@ Auth.prototype.getAuthStrategy = function () {
     return this.authStrategy;
 };
 
-Auth.prototype.authenticateNameAndPassword = function (username, password, done) {
-    return done(null, {username: username, role: "admin"});
+Auth.prototype.authenticate = function (name, password, done) {
+    return done(null, {teamname: name, role: "user"});
 };
-
-Auth.prototype.authenticateUUID = function (uuid, done) {
-    return done(null, {teamname: "team 1", role: "user"});
-};
-
 
 module.exports = Auth;

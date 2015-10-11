@@ -6,14 +6,14 @@ import java.lang.reflect.Method;
 import at.renehollander.socketiowrapper.SocketIOW;
 import io.socket.emitter.Emitter;
 
-public class JSONParsingEventListener implements Emitter.Listener {
+public class EventListener implements Emitter.Listener {
 
     private SocketIOW socketIOW;
     private Object reciever;
     private Method callback;
     private Class<?> dataType;
 
-    public JSONParsingEventListener(SocketIOW socketIOW, Object reciever, Method callback, Class<?> dataType) {
+    public EventListener(SocketIOW socketIOW, Object reciever, Method callback, Class<?> dataType) {
         this.socketIOW = socketIOW;
         this.reciever = reciever;
         this.callback = callback;

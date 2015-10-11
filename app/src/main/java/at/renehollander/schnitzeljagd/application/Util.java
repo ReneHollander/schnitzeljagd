@@ -123,8 +123,16 @@ public class Util {
         return (Schnitzeljagd) Activities.MAIN.getApplication();
     }
 
-    public static void changeFragment(Activity activity, int id, Fragment target) {
+    public static void addFragment(Activity activity, int id, Fragment target) {
         activity.getFragmentManager().beginTransaction().add(id, target).commit();
+    }
+
+    public static void removeFragment(Activity activity, Fragment target) {
+        activity.getFragmentManager().beginTransaction().remove(target).commit();
+    }
+
+    public static void replaceFragment(Activity activity, int id, Fragment target) {
+        activity.getFragmentManager().beginTransaction().replace(id, target).commit();
     }
 
 }
