@@ -20,13 +20,12 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
 
     private EditText teamName;
     private EditText password;
-    private Button btnLogin;
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.getView().setFocusableInTouchMode(true);
-        this.getView().requestFocus();
-        this.getView().setOnKeyListener(this);
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(this);
     }
 
     @Override
@@ -35,7 +34,7 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
 
         this.teamName = (EditText) rootView.findViewById(R.id.teamName);
         this.password = (EditText) rootView.findViewById(R.id.password);
-        this.btnLogin = (Button) rootView.findViewById(R.id.btnLogin);
+        Button btnLogin = (Button) rootView.findViewById(R.id.btnLogin);
 
         Schnitzeljagd sj = Util.getSchnitzeljagd();
         if (sj.getTeamCredentials().hasCredentials()) {
@@ -43,7 +42,7 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
             this.password.setText(sj.getTeamCredentials().getPassword());
         }
 
-        this.btnLogin.setOnClickListener(this::onLoginButtonClick);
+        btnLogin.setOnClickListener(this::onLoginButtonClick);
 
         return rootView;
     }

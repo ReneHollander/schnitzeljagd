@@ -15,6 +15,7 @@ import at.renehollander.schnitzeljagd.R;
 import at.renehollander.schnitzeljagd.activity.Activities;
 import at.renehollander.schnitzeljagd.fragment.Fragments;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class Util {
 
@@ -140,32 +141,62 @@ public class Util {
         activity.getFragmentManager().beginTransaction().replace(id, target).commit();
     }
 
+    private static class Worker {
+        private Emitter.Listener connectError = null;
+        private Emitter.Listener authenticated = null;
+        private Emitter.Listener unautorized = null;
+
+        private Activity activity;
+        private Socket socket;
+
+        public Worker(Activity activity) {
+            this.activity = activity;
+            this.socket = Util.getSchnitzeljagd().getApiConnection().getSocket();
+        }
+
+        public void destroyListeners() {
+            socket.off(Socket.EVENT_CONNECT_ERROR, connectError);
+            socket.off(APIConnection.SOCKET_AUTHENTICATED, authenticated);
+            socket.off(APIConnection.SOCKET_UNAUTHORIZED, unautorized);
+        }
+
+        public void work() {
+            ProgressDialog progressDialog = new ProgressDialog(activity);
+            progressDialog.setTitle("Connecting");
+            progressDialog.setMessage("Connecting to API Server...");
+            progressDialog.show();
+
+            connectError = (object) -> {
+                destroyListeners();
+                Log.d("networking", "Error connecting to API Server: " + Arrays.toString(object));
+                Util.displayErrorDialogFromString(activity, "Error connecting to API Server", Arrays.toString(object));
+                progressDialog.dismiss();
+            };
+            socket.once(Socket.EVENT_CONNECT_ERROR, connectError);
+
+            authenticated = (object) -> {
+                destroyListeners();
+                Log.d("networking", "Successfully logged in!");
+                progressDialog.dismiss();
+                Util.replaceFragment(activity, R.id.container, Fragments.CONTENT);
+            };
+            socket.once(APIConnection.SOCKET_AUTHENTICATED, authenticated);
+
+            unautorized = (object) -> {
+                destroyListeners();
+                Log.d("networking", "Invalid Teamname or Password");
+                Util.displayErrorDialogFromString(activity, "Error connecting to API Server", "Invalid Teamname or Password");
+                progressDialog.dismiss();
+            };
+            socket.once(APIConnection.SOCKET_UNAUTHORIZED, unautorized);
+
+            Util.getSchnitzeljagd().getApiConnection().connect();
+        }
+
+    }
+
     public static void tryConnect(Activity activity) {
-        Schnitzeljagd sj = Util.getSchnitzeljagd();
-        Socket socket = sj.getApiConnection().getSocket();
-
-        ProgressDialog progress = new ProgressDialog(activity);
-        progress.setTitle("Connecting");
-        progress.setMessage("Connecting to API Server...");
-        progress.show();
-
-        sj.getApiConnection().getSocket().once(Socket.EVENT_CONNECT_ERROR, (object) -> {
-            Log.d("networking", "Error connecting to API Server: " + Arrays.toString(object));
-            Util.displayErrorDialogFromString(activity, "Error connecting to API Server", Arrays.toString(object));
-            progress.dismiss();
-        });
-
-        sj.getApiConnection().getSocket().once(APIConnection.SOCKET_AUTHENTICATED, (object) -> {
-            progress.dismiss();
-            Util.replaceFragment(activity, R.id.container, Fragments.CONTENT);
-        });
-
-        sj.getApiConnection().getSocket().once(APIConnection.SOCKET_UNAUTHORIZED, (object) -> {
-            Log.d("networking", "Invalid Teamname or Password");
-            Util.displayErrorDialogFromString(activity, "Error connecting to API Server", "Invalid Teamname or Password");
-            progress.dismiss();
-        });
-        sj.getApiConnection().connect();
+        new Worker(activity).work();
     }
 
 }
