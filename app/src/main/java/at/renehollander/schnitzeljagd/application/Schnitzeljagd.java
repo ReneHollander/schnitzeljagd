@@ -14,6 +14,8 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.util.Date;
 
+import at.renehollander.schnitzeljagd.activity.Activities;
+import at.renehollander.schnitzeljagd.activity.MainActivity;
 import at.renehollander.schnitzeljagd.location.LocationChangeListener;
 
 public class Schnitzeljagd extends Application {
@@ -37,10 +39,6 @@ public class Schnitzeljagd extends Application {
         this.teamCredentials = new Credentials(this, "Credentials");
 
         this.apiConnection = new APIConnection(this);
-        if (this.getTeamCredentials().hasCredentials()) {
-            this.apiConnection.connect();
-        }
-
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Log.i("location", "provider=" + Schnitzeljagd.LOC_USED_LOCATION_PROVIDER + ", enabled=" + locationManager.isProviderEnabled(Schnitzeljagd.LOC_USED_LOCATION_PROVIDER));

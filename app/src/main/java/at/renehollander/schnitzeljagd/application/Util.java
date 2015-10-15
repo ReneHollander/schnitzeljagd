@@ -9,7 +9,12 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+
+import at.renehollander.schnitzeljagd.R;
 import at.renehollander.schnitzeljagd.activity.Activities;
+import at.renehollander.schnitzeljagd.fragment.Fragments;
+import io.socket.client.Socket;
 
 public class Util {
 
@@ -133,6 +138,34 @@ public class Util {
 
     public static void replaceFragment(Activity activity, int id, Fragment target) {
         activity.getFragmentManager().beginTransaction().replace(id, target).commit();
+    }
+
+    public static void tryConnect(Activity activity) {
+        Schnitzeljagd sj = Util.getSchnitzeljagd();
+        Socket socket = sj.getApiConnection().getSocket();
+
+        ProgressDialog progress = new ProgressDialog(activity);
+        progress.setTitle("Connecting");
+        progress.setMessage("Connecting to API Server...");
+        progress.show();
+
+        sj.getApiConnection().getSocket().once(Socket.EVENT_CONNECT_ERROR, (object) -> {
+            Log.d("networking", "Error connecting to API Server: " + Arrays.toString(object));
+            Util.displayErrorDialogFromString(activity, "Error connecting to API Server", Arrays.toString(object));
+            progress.dismiss();
+        });
+
+        sj.getApiConnection().getSocket().once(APIConnection.SOCKET_AUTHENTICATED, (object) -> {
+            progress.dismiss();
+            Util.replaceFragment(activity, R.id.container, Fragments.CONTENT);
+        });
+
+        sj.getApiConnection().getSocket().once(APIConnection.SOCKET_UNAUTHORIZED, (object) -> {
+            Log.d("networking", "Invalid Teamname or Password");
+            Util.displayErrorDialogFromString(activity, "Error connecting to API Server", "Invalid Teamname or Password");
+            progress.dismiss();
+        });
+        sj.getApiConnection().connect();
     }
 
 }

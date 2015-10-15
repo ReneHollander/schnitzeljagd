@@ -25,12 +25,9 @@ public class MainActivity extends Activity {
         Activities.MAIN = this;
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            if (!Util.getSchnitzeljagd().getTeamCredentials().hasCredentials()) {
-                Util.addFragment(this, R.id.container, Fragments.LOGIN);
-            } else {
-                Util.addFragment(this, R.id.container, Fragments.CONTENT);
-            }
+            Util.addFragment(this, R.id.container, Fragments.LOGIN);
         }
+        Util.tryConnect(this);
     }
 
     @Override

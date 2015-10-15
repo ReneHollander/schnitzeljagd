@@ -14,6 +14,7 @@ import android.widget.EditText;
 import at.renehollander.schnitzeljagd.R;
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import at.renehollander.schnitzeljagd.application.Util;
+import io.socket.client.Socket;
 
 public class LoginFragment extends Fragment implements View.OnKeyListener {
 
@@ -39,6 +40,7 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
         Schnitzeljagd sj = Util.getSchnitzeljagd();
         if (sj.getTeamCredentials().hasCredentials()) {
             this.teamName.setText(sj.getTeamCredentials().getName());
+            this.password.setText(sj.getTeamCredentials().getPassword());
         }
 
         this.btnLogin.setOnClickListener(this::onLoginButtonClick);
@@ -47,6 +49,12 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
     }
 
     public void onLoginButtonClick(View view) {
+        View currentFocus = this.getActivity().getCurrentFocus();
+        if (currentFocus != null) {
+            InputMethodManager imm = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        }
+
         String teamNameString = this.teamName.getText().toString();
         String passwordString = this.password.getText().toString();
 
@@ -54,17 +62,13 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
         sj.getTeamCredentials().setName(teamNameString);
         sj.getTeamCredentials().setPassword(passwordString);
 
-        // TODO login
-        sj.getApiConnection().disconnect();
-        sj.getApiConnection().connect();
-
-        View currentFocus = this.getActivity().getCurrentFocus();
-        if (currentFocus != null) {
-            InputMethodManager imm = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        if (sj.getApiConnection().getSocket().connected()) {
+            sj.getApiConnection().getSocket().once(Socket.EVENT_DISCONNECT, (objects) -> this.getActivity().runOnUiThread(() -> Util.tryConnect(this.getActivity())));
+            sj.getApiConnection().disconnect();
+        } else {
+            this.getActivity().runOnUiThread(() -> Util.tryConnect(this.getActivity()));
         }
 
-        Util.replaceFragment(this.getActivity(), R.id.container, Fragments.CONTENT);
     }
 
     @Override

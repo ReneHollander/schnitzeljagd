@@ -40,7 +40,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile project(':zxing-android')
-    compile project(':socketio-wrapper')
 
     compile 'net.sourceforge.streamsupport:streamsupport:1.3'
 

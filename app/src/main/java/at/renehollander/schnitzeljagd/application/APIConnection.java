@@ -7,31 +7,34 @@ import org.json.JSONObject;
 
 import java.net.URI;
 
-import at.renehollander.socketiowrapper.SocketIOW;
-import at.renehollander.socketiowrapper.annotations.SubscribeEvent;
-import at.renehollander.socketiowrapper.interfaces.Listener;
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
-public class APIConnection implements Listener {
+public class APIConnection {
 
-    private static final String TAG = "APIConnection";
-    private static final String API_URL = "http://10.0.101.16:3000/user";
+    public static final String SOCKET_AUTHENTICATED = "authenticated";
+    public static final String SOCKET_UNAUTHORIZED = "unauthorized";
+    public static final String SOCKET_AUTHENTICATION = "authentication";
+
+    private static final String API_URL = "http://10.0.0.3:3000/user";
 
     private Schnitzeljagd schnitzeljagd;
-    private SocketIOW socket;
+    private Socket socket;
 
     public APIConnection(Schnitzeljagd schnitzeljagd) {
         this.schnitzeljagd = schnitzeljagd;
 
-        socket = new SocketIOW(URI.create(API_URL));
-        socket.register(this);
+        socket = IO.socket(URI.create(API_URL));
 
-        socket.setReconnectAttemptCallback(() -> {
-            System.out.println("reconnect");
-        });
-
-        socket.setConnectCallback(() -> {
-            Log.d("networking", "connected");
-            socket.emit("ping", "");
+        socket.on(Socket.EVENT_CONNECT, (objects) -> {
+            JSONObject credentials = new JSONObject();
+            try {
+                credentials.put("name", schnitzeljagd.getTeamCredentials().getName());
+                credentials.put("password", schnitzeljagd.getTeamCredentials().getPassword());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            socket.emit(SOCKET_AUTHENTICATION, credentials);
         });
     }
 
@@ -39,29 +42,15 @@ public class APIConnection implements Listener {
         if (!schnitzeljagd.getTeamCredentials().hasCredentials()) {
             throw new IllegalStateException("no credentials set");
         }
-
-        JSONObject credentials = new JSONObject();
-        try {
-            credentials.put("name", schnitzeljagd.getTeamCredentials().getName());
-            credentials.put("password", schnitzeljagd.getTeamCredentials().getPassword());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
         Log.d("networking", "connecting to socketio at " + API_URL);
-        socket.connect(credentials);
-    }
-
-    @SubscribeEvent(eventName = "pong")
-    public void onPong(SocketIOW socketIOW, Throwable error, String data) {
-        Log.d("networking", "pong");
+        socket.connect();
     }
 
     public void disconnect() {
         socket.disconnect();
     }
 
-    public SocketIOW getSocket() {
+    public Socket getSocket() {
         return socket;
     }
 
