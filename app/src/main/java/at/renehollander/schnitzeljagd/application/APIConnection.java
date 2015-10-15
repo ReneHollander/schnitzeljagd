@@ -14,17 +14,28 @@ import at.renehollander.socketiowrapper.interfaces.Listener;
 public class APIConnection implements Listener {
 
     private static final String TAG = "APIConnection";
-    private static final String API_URL = "http://10.0.101.16:y3000/user";
+    private static final String API_URL = "http://10.0.101.16:3000/user";
 
     private Schnitzeljagd schnitzeljagd;
     private SocketIOW socket;
 
     public APIConnection(Schnitzeljagd schnitzeljagd) {
         this.schnitzeljagd = schnitzeljagd;
+
+        socket = new SocketIOW(URI.create(API_URL));
+        socket.register(this);
+
+        socket.setReconnectAttemptCallback(() -> {
+            System.out.println("reconnect");
+        });
+
+        socket.setConnectCallback(() -> {
+            Log.d("networking", "connected");
+            socket.emit("ping", "");
+        });
     }
 
     public void connect() {
-
         if (!schnitzeljagd.getTeamCredentials().hasCredentials()) {
             throw new IllegalStateException("no credentials set");
         }
@@ -37,15 +48,8 @@ public class APIConnection implements Listener {
             e.printStackTrace();
         }
 
-        Log.d(TAG, "connecting to socketio at " + API_URL);
-        socket = new SocketIOW(URI.create(API_URL));
-        socket.register(this);
+        Log.d("networking", "connecting to socketio at " + API_URL);
         socket.connect(credentials);
-
-        socket.setConnectCallback(() -> {
-            Log.d("networking", "connected");
-            socket.emit("ping", "");
-        });
     }
 
     @SubscribeEvent(eventName = "pong")
@@ -54,9 +58,7 @@ public class APIConnection implements Listener {
     }
 
     public void disconnect() {
-        if (socket != null) {
-            socket.disconnect();
-        }
+        socket.disconnect();
     }
 
     public SocketIOW getSocket() {

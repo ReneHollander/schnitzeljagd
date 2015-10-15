@@ -15,6 +15,7 @@ public class SocketIOW implements Listener {
 
     public SocketIOW(URI uri) {
         this.socket = IO.socket(uri);
+        this.register(this);
     }
 
     public void connect() {
@@ -22,15 +23,17 @@ public class SocketIOW implements Listener {
     }
 
     public void connect(final Object authData) {
+        getSocket().off(Socket.EVENT_CONNECT);
+        getSocket().off("authentication");
+        getSocket().off("authenticated");
         if (authData != null) {
             getSocket().on(Socket.EVENT_CONNECT, args -> {
-                getSocket().on("authenticated", args1 -> {
-                    if (this.connectCallback != null) {
-                        this.connectCallback.call();
-                    }
-                });
-
                 getSocket().emit("authentication", authData);
+            });
+            getSocket().on("authenticated", args1 -> {
+                if (this.connectCallback != null) {
+                    this.connectCallback.call();
+                }
             });
         } else {
             getSocket().on(Socket.EVENT_CONNECT, args -> {
@@ -40,7 +43,6 @@ public class SocketIOW implements Listener {
             });
         }
 
-        this.register(this);
         this.socket.connect();
     }
 
@@ -68,7 +70,7 @@ public class SocketIOW implements Listener {
     }
 
     public void disconnect() {
-        this.getSocket().disconnect();
+        this.socket.disconnect();
     }
 
     public void register(Listener listener) {
@@ -77,7 +79,8 @@ public class SocketIOW implements Listener {
             if (subscribeEvent == null) continue;
             String eventName = subscribeEvent.eventName();
 
-            if (method.getParameterTypes().length != 3) throw new IllegalArgumentException(method + " has to wrong amount of arguments");
+            if (method.getParameterTypes().length != 3)
+                throw new IllegalArgumentException(method + " has to wrong amount of arguments");
             checkSocketIOWThrowableParameters(method);
             getSocket().on(eventName, new EventListener(this, listener, method, method.getParameterTypes()[2]));
         }
@@ -89,8 +92,10 @@ public class SocketIOW implements Listener {
         }
         Class<?> param0 = method.getParameterTypes()[0];
         Class<?> param1 = method.getParameterTypes()[1];
-        if (param0 != SocketIOW.class) throw new IllegalArgumentException("First parameter of " + method + " must be of type SocketIOW");
-        if (param1 != Throwable.class) throw new IllegalArgumentException("Second parameter of " + method + " must be of type Throwable");
+        if (param0 != SocketIOW.class)
+            throw new IllegalArgumentException("First parameter of " + method + " must be of type SocketIOW");
+        if (param1 != Throwable.class)
+            throw new IllegalArgumentException("Second parameter of " + method + " must be of type Throwable");
     }
 
     public interface Callbacks {
