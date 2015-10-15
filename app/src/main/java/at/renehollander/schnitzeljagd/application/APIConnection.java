@@ -14,7 +14,7 @@ import at.renehollander.socketiowrapper.interfaces.Listener;
 public class APIConnection implements Listener {
 
     private static final String TAG = "APIConnection";
-    private static final String API_URL = "http://10.0.0.57:3000/user";
+    private static final String API_URL = "http://10.0.101.16:y3000/user";
 
     private Schnitzeljagd schnitzeljagd;
     private SocketIOW socket;

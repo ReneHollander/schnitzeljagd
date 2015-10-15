@@ -2,21 +2,26 @@ var socketio = require('socket.io');
 var passportSocketIo = require("passport.socketio");
 var cookieParser = require('cookie-parser');
 var socketioauth = require('socketio-auth');
+var auth = require('./auth.js');
+var app = require('./../app.js');
 
-function API(httpServer, auth) {
-    this.io = socketio(httpServer);
+var io;
+var userIO;
+var adminIO;
 
-    this.userIO = this.io.of('/user');
-    this.adminIO = this.io.of('/admin');
+module.exports.init = function () {
+    io = socketio(app.httpServer);
+    userIO = io.of('/user');
+    adminIO = io.of('/admin');
 
-    this.adminIO.use(passportSocketIo.authorize({
+    adminIO.use(passportSocketIo.authorize({
         cookieParser: cookieParser,
         key: auth.getKey(),
         secret: auth.getSecret(),
         store: auth.getSessionStore()
     }));
 
-    socketioauth(this.userIO, {
+    socketioauth(userIO, {
         authenticate: function (socket, authData, callback) {
             console.log("name: " + authData.name);
             console.log("password: " + authData.password);
@@ -28,7 +33,7 @@ function API(httpServer, auth) {
         }
     });
 
-    this.userIO.on('connection', function (socket) {
+    userIO.on('connection', function (socket) {
         console.log('connected');
 
         socket.on('ping', function (data) {
@@ -37,15 +42,16 @@ function API(httpServer, auth) {
         });
 
     });
-
-}
-
-API.prototype.getUserIO = function () {
-    return this.userIO;
 };
 
-API.prototype.getAdminIO = function () {
-    return this.adminIO;
+module.exports.getIO = function () {
+    return io;
 };
 
-module.exports = API;
+module.exports.getUserIO = function () {
+    return userIO;
+};
+
+module.exports.getAdminIO = function () {
+    return adminIO;
+};
