@@ -72,5 +72,7 @@ function setupRoutes() {
     }
 
     app.expressApp.use('/', loadRoute('index'));
+    app.expressApp.use('/login', loadRoute('login'));
+    app.expressApp.use('/register', loadRoute('register'));
     app.expressApp.use('/map', loadRoute('map'));
 }
