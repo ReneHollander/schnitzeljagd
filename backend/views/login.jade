@@ -30,8 +30,8 @@ html
                 p.login-box-msg Sign in to start your session
                 form(action='/login', method='post')
                     .form-group.has-feedback
-                        input.form-control(type='name', placeholder='Name')
-                        span.glyphicon.glyphicon-user.form-control-feedback
+                        input.form-control(type='email', placeholder='E-Mail')
+                        span.glyphicon.glyphicon-envelope.form-control-feedback
                     .form-group.has-feedback
                         input.form-control(type='password', placeholder='Password')
                         span.glyphicon.glyphicon-lock.form-control-feedback
@@ -44,7 +44,7 @@ html
                         .col-xs-4
                             button.btn.btn-primary.btn-block.btn-flat(type='submit') Sign In
                 br
-                a.text-center(href='/register') Register a new team
+                a.text-center(href='/register') Register a new account
         script.
             $(function () {
                 $('input').iCheck({

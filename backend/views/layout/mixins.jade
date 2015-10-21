@@ -1,0 +1,15 @@
+mixin error(title, errortext, error)
+    .callout.callout-danger
+        h4 #{title}
+        if error.length == 1
+            p An error occured while #{errortext}:
+        else
+            p errors.length errors occured while #{errortext}:
+        ul
+            each err in error
+                li= err
+
+mixin success(title, msg)
+    .callout.callout-success
+        h4 #{title}
+        p #{msg}

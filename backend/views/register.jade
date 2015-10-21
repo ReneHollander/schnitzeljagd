@@ -1,4 +1,7 @@
 doctype html
+
+include layout/mixins
+
 html
     head
         title Schnitzeljagd
@@ -27,28 +30,27 @@ html
                     img(src='images/schnitzel_64x64.png', width='50px', height='50px', style='margin-right: 10px;')
                     b Schnitzeljagd
             .register-box-body
-                p.login-box-msg Register a new team
-                form(action='../../index.html', method='post')
+                p.login-box-msg Register a new account
+                if error
+                    +error("Error logging in!", "logging in", error)
+                if success
+                    +success("Registration successful!", "Please check your inbox for the validation E-Mail!")
+                form(action='/register', method='post')
                     .form-group.has-feedback
-                        input.form-control(type='text', placeholder='Team name')
+                        input.form-control(name='email', type='email', placeholder='E-Mail')
+                        span.glyphicon.glyphicon-envelope.form-control-feedback
+                    .form-group.has-feedback
+                        input.form-control(name='username', type='text', placeholder='Username')
                         span.glyphicon.glyphicon-user.form-control-feedback
                     .form-group.has-feedback
-                        input.form-control(type='password', placeholder='Password')
+                        input.form-control(name='password1', type='password', placeholder='Password')
                         span.glyphicon.glyphicon-lock.form-control-feedback
                     .form-group.has-feedback
-                        input.form-control(type='password', placeholder='Retype password')
+                        input.form-control(name='password2' type='password', placeholder='Retype password')
                         span.glyphicon.glyphicon-log-in.form-control-feedback
                     .row
                         .col-xs-8
                         .col-xs-4
                             button.btn.btn-primary.btn-block.btn-flat(type='submit') Register
                 br
-                a.text-center(href='/login') I already have a membership
-        script.
-            $(function () {
-                $('input').iCheck({
-                    checkboxClass: 'icheckbox_square-blue',
-                    radioClass: 'iradio_square-blue',
-                    increaseArea: '20%'
-                });
-            });
+                a.text-center(href='/login') I already have an account

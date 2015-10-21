@@ -20,3 +20,4 @@ node_modules/
 *.iml
 npm-debug.log
 bower_components
+data/

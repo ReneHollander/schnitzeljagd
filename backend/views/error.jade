@@ -1,7 +1,12 @@
 extends layout/base
-block content
-    section.content-header
-        h1 Error #{error.status} - #{message}
-    section.content
-        pre #{error.stack}
 
+block content
+    section.content
+        .error-page
+            h2(class="headline #{color}") #{status}
+            .error-content
+                h3
+                    i(class="fa fa-warning #{color}") #{shortdesc}
+                p #{longdesc}
+    if stack
+        pre #{stack}
