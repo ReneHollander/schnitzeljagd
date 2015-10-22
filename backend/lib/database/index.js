@@ -11,7 +11,7 @@ module.exports.getClient = camo.getClient;
 
 module.exports.init = function () {
     return fs.mkdirsAsync(cfg.directory.db).then(function () {
-        return camo.connect("nedb://" + cfg.directory.db).then(function () {
+        return camo.connect("nedb://" + cfg.directory.db).then(function (db) {
             documents.init();
             module.exports.documents = documents;
         });

@@ -43,4 +43,9 @@ class User extends CustomDocument {
 
 module.exports.init = function () {
     module.exports.User = User;
+    var driver = camo.getClient().driver();
+    console.log(driver.collection('users'));
+    camo.getClient().driver().collection('users').createIndex('email', {unique: true}, function(err, indexName) {
+        // Index created with name indexName
+    });
 };
