@@ -1,5 +1,7 @@
 var path = require('path');
 
+module.exports = require('./cfg.private.js');
+
 module.exports.directory = {
     view: path.join(__dirname, 'views'),
     favicon: path.join(__dirname, 'public', 'favicon.png'),
@@ -8,3 +10,4 @@ module.exports.directory = {
     data: path.join(__dirname, 'data'),
     db: path.join(__dirname, 'data', 'db')
 };
+

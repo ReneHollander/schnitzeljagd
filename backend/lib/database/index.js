@@ -7,8 +7,6 @@ var fs = Promise.promisifyAll(require('fs-extra'));
 var glob = Promise.promisify(require("glob"));
 var cfg = require('../../cfg.js');
 
-var collections = {};
-
 module.exports.init = function () {
     return fs.mkdirsAsync(cfg.directory.db).then(function () {
         return glob(path.join(__dirname, "collections", "*.js")).then(function (files) {
