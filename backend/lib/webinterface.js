@@ -48,8 +48,6 @@ module.exports.init = function () {
         reportError(err, res);
     });
 
-
-
 };
 
 function reportError(err, res) {

@@ -25,17 +25,31 @@ router.post('/', function (req, res, next) {
     } else {
         database.users.createUser(req.body.email, req.body.username, req.body.password1)
             .then(function (user) {
-                console.log(user);
-                return mail.send(user.email, 'Aktivierung deines Accounts', "Bitte nutze den folgenden Link um deine E-Mail Adresse zu verifizieren: " + user.validationToken, "Bitte nutze den folgenden Link um deine E-Mail Adresse zu verifizieren: " + user.validationToken)
-                    .then(function () {
-                        res.render('register', {success: true});
-                    });
+                return mail.send(user.email, "Schnitzeljagd Registration", "verification_email", {
+                    user,
+                    validation_link: "http://localhost:3000/register/verify/" + user.validationToken
+                }).then(function () {
+                    res.render('register', {success: true});
+                }).catch(function (err) {
+                    console.error(err);
+                });
             })
             .catch(function (err) {
                 if (err instanceof Error) webinterface.reportError(err, res);
                 else res.render('register', {error: [err]});
             });
     }
+});
+
+/* GET home page. */
+router.get('/verify/:token', function (req, res, next) {
+    database.users.verifyToken(req.params.token).then(function () {
+        res.render('login', {verified: true});
+
+    }).catch(function (err) {
+        if (err instanceof Error) webinterface.reportError(err, res);
+        else res.render('login', {verified: false, error: [err]});
+    });
 });
 
 module.exports = router;

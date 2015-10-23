@@ -8,6 +8,8 @@ module.exports.directory = {
     public: path.join(__dirname, 'public'),
     routes: path.join(__dirname, 'lib', 'routes'),
     data: path.join(__dirname, 'data'),
-    db: path.join(__dirname, 'data', 'db')
+    db: path.join(__dirname, 'data', 'db'),
+    mail: {
+        templates: path.join(__dirname, 'mail', 'templates')
+    }
 };
-

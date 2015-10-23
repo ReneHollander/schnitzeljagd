@@ -5,10 +5,14 @@ block beforebody
         .login-box
             .login-logo
                 a(href='/')
-                    img(src='images/schnitzel_64x64.png', width='50px', height='50px', style='margin-right: 10px;')
+                    img(src='/images/schnitzel_64x64.png', width='50px', height='50px', style='margin-right: 10px;')
                     b Schnitzeljagd
             .login-box-body
                 p.login-box-msg Sign in to start your session
+                if verified == false
+                    +error("Error verifying your E-Mail address!", "verifying your E-Mail address", error)
+                if verified == true
+                    +success("E-Mail verification successful!", "You can now log in and user our service!")
                 form(action='/login', method='post')
                     .form-group.has-feedback
                         input.form-control(type='email', placeholder='E-Mail')
