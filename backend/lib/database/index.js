@@ -5,8 +5,10 @@ var path = require('path');
 var Datastore = require('nedb');
 var fs = Promise.promisifyAll(require('fs-extra'));
 var glob = Promise.promisify(require("glob"));
+var merge = require('merge');
 var cfg = require('../../cfg.js');
 
+module.exports = {};
 module.exports.init = function () {
     return fs.mkdirsAsync(cfg.directory.db).then(function () {
         return glob(path.join(__dirname, "collections", "*.js")).then(function (files) {
@@ -25,7 +27,7 @@ module.exports.init = function () {
                     });
             });
             return Promise.props(props).then(function (cllctns) {
-                module.exports = cllctns;
+                module.exports = merge(module.exports, cllctns);
             });
         });
     });

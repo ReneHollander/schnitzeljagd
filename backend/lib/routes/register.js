@@ -1,11 +1,13 @@
 "use strict";
 
-var express = require('express');
-var router = express.Router();
 var Promise = require('bluebird');
+var express = require('express');
+var auth = require('./../auth.js');
 var webinterface = require('../webinterface.js');
 var database = require('../database/');
 var mail = require('../mail.js');
+
+var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {

@@ -3,7 +3,7 @@ extends base
 block beforebody
     body.hold-transition.skin-blue.sidebar-mini
         .wrapper
-            header.main-header
+            header.main-header#header
                 a.logo(href='/')
                     span.logo-mini
                         img(src='/images/schnitzel_64x64.png', width='50px', height='50px')
@@ -50,7 +50,7 @@ block beforebody
                                 span Map
             .content-wrapper
                 block content
-            footer.main-footer
+            footer.main-footer#footer
                 .pull-right.hidden-xs
                     b Version
                     |  1.0.0

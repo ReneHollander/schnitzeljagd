@@ -2,10 +2,35 @@ extends layout/admin
 
 block content
     section.content
-        div(id='map', style='height: 862px;')
+        div(id='map')
 
         script(type='text/javascript').
             $(function () {
+
+                var wndw = $(window);
+                var mapDiv = $("#map");
+                var headerDiv = $("#header");
+                var footerDiv = $("#footer");
+
+                console.log(footerDiv);
+
+                function updateMapSize() {
+                    var windowHeight = wndw.height();
+                    var headerHeight = headerDiv.height();
+                    var footerHeight = footerDiv.height();
+                    var mapHeight = windowHeight - headerHeight - footerHeight - 61;
+
+                    console.log("window_height: " + windowHeight);
+                    console.log("header_height: " + headerHeight);
+                    console.log("footer_height: " + footerHeight);
+                    console.log("map_height: " + mapHeight);
+
+                    mapDiv.css("height", mapHeight);
+                }
+
+                $(window).resize(updateMapSize);
+                updateMapSize();
+
                 var map = new google.maps.Map(document.getElementById('map'), {
                     center: {lat: 48.305277, lng: 16.326468},
                     zoom: 16
