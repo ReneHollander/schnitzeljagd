@@ -7,6 +7,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var auth = require('./auth.js');
 var cfg = require('./../cfg.js');
 var app = require("./../app.js");
 
@@ -22,17 +23,8 @@ module.exports.init = function () {
     app.expressApp.use(bodyParser.urlencoded({extended: true}));
     app.expressApp.use(cookieParser());
     app.expressApp.use(express.static(cfg.directory.public));
-    /*
-     app.expressApp.use(auth.getExpressSession({
-     secret: auth.getSecret(),
-     key: auth.getKey(),
-     store: auth.getSessionStore(),
-     resave: true,
-     saveUninitialized: true,
-     proxy: true
-     }));
-     app.expressApp.use(auth.getPassport().initialize());
-     */
+
+    auth.configureExpress(app.expressApp);
 
     setupRoutes();
 
@@ -51,8 +43,6 @@ module.exports.init = function () {
 };
 
 function reportError(err, res) {
-    console.error(err);
-
     var status = err.status || 500;
     var color;
     var shortdesc;
@@ -98,6 +88,8 @@ function reportError(err, res) {
         longdesc: longdesc,
         status: status
     });
+
+    throw err;
 }
 module.exports.reportError = reportError;
 

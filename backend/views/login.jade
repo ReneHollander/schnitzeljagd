@@ -13,12 +13,14 @@ block beforebody
                     +error("Error verifying your E-Mail address!", "verifying your E-Mail address", error)
                 if verified == true
                     +success("E-Mail verification successful!", "You can now log in and user our service!")
+                if error
+                    +error("Error logging in", "logging into your account", error)
                 form(action='/login', method='post')
                     .form-group.has-feedback
-                        input.form-control(type='email', placeholder='E-Mail')
+                        input.form-control(name='email', type='email', placeholder='E-Mail')
                         span.glyphicon.glyphicon-envelope.form-control-feedback
                     .form-group.has-feedback
-                        input.form-control(type='password', placeholder='Password')
+                        input.form-control(name='password', type='password', placeholder='Password')
                         span.glyphicon.glyphicon-lock.form-control-feedback
                     .row
                         .col-xs-8

@@ -1,8 +1,8 @@
-var bcrypt = require('bcrypt');
 var Promise = require('bluebird');
+var bcrypt = Promise.promisifyAll(require('bcrypt'));
 var randomstring = require("randomstring");
 var database = require('./../index.js');
-var dbutil = require("./../util.js");
+var dbutil = require("./../../util/database.js");
 
 var ds;
 module.exports.init = function (datastore) {
@@ -22,12 +22,8 @@ function createUser(email, username, password) {
         ]
     }).then(function (docs) {
         if (docs.length == 0) {
-            return new Promise(function (resolve, reject) {
-                bcrypt.hash(password, 8, function (err, hash) {
-                    if (err) reject(err);
-                    else resolve(hash);
-                });
-            }).then(function (hash) {
+            return bcrypt.hashAsync(password, 8)
+                .then(function (hash) {
                     return ds.insertAsync({
                         email: email,
                         username: username,
@@ -37,7 +33,7 @@ function createUser(email, username, password) {
                     });
                 });
         } else {
-            return Promise.reject("E-Mail or Username already in use!");
+            return Promise.reject("E-Mail or Username already in use");
         }
     });
 }
@@ -47,7 +43,7 @@ function verifyToken(validationToken) {
     return ds.findAsync({validationToken: validationToken})
         .then(function (docs) {
             if (docs.length == 0) {
-                return Promise.reject("Invalid Verification Token or Verification Token already used!");
+                return Promise.reject("Invalid Verification Token or Verification Token already used");
             } else {
                 return ds.updateAsync({validationToken: validationToken}, {$set: {validationToken: undefined}})
                     .then(function () {
@@ -57,3 +53,30 @@ function verifyToken(validationToken) {
         });
 }
 module.exports.verifyToken = verifyToken;
+
+function getUserByEmail(email) {
+    return ds.findAsync({email: email})
+        .then(function (docs) {
+            if (docs.length == 0) {
+                return Promise.reject("No user with given E-Mail found");
+            } else {
+                return docs.pop();
+            }
+        });
+}
+module.exports.getUserByEmail = getUserByEmail;
+
+function validateUser(email, password) {
+    return getUserByEmail(email)
+        .then(function (user) {
+            return bcrypt.compareAsync(password, user.passwordHash)
+                .then(function (res) {
+                    if (res == false) {
+                        return Promise.reject("Invalid password");
+                    } else {
+                        return user;
+                    }
+                });
+        });
+}
+module.exports.validateUser = validateUser;

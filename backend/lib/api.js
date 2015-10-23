@@ -1,6 +1,4 @@
 var socketio = require('socket.io');
-var passportSocketIo = require("passport.socketio");
-var cookieParser = require('cookie-parser');
 var socketioauth = require('socketio-auth');
 var auth = require('./auth.js');
 var app = require('./../app.js');
@@ -14,12 +12,7 @@ module.exports.init = function () {
     userIO = io.of('/user');
     adminIO = io.of('/admin');
 
-    adminIO.use(passportSocketIo.authorize({
-        cookieParser: cookieParser,
-        key: auth.getKey(),
-        secret: auth.getSecret(),
-        store: auth.getSessionStore()
-    }));
+    auth.configureIO(adminIO);
 
     socketioauth(userIO, {
         authenticate: function (socket, authData, callback) {
