@@ -10,9 +10,20 @@ module.exports = function (schemas) {
             index: true,
             unique: true
         },
-        creationDate: Date,
+        creationDate: {
+            type: Date,
+            default: Date.now
+        },
         founder: {type: ObjectId, ref: 'User'},
         members: [{type: ObjectId, ref: 'User'}]
     });
+
+    schema.statics.createTeam = function (teamname, founder) {
+        return new schemas.Team({
+            teamname: teamname,
+            founder: founder._id
+        }).save();
+    };
+
     return mongoose.model('Team', schema);
 };
