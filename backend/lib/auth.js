@@ -5,6 +5,7 @@ var expresssession = require('express-session');
 var passportSocketIo = require("passport.socketio");
 var cookieParser = require('cookie-parser');
 var database = require('./database/');
+var webinterface = require('./webinterface.js');
 
 var secret = crypto.randomBytes(64).toString('hex');
 var key = "schnitzeljagd.sid";
@@ -23,11 +24,42 @@ passport.deserializeUser(function (user, done) {
     done(null, user);
 });
 
-module.exports.checkUserLoggedIn = function (req, res, next) {
-    if (req.user) {
-        next();
+function checkRole(user, allowedRoles, callback) {
+    if (user) {
+        if (user.validation_link) {
+            callback(new Error("Please validate your E-Mail address before logging in!"));
+            return;
+        }
+        for (allowedRole of allowedRoles) {
+            if (user.role == allowedRole) {
+                callback(null, true);
+                return;
+            }
+        }
+        callback(null, false);
     } else {
-        res.redirect('/login');
+        callback(new Error("Please log in before!"));
+    }
+}
+module.exports.checkRole = checkRole;
+
+function checkUserExpress(allowedRoles, req, res, next) {
+    checkRole(req.user, allowedRoles, function (err, result) {
+        if (err) res.render('login', {error: [err.message]});
+        else if (result === false) {
+            var forbidden = new Error('Forbidden');
+            forbidden.status = 403;
+            next(forbidden);
+        }
+        else if (result === true) next();
+        else throw new Error('Unknown state!');
+    });
+}
+
+module.exports.checkUserMiddleware = function () {
+    var args = arguments;
+    return function (req, res, next) {
+        checkUserExpress(args, req, res, next);
     }
 };
 

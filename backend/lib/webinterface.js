@@ -16,7 +16,6 @@ module.exports.init = function () {
     app.expressApp.set('views', cfg.directory.view);
     app.expressApp.set('view engine', 'jade');
 
-    // uncomment after placing your favicon in /public
     app.expressApp.use(favicon(cfg.directory.favicon));
     //app.expressApp.use(logger('dev'));
     app.expressApp.use(bodyParser.json());
@@ -49,18 +48,21 @@ function reportError(err, res) {
     var longdesc;
     var stack;
 
-    if (app.expressApp.get('env') === 'development') {
-        stack = err.stack;
-    }
     if (status == 404) {
         color = 'text-yellow';
         shortdesc = 'Oops! Page not found.';
         longdesc = 'We could not find the page you were looking for.';
+        err = undefined;
+    } else if (status == 403) {
+        color = 'text-red';
+        shortdesc = 'Access Forbidden!';
+        longdesc = 'You are not allowed to access this page!';
+        err = undefined;
     } else if (status >= 400 && status <= 499) {
         color = 'text-red';
         shortdesc = 'Oops! You fucked up.';
         if (err.status) {
-            longdesc = 'I don\' know what you did, but it was not good: ' + err.message + '<br>Maybe try again and punch yourself in the face?';
+            longdesc = 'I don\' know what you did, but it was not good: ' + err.message + '\nMaybe try again and punch yourself in the face?';
         } else {
             longdesc = 'I don\' know what you did, but it was not good. Maybe try again and punch yourself in the face?';
         }
@@ -68,7 +70,7 @@ function reportError(err, res) {
         color = 'text-red';
         shortdesc = 'Oops! I fucked up.';
         if (err.status) {
-            longdesc = 'I don\' know what I did that broke all the things: ' + err.message + '<br>Maybe write an angry email to the admin?';
+            longdesc = 'I don\' know what I did that broke all the things: ' + err.message + '\nMaybe write an angry email to the admin?';
         } else {
             longdesc = 'I don\' know what I did that broke all the things. Maybe write an angry email to the admin?';
         }
@@ -76,11 +78,16 @@ function reportError(err, res) {
         color = 'text-red';
         shortdesc = 'Oops! I don\'t know what fucked up.';
         if (err.status) {
-            longdesc = 'I don\' know what fucked up and who caused the fuck up: ' + err.message + '<br>Maybe write an angry email to the admin or punch yourself in the face for your own stupidity?';
+            longdesc = 'I don\' know what fucked up and who caused the fuck up: ' + err.message + '\nMaybe write an angry email to the admin or punch yourself in the face for your own stupidity?';
         } else {
             longdesc = 'I don\' know what fucked up and who caused the fuck up. Maybe write an angry email to the admin or punch yourself in the face for your own stupidity?';
         }
     }
+
+    if (err && err.stack && app.expressApp.get('env') === 'development') {
+        stack = err.stack;
+    }
+
     res.render('error', {
         stack: stack,
         color: color,
@@ -89,7 +96,7 @@ function reportError(err, res) {
         status: status
     });
 
-    throw err;
+    if (err) throw err;
 }
 module.exports.reportError = reportError;
 

@@ -8,8 +8,7 @@ var database = require('../database/');
 
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', auth.checkUserLoggedIn, function (req, res, next) {
+router.get('/', auth.checkUserMiddleware('user', 'admin'), function (req, res, next) {
     res.render('index');
 });
 

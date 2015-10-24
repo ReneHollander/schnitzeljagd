@@ -29,7 +29,8 @@ function createUser(email, username, password) {
                         username: username,
                         passwordHash: hash,
                         registrationDate: new Date(),
-                        validationToken: randomstring.generate(32)
+                        validationToken: randomstring.generate(32),
+                        role: 'user'
                     });
                 });
         } else {
