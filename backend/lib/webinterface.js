@@ -36,12 +36,12 @@ module.exports.init = function () {
 
     // error handlers
     app.expressApp.use(function (err, req, res, next) {
-        reportError(err, res);
+        reportError(err, req, res);
     });
 
 };
 
-function reportError(err, res) {
+function reportError(err, req, res) {
     var status = err.status || 500;
     var color;
     var shortdesc;
@@ -93,7 +93,8 @@ function reportError(err, res) {
         color: color,
         shortdesc: shortdesc,
         longdesc: longdesc,
-        status: status
+        status: status,
+        user: req.user
     });
 
     if (err) throw err;
@@ -105,8 +106,14 @@ function setupRoutes() {
         return require(path.join(cfg.directory.routes, name));
     }
 
-    app.expressApp.use('/', loadRoute('index'));
+    // login and registration
     app.expressApp.use('/login', loadRoute('login'));
     app.expressApp.use('/register', loadRoute('register'));
-    app.expressApp.use('/map', loadRoute('map'));
+
+    // Pages for Users and Admins
+    app.expressApp.use('/', loadRoute('index'));
+    app.expressApp.use('/team', loadRoute('team'));
+
+    // Admin pages
+    app.expressApp.use('/admin/map', loadRoute('admin/map'));
 }

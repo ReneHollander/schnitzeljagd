@@ -8,8 +8,8 @@ var database = require('../database/');
 
 var router = express.Router();
 
-router.get('/', auth.checkUserMiddleware('admin'), function (req, res, next) {
-    res.render('map');
+router.get('/', auth.checkUserMiddleware('user', 'admin'), function (req, res, next) {
+    res.render('team', {user: req.user});
 });
 
 module.exports = router;

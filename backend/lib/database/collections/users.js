@@ -2,6 +2,7 @@ var Promise = require('bluebird');
 var bcrypt = Promise.promisifyAll(require('bcrypt'));
 var randomstring = require("randomstring");
 var database = require('./../index.js');
+var gravatar = require('gravatar');
 var dbutil = require("./../../util/database.js");
 
 var ds;
@@ -30,7 +31,13 @@ function createUser(email, username, password) {
                         passwordHash: hash,
                         registrationDate: new Date(),
                         validationToken: randomstring.generate(32),
-                        role: 'user'
+                        role: 'user',
+                        profilepicture: {
+                            s64: gravatar.url(email, {s: 64, r: 'pg', d: '404'}),
+                            s128: gravatar.url(email, {s: 128, r: 'pg', d: '404'}),
+                            s256: gravatar.url(email, {s: 256, r: 'pg', d: '404'}),
+                            s512: gravatar.url(email, {s: 512, r: 'pg', d: '404'})
+                        }
                     });
                 });
         } else {

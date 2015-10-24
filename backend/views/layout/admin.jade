@@ -17,37 +17,23 @@ block beforebody
                         ul.nav.navbar-nav
                             li.dropdown.user.user-menu
                                 a.dropdown-toggle(href='#', data-toggle='dropdown')
-                                    span.hidden-xs Alexander Pierce
+                                    img(src='#{user.profilepicture.s64}', class="user-image", alt="User Image")
+                                    span.hidden-xs #{user.username}
                                 ul.dropdown-menu
                                     li.user-header
+                                        img(src='#{user.profilepicture.s256}', class="img-circle", alt="User Image")
                                         p
-                                            | Alexander Pierce - Web Developer
-                                            small Member since Nov. 2012
-                                    li.user-body
-                                        .row
-                                            .col-xs-4.text-center
-                                                a(href='#') Followers
-                                            .col-xs-4.text-center
-                                                a(href='#') Sales
-                                            .col-xs-4.text-center
-                                                a(href='#') Friends
+                                            | #{user.username}
+                                            small Member since #{user.registrationDate}
                                     li.user-footer
                                         .pull-left
-                                            a.btn.btn-default.btn-flat(href='#') Profile
+                                            a.btn.btn-default.btn-flat(href='/user/settings') Settings
                                         .pull-right
-                                            a.btn.btn-default.btn-flat(href='#') Sign out
+                                            a.btn.btn-default.btn-flat(href='/logout') Sign out
             aside.main-sidebar
                 section.sidebar
                     ul.sidebar-menu
-                        li.header MAIN NAVIGATION
-                        li
-                            a(href='/')
-                                i.fa.fa-dashboard
-                                span Dashboard
-                        li
-                            a(href='/map')
-                                i.fa.fa-map
-                                span Map
+                        include nav
             .content-wrapper
                 block content
             footer.main-footer#footer

@@ -9,7 +9,7 @@ var database = require('../database/');
 var router = express.Router();
 
 router.get('/', auth.checkUserMiddleware('user', 'admin'), function (req, res, next) {
-    res.render('index');
+    res.render('index', {user: req.user});
 });
 
 module.exports = router;

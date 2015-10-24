@@ -36,7 +36,7 @@ router.post('/', function (req, res, next) {
                 });
             })
             .catch(function (err) {
-                if (err instanceof Error) webinterface.reportError(err, res);
+                if (err instanceof Error) webinterface.reportError(err, req, res);
                 else res.render('register', {error: [err]});
             });
     }
@@ -47,7 +47,7 @@ router.get('/verify/:token', function (req, res, next) {
         res.render('login', {verified: true});
 
     }).catch(function (err) {
-        if (err instanceof Error) webinterface.reportError(err, res);
+        if (err instanceof Error) webinterface.reportError(err, req, res);
         else res.render('login', {verified: false, error: [err]});
     });
 });

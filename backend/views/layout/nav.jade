@@ -1,0 +1,15 @@
+li.header MAIN NAVIGATION
+li
+    a(href='/')
+        i.fa.fa-dashboard
+        span Dashboard
+li
+    a(href='/team')
+        i.fa.fa-user
+        span Team
+if user && user.role === 'admin'
+    li.header ADMINISTRATION
+        li
+            a(href='/admin/map')
+                i.fa.fa-map
+                span Map
