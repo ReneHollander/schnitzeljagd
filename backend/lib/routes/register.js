@@ -4,7 +4,7 @@ var Promise = require('bluebird');
 var express = require('express');
 var auth = require('./../auth.js');
 var webinterface = require('../webinterface.js');
-var database = require('../database/');
+var schema = require('../database/schema.js');
 var mail = require('../mail.js');
 
 var router = express.Router();
@@ -15,7 +15,7 @@ router.get('/', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
     if (!req.body) throw new Error("No request body found!");
-
+    // TODO validate email, password, name
     var errors = [];
     if (!req.body.email) errors.push("No email supplied!");
     if (!req.body.username) errors.push("No username supplied!");
@@ -24,7 +24,7 @@ router.post('/', function (req, res, next) {
     if (errors.length != 0) {
         res.render('register', {error: errors});
     } else {
-        database.users.createUser(req.body.email, req.body.username, req.body.password1)
+        schema.User.createUser(req.body.email, req.body.username, req.body.password1)
             .then(function (user) {
                 return mail.send(user.email, "Schnitzeljagd Registration", "verification_email", {
                     user,
@@ -43,7 +43,7 @@ router.post('/', function (req, res, next) {
 });
 
 router.get('/verify/:token', function (req, res, next) {
-    database.users.verifyToken(req.params.token).then(function () {
+    schema.User.verifyToken(req.params.token).then(function () {
         res.render('login', {verified: true});
 
     }).catch(function (err) {

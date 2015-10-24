@@ -1,7 +1,7 @@
 var express = require('express');
 var http = require('http');
 var util = require('./lib/util/express.js');
-var datebase = require('./lib/database/');
+var dbinit = require('./lib/database/init.js');
 var api = require('./lib/api.js');
 var webinterface = require('./lib/webinterface.js');
 
@@ -18,7 +18,7 @@ httpServer.on('listening', function () {
     var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
     console.log('Listening on ' + bind);
 
-    datebase.init()
+    dbinit()
         .then(api.init)
         .then(webinterface.init)
         .catch(function (err) {

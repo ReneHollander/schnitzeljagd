@@ -12,6 +12,17 @@ var cfg = require('./../cfg.js');
 var app = require("./../app.js");
 
 module.exports.init = function () {
+    /*
+     var onHeaders = require('on-headers');
+     app.expressApp.use(function (req, res, next) {
+     onHeaders(res, function () {
+     if (!req.url.startsWith('/bower_components/') && !req.url.startsWith('/javascripts/') && !req.url.startsWith('/images/')) {
+     console.log("sending headers for: " + req.url);
+     }
+     });
+     next();
+     });
+     */
     // view engine setup
     app.expressApp.set('views', cfg.directory.view);
     app.expressApp.set('view engine', 'jade');
@@ -87,15 +98,24 @@ function reportError(err, req, res) {
     if (err && err.stack && app.expressApp.get('env') === 'development') {
         stack = err.stack;
     }
-
-    res.render('error', {
-        stack: stack,
-        color: color,
-        shortdesc: shortdesc,
-        longdesc: longdesc,
-        status: status,
-        user: req.user
-    });
+    if (req.user) {
+        res.render('error', {
+            stack: stack,
+            color: color,
+            shortdesc: shortdesc,
+            longdesc: longdesc,
+            status: status,
+            user: req.user
+        });
+    } else {
+        res.end(JSON.stringify({
+            stack: stack,
+            color: color,
+            shortdesc: shortdesc,
+            longdesc: longdesc,
+            status: status
+        }));
+    }
 
     if (err) throw err;
 }

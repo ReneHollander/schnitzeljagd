@@ -17,11 +17,11 @@ block beforebody
                         ul.nav.navbar-nav
                             li.dropdown.user.user-menu
                                 a.dropdown-toggle(href='#', data-toggle='dropdown')
-                                    img(src='#{user.profilepicture.s64}', class="user-image", alt="User Image")
+                                    img(src='#{user.profilepicture}', class="user-image", alt="User Image")
                                     span.hidden-xs #{user.username}
                                 ul.dropdown-menu
                                     li.user-header
-                                        img(src='#{user.profilepicture.s256}', class="img-circle", alt="User Image")
+                                        img(src='#{user.profilepicture}', class="img-circle", alt="User Image")
                                         p
                                             | #{user.username}
                                             small Member since #{user.registrationDate}

@@ -1,10 +1,13 @@
+"use strict";
+
 var passport = require('passport');
 var passportlocal = require('passport-local');
 var crypto = require('crypto');
 var expresssession = require('express-session');
 var passportSocketIo = require("passport.socketio");
 var cookieParser = require('cookie-parser');
-var database = require('./database/');
+var _ = require('underscore');
+var schema = require('./database/schema.js');
 var webinterface = require('./webinterface.js');
 
 var secret = crypto.randomBytes(64).toString('hex');
@@ -18,48 +21,36 @@ var authStrategy = new passportlocal.Strategy({
 
 passport.use('local', authStrategy);
 passport.serializeUser(function (user, done) {
-    done(null, user);
+    done(null, user._id);
 });
-passport.deserializeUser(function (user, done) {
-    done(null, user);
-});
-
-function checkRole(user, allowedRoles, callback) {
-    if (user) {
-        if (user.validation_link) {
-            callback(new Error("Please validate your E-Mail address before logging in!"));
-            return;
-        }
-        for (allowedRole of allowedRoles) {
-            if (user.role == allowedRole) {
-                callback(null, true);
-                return;
-            }
-        }
-        callback(null, false);
-    } else {
-        callback(new Error("Please log in before!"));
-    }
-}
-module.exports.checkRole = checkRole;
-
-function checkUserExpress(allowedRoles, req, res, next) {
-    checkRole(req.user, allowedRoles, function (err, result) {
-        if (err) res.render('login', {error: [err.message]});
-        else if (result === false) {
-            var forbidden = new Error('Forbidden');
-            forbidden.status = 403;
-            next(forbidden);
-        }
-        else if (result === true) next();
-        else throw new Error('Unknown state!');
+passport.deserializeUser(function (id, done) {
+    schema.User.findOne({_id: id}).then(function (user) {
+        done(null, user);
+    }).catch(function (err) {
+        done(err);
     });
-}
+});
 
 module.exports.checkUserMiddleware = function () {
-    var args = arguments;
+    var allowedRoles = arguments;
     return function (req, res, next) {
-        checkUserExpress(args, req, res, next);
+        if (req.user) {
+            var allowed = false;
+            _.each(allowedRoles, function (allowedRole) {
+                if (req.user.role == allowedRole) {
+                    allowed = true;
+                }
+            });
+            if (allowed) {
+                next();
+            } else {
+                var forbidden = new Error('Forbidden');
+                forbidden.status = 403;
+                next(forbidden);
+            }
+        } else {
+            res.render('login', {error: ["Please log in before!"]});
+        }
     }
 };
 
@@ -85,7 +76,7 @@ module.exports.configureIO = function (io) {
 };
 
 function authenticate(email, password, done) {
-    database.users.validateUser(email, password)
+    schema.User.validateUser(email, password)
         .then(function (user) {
             done(null, user);
         }).catch(function (err) {

@@ -17,18 +17,20 @@
     "gravatar": "^1.3.1",
     "jade": "^1.11.0",
     "merge": "^1.2.0",
+    "mongoose": "^4.2.2",
     "morgan": "^1.6.1",
-    "nedb": "^1.2.1",
     "nodemailer": "^1.8.0",
     "nodemailer-html-to-text": "^1.0.2",
     "nodemailer-smtp-transport": "^1.0.3",
+    "on-headers": "^1.0.1",
     "passport": "^0.3.0",
     "passport-local": "^1.0.0",
     "passport.socketio": "^3.6.1",
-    "qrcode": "^0.4.0",
+    "qrcode": "^0.4.1",
     "randomstring": "^1.1.0",
     "serve-favicon": "^2.3.0",
     "socket.io": "^1.3.7",
-    "socketio-auth": "git+https://github.com/invisiblejs/socketio-auth.git#development"
+    "socketio-auth": "git+https://github.com/invisiblejs/socketio-auth.git#development",
+    "underscore": "^1.8.3"
   }
 }
