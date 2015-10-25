@@ -1,15 +1,16 @@
 extends layout/admin
 
-mixin memberRow(member)
+mixin memberRow(member, deletebutton)
     tr
         td #{member.username}
         td #{member.email}
         td
-            form.form-horizontal(action="/team", method="post")
-                input(type='hidden', name='userid', value='#{member.id}')
-                button.btn.btn-block.btn-danger(type='submit', name='removemember')
-                    i.fa.fa-remove
-                    | Remove
+            if deletebutton
+                form.form-horizontal(action="/team", method="post")
+                    input(type='hidden', name='userid', value='#{member.id}')
+                    button.btn.btn-sm.btn-danger(type='submit', name='removemember')
+                        i.fa.fa-remove
+                        |  Remove
 
 block content
     section.content-header
@@ -22,60 +23,68 @@ block content
                     |  Home
             li.active Team
     section.content
-        .box.box-info
-            .box-header.with-border
-                h3.box-title New Team
-            form.form-horizontal(action="/team", method="post")
-                .box-body
-                    .form-group
-                        label.col-sm-2.control-label(for='teamname') Team Name
-                        .col-sm-10
-                            input#teamname.form-control(name='teamname', type='text', placeholder='Team Name')
-                    .form-group
-                        label.col-sm-2.control-label(for='teampassword1') Team Password
-                        .col-sm-10
-                            input#teampassword1.form-control(name='teampassword1', type='password', placeholder='Team Password')
-                    .form-group
-                        label.col-sm-2.control-label(for='teampassword2') Repeat Team Password
-                        .col-sm-10
-                            input#teampassword2.form-control(name='teampassword2', type='password', placeholder='Repeat Team Password')
-                    .form-group
-                        label.col-sm-2.control-label(for='invite') Invite to Team (E-Mail)
-                        .col-sm-10
-                            textarea#invite.form-control(name='invite', rows='4', placeholder='Invite to Team')
-                .box-footer
-                    button.btn.btn-info.pull-right(name='createteam', type='submit') Create Team
-        .box.box-info
-            .box-header.with-border
-                h3.box-title Team Settings
-            form.form-horizontal(action="/team", method="post")
-                .box-body
-                    .form-group
-                        label.col-sm-2.control-label(for='teamname') Team Name
-                        .col-sm-10
-                            input#teamname.form-control(name='teamname', type='text', placeholder='Team Name')
-                    .form-group
-                        label.col-sm-2.control-label(for='teampassword1') Team Password
-                        .col-sm-10
-                            input#teampassword1.form-control(name='teampassword1', type='password', placeholder='Team Password')
-                    .form-group
-                        label.col-sm-2.control-label(for='teampassword2') Repeat Team Password
-                        .col-sm-10
-                            input#teampassword2.form-control(name='teampassword2', type='password', placeholder='Repeat Team Password')
-                    .form-group
-                        label.col-sm-2.control-label(for='invite') Invite to Team (E-Mail)
-                        .col-sm-10
-                            textarea#invite.form-control(name='invite', rows='4', placeholder='Invite to Team')
-                .box-footer
-                    button.btn.btn-info.pull-right(name='updateteam', type='submit') Update Team
-        .box.box-info
-            .box-header.with-border
-                h3.box-title Team
-            .box-body.table-responsive
-                table.table.table-bordered.table-hover
-                    tr
-                        th(style='width: 200px') Username
-                        th E-Mail
-                        th(style='width: 200px') Remove
-                    +memberRow({username: 'Rene8888', email: 'rene.hollander@hotmail.de', id: '1'})
-                    +memberRow({username: 'Toaster1032', email: 'p.k@magic-consoles.com', id: '2'})
+        if error
+            +error(error.title, error.errortext, error.list)
+        if success
+            +success(success.title, success.msg)
+        if !team
+            .box.box-info
+                .box-header.with-border
+                    h3.box-title New Team
+                form.form-horizontal(action="/team", method="post")
+                    .box-body
+                        .form-group
+                            label.col-sm-2.control-label(for='teamname') Team Name
+                            .col-sm-10
+                                input#teamname.form-control(name='teamname', type='text', placeholder='Team Name')
+                        .form-group
+                            label.col-sm-2.control-label(for='teampassword1') Team Password
+                            .col-sm-10
+                                input#teampassword1.form-control(name='teampassword1', type='password', placeholder='Team Password')
+                        .form-group
+                            label.col-sm-2.control-label(for='teampassword2') Repeat Team Password
+                            .col-sm-10
+                                input#teampassword2.form-control(name='teampassword2', type='password', placeholder='Repeat Team Password')
+                        .form-group
+                            label.col-sm-2.control-label(for='invite') Invite to Team (E-Mail)
+                            .col-sm-10
+                                textarea#invite.form-control(name='invite', rows='4', placeholder='Invite to Team')
+                    .box-footer
+                        button.btn.btn-info.pull-right(name='createteam', type='submit') Create Team
+        if team && team.founder.id == user.id
+            .box.box-info
+                .box-header.with-border
+                    h3.box-title Team Settings
+                form.form-horizontal(action="/team", method="post")
+                    .box-body
+                        .form-group
+                            label.col-sm-2.control-label(for='teamname') Team Name
+                            .col-sm-10
+                                input#teamname.form-control(name='teamname', type='text', placeholder='Team Name', value='#{team.teamname}')
+                        .form-group
+                            label.col-sm-2.control-label(for='teampassword1') Team Password
+                            .col-sm-10
+                                input#teampassword1.form-control(name='teampassword1', type='password', placeholder='Team Password')
+                        .form-group
+                            label.col-sm-2.control-label(for='teampassword2') Repeat Team Password
+                            .col-sm-10
+                                input#teampassword2.form-control(name='teampassword2', type='password', placeholder='Repeat Team Password')
+                        .form-group
+                            label.col-sm-2.control-label(for='invite') Invite to Team (E-Mail)
+                            .col-sm-10
+                                textarea#invite.form-control(name='invite', rows='4', placeholder='Invite to Team')
+                    .box-footer
+                        button.btn.btn-danger(name='deleteteam', type='submit') Delete Team
+                        button.btn.btn-info.pull-right(name='updateteam', type='submit') Update Team
+        if team
+            .box.box-info
+                .box-header.with-border
+                    h3.box-title Team
+                .box-body.table-responsive
+                    table.table.table-bordered.table-hover
+                        tr
+                            th(style='width: 200px') Username
+                            th E-Mail
+                            th(style='width: 10px') Remove
+                        each member in team.members
+                            +memberRow(member, member.id != team.founder.id)

@@ -38,14 +38,26 @@ module.exports = function (schemas) {
         return gravatar.url(this.email, {s: 512, r: 'pg', d: '404'});
     });
 
+    schema.methods.getTeam = function () {
+        return schemas.Team.findTeamForUser(this);
+    };
+
     schema.statics.createUser = function (email, username, password) {
-        return bcrypt.hashAsync(password, 8)
-            .then(function (hash) {
-                return new schemas.User({
-                    email: email,
-                    username: username,
-                    passwordHash: hash
-                }).save();
+        return this.findOne({$or: [{email: email}, {username: username}]})
+            .then(function (user) {
+                if (user) {
+                    if (user.email === email) return Promise.reject('E-Mail already in use!');
+                    if (user.username === username) return Promise.reject('Username already in use!');
+                } else {
+                    return bcrypt.hashAsync(password, 8)
+                        .then(function (hash) {
+                            return new schemas.User({
+                                email: email,
+                                username: username,
+                                passwordHash: hash
+                            }).save();
+                        });
+                }
             });
     };
 

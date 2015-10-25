@@ -4,7 +4,7 @@ mixin error(title, errortext, error)
         if error.length == 1
             p An error occured while #{errortext}:
         else
-            p errors.length errors occured while #{errortext}:
+            p #{error.length} errors occured while #{errortext}:
         ul
             each err in error
                 li= err
@@ -13,3 +13,6 @@ mixin success(title, msg)
     .callout.callout-success
         h4 #{title}
         p #{msg}
+
+mixin printJSON(data)
+    pre #{JSON.stringify(data, null, 2)};

@@ -1,6 +1,7 @@
 var Promise = require('bluebird');
 var mongoose = Promise.promisifyAll(require('mongoose'));
 var gravatar = require('gravatar');
+var bcrypt = Promise.promisifyAll(require('bcrypt'));
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
 module.exports = function (schemas) {
@@ -14,15 +15,50 @@ module.exports = function (schemas) {
             type: Date,
             default: Date.now
         },
+        teampasswordHash: {
+            type: String
+        },
         founder: {type: ObjectId, ref: 'User'},
         members: [{type: ObjectId, ref: 'User'}]
     });
 
-    schema.statics.createTeam = function (teamname, founder) {
-        return new schemas.Team({
-            teamname: teamname,
-            founder: founder._id
-        }).save();
+    schema.methods.removeMember = function (member) {
+        this.members.remove(member);
+        return this.save();
+    };
+
+    schema.methods.addMember = function (member) {
+        this.members.push(member);
+        return this.save();
+    };
+
+    schema.methods.deleteTeam = function () {
+        return this.remove();
+    };
+
+    schema.statics.createTeam = function (teamname, founder, teampassword) {
+        return this.findOne({teamname: teamname})
+            .then(function (team) {
+                if (team) return Promise.reject('Teamname already in use!');
+                else {
+                    return bcrypt.hashAsync(teampassword, 8)
+                        .then(function (hash) {
+                            return new schemas.Team({
+                                teamname: teamname,
+                                founder: founder,
+                                members: founder,
+                                teampasswordHash: hash
+                            }).save()
+                                .then(function (team) {
+                                    return schemas.Team.findOne({_id: team._id}).populate(['members', 'founder']);
+                                });
+                        });
+                }
+            });
+    };
+
+    schema.statics.findTeamForUser = function (user) {
+        return this.findOne({members: user}).populate(['members', 'founder']);
     };
 
     return mongoose.model('Team', schema);
