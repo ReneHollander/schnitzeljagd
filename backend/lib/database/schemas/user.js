@@ -26,8 +26,7 @@ module.exports = function (schemas) {
             default: function () {
                 return randomstring.generate(32);
             },
-            index: true,
-            unique: true
+            index: true
         },
         role: {
             type: String,
@@ -43,8 +42,8 @@ module.exports = function (schemas) {
         return bcrypt.hashAsync(password, 8)
             .then(function (hash) {
                 return new schemas.User({
-                    email: 'rene.hollander@hotmail.de',
-                    username: 'Rene8888',
+                    email: email,
+                    username: username,
                     passwordHash: hash
                 }).save();
             });
