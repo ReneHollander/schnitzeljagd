@@ -21,11 +21,10 @@ var authStrategy = new passportlocal.Strategy({
 
 passport.use('local', authStrategy);
 passport.serializeUser(function (user, done) {
-    done(null, user.id);
+    done(null, user._id);
 });
-passport.deserializeUser(function (id, done) {
-    schema.User.findOne({id: id}).then(function (user) {
-        console.log(user);
+passport.deserializeUser(function (_id, done) {
+    schema.User.findOne({_id: _id}).then(function (user) {
         done(null, user);
     }).catch(function (err) {
         done(err);
