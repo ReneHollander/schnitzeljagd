@@ -22,67 +22,55 @@ router.post('/', auth.checkUserMiddleware('user', 'admin'), function (req, res, 
         if (!req.body.teampassword1) errors.push("No password supplied!");
         if (req.body.teampassword1 && req.body.teampassword1 != req.body.teampassword2) errors.push("Passwords do not match!");
         if (errors.length != 0) {
-            res.render('team', {
-                error: {
-                    title: 'Error creating team!',
-                    errortext: 'creating team',
-                    list: errors
-                },
-                user: req.user
-            });
+            webinterface.renderSuccess(req, res, 'team', 'Error creating team!', 'creating team', {user: req.user});
         } else {
             schema.Team.createTeam(req.body.teamname, req.user, req.body.teampassword1)
                 .then(function (team) {
-                    res.render('team', {
-                        success: {
-                            title: "Team creation successful!",
-                            msg: "Your team was successfully created! You got one step closer to get those Schnitzels!"
-                        },
+                    webinterface.renderSuccess(req, res, 'team', "Team creation successful!", "Your team was successfully created! You got one step closer to get those Schnitzels!", {
                         user: req.user,
                         team: team
                     });
-                }).catch(function (err) {
-                    if (err instanceof Error) webinterface.reportError(err, req, res);
-                    else res.render('team', {
-                        error: {
-                            title: 'Error creating team!',
-                            errortext: 'creating team',
-                            list: [err]
-                        }, user: req.user
-                    });
-                });
+                })
+                .catch(webinterface.catchErrorMiddleware(req, res, 'team', 'Error creating team!', 'creating team', {user: req.user}));
         }
-    } else if (req.body.deleteteam !== undefined) {
+    }
+    else if (req.body.deleteteam !== undefined) {
         req.user.getTeam()
             .then(function (team) {
                 if (team) {
-                    return team.deleteTeam()
-                        .then(function () {
-                            res.render('team', {
-                                success: {
-                                    title: "Successfully deleted team!",
-                                    msg: "You successfully deleted your team!"
-                                },
-                                user: req.user
-                            });
-                        });
+                    return team.deleteTeam();
                 } else {
-                    res.render('team', {
-                        error: {
-                            title: 'Error deleting team!',
-                            errortext: 'deleting team',
-                            list: ['You are not in a team!']
-                        },
-                        user: req.user
-                    });
+                    return Promise.reject('You are not in a team!');
                 }
+            })
+            .then(webinterface.successMiddleware(req, res, 'team', "Successfully deleted team!", "You successfully deleted your team!", {user: req.user}))
+            .catch(webinterface.catchErrorMiddleware(req, res, 'team', 'Error deleting team!', 'deleting team', {user: req.user}));
+    } else if (req.body.removemember !== undefined) {
+        req.user.getTeam()
+            .then(function (team) {
+                return schema.User.getUserById(req.body.userid)
+                    .then(function (user) {
+                        return team.removeMember(user);
+                    })
+                    .then(function (team2) {
+                        console.log(team2);
+                        webinterface.renderSuccess(req, res, 'team', 'Successfully deleted member', 'The team member was successfully deleted from your team!', {
+                            user: req.user,
+                            team: team2
+                        });
+                    })
+                    .catch(webinterface.catchErrorMiddleware(req, res, 'team', 'Error removing team member!', 'removing team member', {
+                        user: req.user,
+                        team: team
+                    }));
             });
     } else {
         req.user.getTeam().then(function (team) {
             res.render('team', {user: req.user, team: team});
         });
     }
-});
+})
+;
 
 module.exports = router;
 

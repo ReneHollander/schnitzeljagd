@@ -52,6 +52,44 @@ module.exports.init = function () {
 
 };
 
+function renderSuccess(req, res, page, title, msg, data) {
+    if (!data) data = {};
+    data.success = {
+        title: title,
+        msg: msg
+    };
+    res.render(page, data);
+}
+module.exports.renderSuccess = renderSuccess;
+
+function renderError(req, res, page, title, errortext, list, data) {
+    if (!data) data = {};
+    data.error = {
+        title: title,
+        errortext: msg,
+        list: list
+    };
+    res.render(page, data);
+}
+module.exports.renderError = renderError;
+
+function catchErrorMiddleware(req, res, page, title, errortext, data) {
+    return function (err) {
+        if (err instanceof Error) reportError(err, req, res);
+        else {
+            renderError(req, res, page, title, errortext, [err], data);
+        }
+    }
+}
+module.exports.catchErrorMiddleware = catchErrorMiddleware;
+
+function successMiddleware(req, res, page, title, msg, data) {
+    return function () {
+        renderSuccess(req, res, page, title, msg, data);
+    }
+}
+module.exports.successMiddleware = successMiddleware;
+
 function reportError(err, req, res) {
     var status = err.status || 500;
     var color;
@@ -119,6 +157,7 @@ function reportError(err, req, res) {
 
     if (err) throw err;
 }
+
 module.exports.reportError = reportError;
 
 function setupRoutes() {

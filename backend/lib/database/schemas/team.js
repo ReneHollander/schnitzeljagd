@@ -23,7 +23,7 @@ module.exports = function (schemas) {
     });
 
     schema.methods.removeMember = function (member) {
-        this.members.remove(member);
+        this.members.pull(member);
         return this.save();
     };
 

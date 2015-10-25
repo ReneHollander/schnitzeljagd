@@ -26,7 +26,7 @@ if (false) {
             return schema.User.verifyToken(user.validationToken);
         })
         .then(function (user) {
-            return schema.Team.createTeam('SuperTeam', user);
+            return schema.Team.createTeam('SuperTeam', user, "1234");
         }).then(function (team) {
             return schema.User.createUser("p.k@magic-consoles.com", "Toaster1032", "1234")
                 .then(function (user2) {

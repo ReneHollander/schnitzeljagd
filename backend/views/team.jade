@@ -53,6 +53,19 @@ block content
                                 textarea#invite.form-control(name='invite', rows='4', placeholder='Invite to Team')
                     .box-footer
                         button.btn.btn-info.pull-right(name='createteam', type='submit') Create Team
+        if team
+            .box.box-info
+                .box-header.with-border
+                    h3.box-title Team
+                .box-body.table-responsive
+                    table.table.table-bordered.table-hover
+                        tr
+                            th(style='width: 50px')
+                            th(style='width: 200px') Username
+                            th E-Mail
+                            th(style='width: 10px') Remove
+                        each member in team.members
+                            +memberRow(member, member.id != team.founder.id)
         if team && team.founder.id == user.id
             .box.box-info
                 .box-header.with-border
@@ -78,16 +91,3 @@ block content
                     .box-footer
                         button.btn.btn-danger(name='deleteteam', type='submit') Delete Team
                         button.btn.btn-info.pull-right(name='updateteam', type='submit') Update Team
-        if team
-            .box.box-info
-                .box-header.with-border
-                    h3.box-title Team
-                .box-body.table-responsive
-                    table.table.table-bordered.table-hover
-                        tr
-                            th(style='width: 50px')
-                            th(style='width: 200px') Username
-                            th E-Mail
-                            th(style='width: 10px') Remove
-                        each member in team.members
-                            +memberRow(member, member.id != team.founder.id)

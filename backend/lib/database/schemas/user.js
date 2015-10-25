@@ -61,6 +61,14 @@ module.exports = function (schemas) {
             });
     };
 
+    schema.statics.getUserById = function (id) {
+        return this.findOne({_id: id})
+            .then(function (user) {
+                if (!user) return Promise.reject("User not found!");
+                else return user;
+            });
+    };
+
     schema.statics.verifyToken = function (token) {
         return this.findOne({validationToken: token})
             .then(function (user) {
