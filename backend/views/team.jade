@@ -2,9 +2,11 @@ extends layout/admin
 
 mixin memberRow(member, deletebutton)
     tr
-        td #{member.username}
-        td #{member.email}
-        td
+        td(style="vertical-align: middle;")
+            img(src='#{member.profilepicture}', width='40px', height='40px', alt="User Image")
+        td(style="vertical-align: middle;") #{member.username}
+        td(style="vertical-align: middle;") #{member.email}
+        td(style="vertical-align: middle;")
             if deletebutton
                 form.form-horizontal(action="/team", method="post")
                     input(type='hidden', name='userid', value='#{member.id}')
@@ -83,6 +85,7 @@ block content
                 .box-body.table-responsive
                     table.table.table-bordered.table-hover
                         tr
+                            th(style='width: 50px')
                             th(style='width: 200px') Username
                             th E-Mail
                             th(style='width: 10px') Remove
