@@ -4,16 +4,20 @@ var passport = require('passport');
 var passportlocal = require('passport-local');
 var crypto = require('crypto');
 var expresssession = require('express-session');
+var MongoDBStore = require('connect-mongodb-session')(expresssession);
 var passportSocketIo = require("passport.socketio");
 var cookieParser = require('cookie-parser');
 var _ = require('underscore');
 var schema = require('./database/schema.js');
 var webinterface = require('./webinterface.js');
+var cfg = require('./../cfg.js');
 
-var secret = crypto.randomBytes(64).toString('hex');
-var key = "schnitzeljagd.sid";
+/*var sessionStore = new expresssession.MemoryStore();*/
+var sessionStore = new MongoDBStore({
+    uri: cfg.database.connectionstring,
+    collection: 'sessions'
+});
 
-var sessionStore = new expresssession.MemoryStore();
 var authStrategy = new passportlocal.Strategy({
     usernameField: 'email',
     passwordField: 'password'
@@ -56,11 +60,14 @@ module.exports.checkUserMiddleware = function () {
 
 module.exports.configureExpress = function (express) {
     express.use(expresssession({
-        secret: secret,
+        secret: cfg.auth.secret,
         store: sessionStore,
-        key: key,
+        key: cfg.auth.key,
         resave: true,
-        saveUninitialized: true
+        saveUninitialized: true,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+        }
     }));
     express.use(passport.initialize());
     express.use(passport.session());
@@ -69,9 +76,12 @@ module.exports.configureExpress = function (express) {
 module.exports.configureIO = function (io) {
     io.use(passportSocketIo.authorize({
         cookieParser: cookieParser,
-        key: key,
-        secret: secret,
-        store: sessionStore
+        key: cfg.auth.key,
+        secret: cfg.auth.secret,
+        store: sessionStore,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+        }
     }));
 };
 
