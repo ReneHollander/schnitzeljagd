@@ -17,7 +17,7 @@ module.exports = function () {
 
 var schema = require('./schema.js');
 
-if (true) {
+if (false) {
     module.exports()
         .then(function () {
             return schema.Navigation.Text({content: "Hello World!"}).save();

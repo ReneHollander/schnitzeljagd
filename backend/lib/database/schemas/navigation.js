@@ -34,16 +34,10 @@ module.exports = function (schemas) {
     }, options);
     var Text = Base.discriminator('text', TextSchema);
 
-    var HTMLSchema = new mongoose.Schema({
-        html: String
-    }, options);
-    var HTML = Base.discriminator('html', HTMLSchema);
-
     return {
         Base: Base,
         Compass: Compass,
         Map: Map,
-        Text: Text,
-        HTML: HTML
+        Text: Text
     };
 };
