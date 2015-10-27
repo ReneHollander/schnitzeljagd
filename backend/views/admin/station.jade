@@ -1,5 +1,18 @@
 extends ../layout/admin
 
+block head
+    link(rel='stylesheet', href='/bower_components/adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')
+    script(src='/bower_components/adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')
+    script.
+        $(function () {
+            $("#htmleditor").wysihtml5();
+            $('input').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue',
+                increaseArea: '20%'
+            });
+        });
+
 block content
     section.content-header
         h1
@@ -26,3 +39,65 @@ block content
                     | Body
                 .box-footer
                     | Footer
+        .box.box-info
+            .box-header.with-border
+                h3.box-title New Station
+            form.form-horizontal(action="/admin/station", method="post")
+                .box-body
+                    +textField('text', 'name', 'Name')
+                    +textField('text', 'description', 'Description')
+                    .form-group
+                        label.col-sm-2.control-label Navigation
+                        .col-sm-10
+                            .nav-tabs-custom
+                                ul.nav.nav-tabs
+                                    li.active
+                                        a(href='#tabCompass', data-toggle='tab') Compass
+                                    li
+                                        a(href='#tabMap', data-toggle='tab') Map
+                                    li
+                                        a(href='#tabText', data-toggle='tab') Text
+                                .tab-content
+                                    #tabCompass.tab-pane.active
+                                        +textField('text', 'lat', 'Latitude')
+                                        +textField('text', 'long', 'Longitude')
+                                        +checkBox('showdistance', 'Show Distance')
+                                    #tabMap.tab-pane
+                                        +textField('text', 'lat', 'Latitude')
+                                        +textField('text', 'long', 'Longitude')
+                                    #tabText.tab-pane
+                                        form
+                                            textarea.textarea(id="htmleditor", name="htmleditor", placeholder='Place some text here', style='width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;')
+
+                    .form-group
+                        label.col-sm-2.control-label Answer
+                        .col-sm-10
+                            .nav-tabs-custom
+                                ul.nav.nav-tabs
+                                    li.active
+                                        a(href='#tabQRCode', data-toggle='tab') QR Code
+                                    li
+                                        a(href='#tabQuestion', data-toggle='tab') Question
+                                    li
+                                        a(href='#tabArea', data-toggle='tab') Area
+                                .tab-content
+                                    #tabQRCode.tab-pane.active
+                                        +textField('text', 'text', 'Text')
+                                        .form-group
+                                            label.col-sm-2.control-label(for='token') Token
+                                            .col-sm-10
+                                                input.form-control(id='token', name='token', type='#text', placeholder='Token')
+                                        .form-group
+                                            label.col-sm-2.control-label(for='token') QR Code
+                                            .col-sm-10
+                                                img(id='token', src='http://goqr.me/_Resources/Static/Packages/GoQrMe.Ui/Images/qr_default.png')
+                                    #tabQuestion.tab-pane
+                                        +textField('text', 'text', 'Text')
+                                    #tabArea.tab-pane
+                                        +textField('text', 'text', 'Text')
+                                        +textField('text', 'lat', 'Latitude')
+                                        +textField('text', 'long', 'Longitude')
+                                        +textField('number', 'timetostay', 'Time to Stay')
+                                        +checkBox('showonmap', 'Show on Map')
+                .box-footer
+                    button.btn.btn-info.pull-right(name='createstation', type='submit') Create Station

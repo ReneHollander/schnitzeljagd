@@ -16,3 +16,16 @@ mixin success(title, msg)
 
 mixin printJSON(data)
     pre #{JSON.stringify(data, null, 2)};
+
+mixin textField(type, name, text)
+    .form-group
+        label.col-sm-2.control-label(for='#{id}') #{text}
+        .col-sm-10
+            input.form-control(id='#{id}', name='#{id}', type='#{type}', placeholder='#{text}')
+
+mixin checkBox(name, text)
+    .form-group
+        label.col-sm-2.control-label(for='#{id}') #{text}
+        .col-sm-10
+            .checkbox.icheck
+                input(name='#{name}', type='checkbox')

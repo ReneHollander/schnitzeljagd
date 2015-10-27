@@ -35,18 +35,9 @@ block content
                     h3.box-title New Team
                 form.form-horizontal(action="/team", method="post")
                     .box-body
-                        .form-group
-                            label.col-sm-2.control-label(for='teamname') Team Name
-                            .col-sm-10
-                                input#teamname.form-control(name='teamname', type='text', placeholder='Team Name')
-                        .form-group
-                            label.col-sm-2.control-label(for='teampassword1') Team Password
-                            .col-sm-10
-                                input#teampassword1.form-control(name='teampassword1', type='password', placeholder='Team Password')
-                        .form-group
-                            label.col-sm-2.control-label(for='teampassword2') Repeat Team Password
-                            .col-sm-10
-                                input#teampassword2.form-control(name='teampassword2', type='password', placeholder='Repeat Team Password')
+                        +textField('text', 'teamname', 'Team Name')
+                        +textField('password', 'teampassword1', 'Team Password')
+                        +textField('password', 'teampassword2', 'Repeat Team Password')
                         .form-group
                             label.col-sm-2.control-label(for='invite') Invite to Team (E-Mail)
                             .col-sm-10
