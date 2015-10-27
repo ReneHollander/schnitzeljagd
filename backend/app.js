@@ -1,6 +1,6 @@
 var express = require('express');
 var http = require('http');
-var util = require('./lib/util/express.js');
+var util = require('./lib/util.js');
 var dbinit = require('./lib/database/init.js');
 var api = require('./lib/api.js');
 var webinterface = require('./lib/webinterface.js');

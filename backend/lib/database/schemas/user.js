@@ -30,7 +30,8 @@ module.exports = function (schemas) {
         },
         role: {
             type: String,
-            default: 'user'
+            default: 'user',
+            enum: ['user', 'admin']
         }
     });
 
@@ -42,7 +43,7 @@ module.exports = function (schemas) {
         return schemas.Team.findTeamForUser(this);
     };
 
-    schema.statics.createUser = function (email, username, password) {
+    schema.statics.createUser = function (email, username, password, role) {
         return this.findOne({$or: [{email: email}, {username: username}]})
             .then(function (user) {
                 if (user) {
@@ -54,7 +55,8 @@ module.exports = function (schemas) {
                             return new schemas.User({
                                 email: email,
                                 username: username,
-                                passwordHash: hash
+                                passwordHash: hash,
+                                role: role
                             }).save();
                         });
                 }

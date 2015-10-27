@@ -1,3 +1,11 @@
+var randomstring = require('randomstring');
+
+module.exports.randomStringGenerator = function (chars) {
+    return function () {
+        return randomstring.generate(chars);
+    };
+};
+
 module.exports.express = {
     onError: function (error) {
         if (error.syscall !== 'listen') {

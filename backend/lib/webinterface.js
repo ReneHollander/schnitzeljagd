@@ -175,4 +175,5 @@ function setupRoutes() {
 
     // Admin pages
     app.expressApp.use('/admin/map', loadRoute('admin/map'));
+    app.expressApp.use('/admin/station', loadRoute('admin/station'));
 }

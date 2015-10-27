@@ -1,4 +1,5 @@
 var Promise = require('bluebird');
+var extend = require('extend');
 var mongoose = Promise.promisifyAll(require('mongoose'));
 
 function requireSchema(name) {
@@ -7,3 +8,6 @@ function requireSchema(name) {
 
 module.exports.User = requireSchema('user');
 module.exports.Team = requireSchema('team');
+module.exports.Navigation = requireSchema('navigation');
+module.exports.Answer = requireSchema('answer');
+module.exports.Station = requireSchema('station');

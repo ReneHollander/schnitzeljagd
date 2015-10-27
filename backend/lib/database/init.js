@@ -15,12 +15,31 @@ module.exports = function () {
     return mongoose.connectAsync(cfg.database.connectionstring);
 };
 
-if (false) {
-    var schema = require('./schema.js');
+var schema = require('./schema.js');
 
+if (true) {
     module.exports()
         .then(function () {
-            return schema.User.createUser("rene.hollander@hotmail.de", "Rene8888", "1234");
+            return schema.Navigation.Text({content: "Hello World!"}).save();
+        }).
+        then(function (textNavigation) {
+            return schema.Station({title: "Titel", description: "Beschreibung", navigation: textNavigation}).save();
+        })
+        .then(function (station) {
+            return schema.Station.populate(station, ['navigation']);
+        })
+        .then(function (stations) {
+            console.log(stations);
+        })
+        .catch(function (err) {
+            throw err;
+        });
+}
+
+if (false) {
+    module.exports()
+        .then(function () {
+            return schema.User.createUser("rene.hollander@hotmail.de", "Rene8888", "1234", 'admin');
         })
         .then(function (user) {
             return schema.User.verifyToken(user.validationToken);
@@ -42,8 +61,6 @@ if (false) {
 }
 
 if (false) {
-    var schema = require('./schema.js');
-
     module.exports()
         .then(function () {
             return schema.User.createUser("rene.hollander@hotmail.de", "Rene8888", "1234");

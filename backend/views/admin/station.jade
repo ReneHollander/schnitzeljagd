@@ -1,0 +1,28 @@
+extends ../layout/admin
+
+block content
+    section.content-header
+        h1
+            | Station
+        ol.breadcrumb
+            li
+                a(href='/')
+                    i.fa.fa-dashboard
+                    |  Home
+            li
+                a(href='/admin')
+                    i.fa.fa-dashboard
+                    |  Admin
+            li.active Station
+    section.content
+        if error
+            +error(error.title, error.errortext, error.list)
+        if success
+            +success(success.title, success.msg)
+        .box.box-info
+            .box-header.with-border
+                h3.box-title Stations
+                .box-body
+                    | Body
+                .box-footer
+                    | Footer

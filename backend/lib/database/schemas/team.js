@@ -50,7 +50,7 @@ module.exports = function (schemas) {
                                 teampasswordHash: hash
                             }).save()
                                 .then(function (team) {
-                                    return schemas.Team.findOne({_id: team._id}).populate(['members', 'founder']);
+                                    return schemas.populate(team, ['members', 'founder']);
                                 });
                         });
                 }
