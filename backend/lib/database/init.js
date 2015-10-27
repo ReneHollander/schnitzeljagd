@@ -21,12 +21,20 @@ if (true) {
     module.exports()
         .then(function () {
             return schema.Navigation.Text({content: "Hello World!"}).save();
-        }).
-        then(function (textNavigation) {
-            return schema.Station({title: "Titel", description: "Beschreibung", navigation: textNavigation}).save();
+        })
+        .then(function (navigation) {
+            return schema.Answer.QR({title: "Find the QR Code!"}).save()
+                .then(function (answer) {
+                    return schema.Station({
+                        title: "Titel",
+                        description: "Beschreibung",
+                        answer: answer,
+                        navigation: navigation
+                    }).save();
+                });
         })
         .then(function (station) {
-            return schema.Station.populate(station, ['navigation']);
+            return schema.Station.populate(station, ['navigation', 'answer']);
         })
         .then(function (stations) {
             console.log(stations);
@@ -56,7 +64,11 @@ if (false) {
                         .then(function (team) {
                             return schema.Team.findTeamForUser(user2);
                         });
+
                 });
+        })
+        .then(function (data) {
+            console.log(data);
         });
 }
 

@@ -19,7 +19,11 @@ module.exports = function (schemas) {
             type: String
         },
         founder: {type: ObjectId, ref: 'User'},
-        members: [{type: ObjectId, ref: 'User'}]
+        members: [{type: ObjectId, ref: 'User'}],
+        currentstation: {
+            type: ObjectId,
+            ref: 'Station'
+        }
     });
 
     schema.methods.removeMember = function (member) {
@@ -50,7 +54,7 @@ module.exports = function (schemas) {
                                 teampasswordHash: hash
                             }).save()
                                 .then(function (team) {
-                                    return schemas.populate(team, ['members', 'founder']);
+                                    return schemas.Team.populate(team, ['members', 'founder']);
                                 });
                         });
                 }
