@@ -11,6 +11,16 @@ block head
                 radioClass: 'iradio_square-blue',
                 increaseArea: '20%'
             });
+
+            function tabnameSetter(targettab, targetinput) {
+                targettab.on('shown.bs.tab', function (e) {
+                    var target = $(e.target);
+                    targetinput.attr('value', target.attr('tabname'));
+                })
+            }
+
+            tabnameSetter($('#navigationTabs'), $('#navigationtype'));
+            tabnameSetter($('#answerTabs'), $('#answertype'));
         });
 
 block content
@@ -43,20 +53,22 @@ block content
             .box-header.with-border
                 h3.box-title New Station
             form.form-horizontal(action="/admin/station", method="post")
+                input(id='navigationtype', type='hidden', name='navigationtype', value='compass')
+                input(id='answertype', type='hidden', name='answertype', value='qr')
                 .box-body
                     +textField('text', 'name', 'Name')
                     +textField('text', 'description', 'Description')
                     .form-group
                         label.col-sm-2.control-label Navigation
                         .col-sm-10
-                            .nav-tabs-custom
+                            .nav-tabs-custom#navigationTabs
                                 ul.nav.nav-tabs
                                     li.active
-                                        a(href='#tabCompass', data-toggle='tab') Compass
+                                        a(href='#tabCompass', tabname='compass', data-toggle='tab') Compass
                                     li
-                                        a(href='#tabMap', data-toggle='tab') Map
+                                        a(href='#tabMap', tabname='map', data-toggle='tab') Map
                                     li
-                                        a(href='#tabText', data-toggle='tab') Text
+                                        a(href='#tabText', tabname='text', data-toggle='tab') Text
                                 .tab-content
                                     #tabCompass.tab-pane.active
                                         +textField('text', 'lat', 'Latitude')
@@ -72,14 +84,14 @@ block content
                     .form-group
                         label.col-sm-2.control-label Answer
                         .col-sm-10
-                            .nav-tabs-custom
+                            .nav-tabs-custom#answerTabs
                                 ul.nav.nav-tabs
                                     li.active
-                                        a(href='#tabQRCode', data-toggle='tab') QR Code
+                                        a(href='#tabQRCode',tabname='qr', data-toggle='tab') QR Code
                                     li
-                                        a(href='#tabQuestion', data-toggle='tab') Question
+                                        a(href='#tabQuestion',tabname='question', data-toggle='tab') Question
                                     li
-                                        a(href='#tabArea', data-toggle='tab') Area
+                                        a(href='#tabArea',tabname='area', data-toggle='tab') Area
                                 .tab-content
                                     #tabQRCode.tab-pane.active
                                         +textField('text', 'text', 'Text')
