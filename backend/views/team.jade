@@ -35,13 +35,10 @@ block content
                     h3.box-title New Team
                 form.form-horizontal(action="/team", method="post")
                     .box-body
-                        +textField('text', 'teamname', 'Team Name')
-                        +textField('password', 'teampassword1', 'Team Password')
-                        +textField('password', 'teampassword2', 'Repeat Team Password')
-                        .form-group
-                            label.col-sm-2.control-label(for='invite') Invite to Team (E-Mail)
-                            .col-sm-10
-                                textarea#invite.form-control(name='invite', rows='4', placeholder='Invite to Team')
+                        +input('name', 'name', 'text', 'Team Name')
+                        +input('password1', 'password1', 'password', 'Team Password')
+                        +input('password2', 'password2', 'password', 'Repeat Team Password')
+                        +input('invite', 'invite', 'textarea', 'Invite to Team (E-Mail)')
                     .box-footer
                         button.btn.btn-info.pull-right(name='createteam', type='submit') Create Team
         if team
@@ -63,22 +60,10 @@ block content
                     h3.box-title Team Settings
                 form.form-horizontal(action="/team", method="post")
                     .box-body
-                        .form-group
-                            label.col-sm-2.control-label(for='teamname') Team Name
-                            .col-sm-10
-                                input#teamname.form-control(name='teamname', type='text', placeholder='Team Name', value='#{team.teamname}')
-                        .form-group
-                            label.col-sm-2.control-label(for='teampassword1') Team Password
-                            .col-sm-10
-                                input#teampassword1.form-control(name='teampassword1', type='password', placeholder='Team Password')
-                        .form-group
-                            label.col-sm-2.control-label(for='teampassword2') Repeat Team Password
-                            .col-sm-10
-                                input#teampassword2.form-control(name='teampassword2', type='password', placeholder='Repeat Team Password')
-                        .form-group
-                            label.col-sm-2.control-label(for='invite') Invite to Team (E-Mail)
-                            .col-sm-10
-                                textarea#invite.form-control(name='invite', rows='4', placeholder='Invite to Team')
+                        +input('name', 'name', 'text', 'Team Name')
+                        +input('password1', 'password1', 'password', 'Team Password')
+                        +input('password2', 'password2', 'password', 'Repeat Team Password')
+                        +input('invite', 'invite', 'textarea', 'Invite to Team (E-Mail)')
                     .box-footer
                         button.btn.btn-danger(name='deleteteam', type='submit') Delete Team
                         button.btn.btn-info.pull-right(name='updateteam', type='submit') Update Team

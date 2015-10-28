@@ -18,13 +18,13 @@ router.post('/', auth.checkUserMiddleware('user', 'admin'), function (req, res, 
     console.log(req.body);
     var errors = [];
     if (req.body.createteam !== undefined) {
-        if (!req.body.teamname) errors.push("No team name supplied!");
-        if (!req.body.teampassword1) errors.push("No password supplied!");
-        if (req.body.teampassword1 && req.body.teampassword1 != req.body.teampassword2) errors.push("Passwords do not match!");
+        if (!req.body.name) errors.push("No team name supplied!");
+        if (!req.body.password1) errors.push("No password supplied!");
+        if (req.body.password1 && req.body.password1 != req.body.password2) errors.push("Passwords do not match!");
         if (errors.length != 0) {
             webinterface.renderSuccess(req, res, 'team', 'Error creating team!', 'creating team', {user: req.user});
         } else {
-            schema.Team.createTeam(req.body.teamname, req.user, req.body.teampassword1)
+            schema.Team.createTeam(req.body.name, req.user, req.body.password1)
                 .then(function (team) {
                     webinterface.renderSuccess(req, res, 'team', "Team creation successful!", "Your team was successfully created! You got one step closer to get those Schnitzels!", {
                         user: req.user,

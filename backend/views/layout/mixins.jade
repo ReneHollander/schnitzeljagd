@@ -17,15 +17,36 @@ mixin success(title, msg)
 mixin printJSON(data)
     pre #{JSON.stringify(data, null, 2)};
 
-mixin textField(type, name, text)
-    .form-group
-        label.col-sm-2.control-label(for='#{id}') #{text}
-        .col-sm-10
-            input.form-control(id='#{id}', name='#{id}', type='#{type}', placeholder='#{text}')
-
-mixin checkBox(name, text)
-    .form-group
-        label.col-sm-2.control-label(for='#{id}') #{text}
-        .col-sm-10
-            .checkbox.icheck
-                input(name='#{name}', type='checkbox')
+mixin input(id, name, type, text, extra)
+    if !extra
+        - extra = {}
+    if !extra.value
+        - extra.value = ''
+    if type == 'hidden'
+        input(id='#{id}', name='#{name}', type='hidden', value='#{extra.value}')
+    else if type == 'wysiwyg'
+        if !extra.height
+            - extra.height = '200px'
+        textarea.textarea(id="#{id}", name="#{name}", placeholder='#{text}', style='width: 100%; height: #{extra.height}; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;')
+        link(rel='stylesheet', href='/bower_components/adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')
+        script(src='/bower_components/adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')
+        script.
+            $(function () {
+                $("\##{id}").wysihtml5();
+            });
+    else
+        .form-group
+            label.col-sm-2.control-label(for='#{id}') #{text}
+            .col-sm-10
+                if type == 'checkbox'
+                    .checkbox.icheck
+                        if extra.checked == true
+                            input(id='#{id}', name='#{name}', type='checkbox', checked)
+                        else
+                            input(id='#{id}', name='#{name}', type='checkbox')
+                else if type == 'textarea'
+                    if !extra.rows
+                        - extra.rows = 4
+                    textarea.form-control(id='#{id}', name='#{name}', rows='#{extra.rows}', placeholder='#{text}')
+                else
+                    input.form-control(id='#{id}', name='#{name}', type='#{type}', placeholder='#{text}', value='#{extra.value}')

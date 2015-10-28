@@ -12,4 +12,9 @@ router.get('/', auth.checkUserMiddleware('admin'), function (req, res, next) {
     res.render('admin/station', {user: req.user});
 });
 
+router.post('/', auth.checkUserMiddleware('admin'), function (req, res, next) {
+    console.log(req.body);
+    res.render('admin/station', {user: req.user});
+});
+
 module.exports = router;

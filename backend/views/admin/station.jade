@@ -1,11 +1,9 @@
 extends ../layout/admin
 
 block head
-    link(rel='stylesheet', href='/bower_components/adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')
-    script(src='/bower_components/adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')
+
     script.
         $(function () {
-            $("#htmleditor").wysihtml5();
             $('input').iCheck({
                 checkboxClass: 'icheckbox_square-blue',
                 radioClass: 'iradio_square-blue',
@@ -53,11 +51,11 @@ block content
             .box-header.with-border
                 h3.box-title New Station
             form.form-horizontal(action="/admin/station", method="post")
-                input(id='navigationtype', type='hidden', name='navigationtype', value='compass')
-                input(id='answertype', type='hidden', name='answertype', value='qr')
+                +input('navigationtype', 'navigationtype', 'hidden', 'compass')
+                +input('answertype', 'answertype', 'hidden', 'qr')
                 .box-body
-                    +textField('text', 'name', 'Name')
-                    +textField('text', 'description', 'Description')
+                    +input('name', 'name', 'text',  'Name')
+                    +input('description', 'description', 'text', 'Description')
                     .form-group
                         label.col-sm-2.control-label Navigation
                         .col-sm-10
@@ -71,15 +69,14 @@ block content
                                         a(href='#tabText', tabname='text', data-toggle='tab') Text
                                 .tab-content
                                     #tabCompass.tab-pane.active
-                                        +textField('text', 'lat', 'Latitude')
-                                        +textField('text', 'long', 'Longitude')
-                                        +checkBox('showdistance', 'Show Distance')
+                                        +input('compass_lat', 'compass[lat]', 'text', 'Latitude')
+                                        +input('compass_long', 'compass[long]', 'text', 'Longitude')
+                                        +input('compass_showdistance', 'compass[showdistance]', 'checkbox', 'Show Distance')
                                     #tabMap.tab-pane
-                                        +textField('text', 'lat', 'Latitude')
-                                        +textField('text', 'long', 'Longitude')
+                                        +input('map_lat', 'map[lat]', 'number', 'Latitude')
+                                        +input('map_long', 'map[long]', 'number','Longitude')
                                     #tabText.tab-pane
-                                        form
-                                            textarea.textarea(id="htmleditor", name="htmleditor", placeholder='Place some text here', style='width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;')
+                                        +input('text_html', 'text[html]', 'wysiwyg','Place some text here')
 
                     .form-group
                         label.col-sm-2.control-label Answer
@@ -94,22 +91,17 @@ block content
                                         a(href='#tabArea',tabname='area', data-toggle='tab') Area
                                 .tab-content
                                     #tabQRCode.tab-pane.active
-                                        +textField('text', 'text', 'Text')
-                                        .form-group
-                                            label.col-sm-2.control-label(for='token') Token
-                                            .col-sm-10
-                                                input.form-control(id='token', name='token', type='#text', placeholder='Token')
+                                        +input('qr_text', 'qr[text]', 'text', 'Text')
+                                        +input('qr_token', 'qr[token]', 'text', 'Token')
                                         .form-group
                                             label.col-sm-2.control-label(for='token') QR Code
                                             .col-sm-10
                                                 img(id='token', src='http://goqr.me/_Resources/Static/Packages/GoQrMe.Ui/Images/qr_default.png')
                                     #tabQuestion.tab-pane
-                                        +textField('text', 'text', 'Text')
+                                        +input('question_text', 'question[text]', 'text', 'Text')
                                     #tabArea.tab-pane
-                                        +textField('text', 'text', 'Text')
-                                        +textField('text', 'lat', 'Latitude')
-                                        +textField('text', 'long', 'Longitude')
-                                        +textField('number', 'timetostay', 'Time to Stay')
-                                        +checkBox('showonmap', 'Show on Map')
+                                        +input('area_text', 'area[text]', 'text', 'Text')
+                                        +input('area_timetostay', 'area[timetostay]', 'number', 'Time to Stay')
+                                        +input('area_showonmap', 'area[showonmap]', 'checkbox', 'Show on Map')
                 .box-footer
                     button.btn.btn-info.pull-right(name='createstation', type='submit') Create Station
