@@ -1,9 +1,45 @@
 extends ../layout/admin
 
-block head
+mixin stationRow(station)
+    tr(stationid='#{station.id}')
+        td(style="vertical-align: middle;") #{station.name}
+        td(style="vertical-align: middle;") #{station.description}
+        td(style="vertical-align: middle;") #{station.navigation.type}
+        td(style="vertical-align: middle;") #{station.answer.type}
+        td(style="vertical-align: middle;")
+            form.form-horizontal(action="/admin/station", method="post")
+                input(type='hidden', name='stationid', value='#{station.id}')
+                button.btn.btn-sm.btn-danger(type='submit', name='removestation')
+                    i.fa.fa-remove
+                    |  Remove
 
+block head
     script.
         $(function () {
+            var orderField = $("#order");
+            var stations = $("#stations").find("tbody");
+
+            function applyOrder() {
+                var order = [];
+                stations.children().each(function (key, value) {
+                    order.push($(value).attr('stationid'));
+                });
+                orderField.attr('value', order);
+            }
+            applyOrder();
+
+            stations.sortable({
+                helper: function (e, tr) {
+                    var $originals = tr.children();
+                    var $helper = tr.clone();
+                    $helper.children().each(function (index) {
+                        $(this).width($originals.eq(index).width())
+                    });
+                    return $helper;
+                },
+                stop: applyOrder
+            }).disableSelection();
+
             $('input').iCheck({
                 checkboxClass: 'icheckbox_square-blue',
                 radioClass: 'iradio_square-blue',
@@ -43,10 +79,41 @@ block content
         .box.box-info
             .box-header.with-border
                 h3.box-title Stations
-                .box-body
-                    | Body
-                .box-footer
-                    | Footer
+            .box-body.table-responsive
+                table#stations.table.table-bordered.table-hover
+                    thead
+                        tr.nodrop.nodrag
+                            th(style='width: 200px') Name
+                            th Description
+                            th(style='width: 200px') Navigation
+                            th(style='width: 200px') Answer
+                            th(style='width: 10px') Remove
+                    tbody
+                        +stationRow({
+                            id: 1,
+                            name: 'Station 1',
+                            description: 'This is Station 1',
+                            navigation: {type: 'text'},
+                            answer: {type: 'qr'}
+                        })
+                        +stationRow({
+                            id: 2,
+                            name: 'Station 2',
+                            description: 'This is Station 2',
+                            navigation: {type: 'compass'},
+                            answer: {type: 'area'}
+                        })
+                        +stationRow({
+                            id: 3,
+                            name: 'Station 3',
+                            description: 'This is Station 3',
+                            navigation: {type: 'map'},
+                            answer: {type: 'question'}
+                        })
+            .box-footer
+                form(action="/admin/station", method="post")
+                    +input('order', 'order', 'hidden')
+                    button.btn.btn-info.pull-right(name='orderstations', type='submit') Save Order
         .box.box-info
             .box-header.with-border
                 h3.box-title New Station
