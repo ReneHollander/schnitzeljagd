@@ -27,7 +27,6 @@ public class MainActivity extends Activity {
         if (savedInstanceState == null) {
             Util.addFragment(this, R.id.container, Fragments.LOGIN);
         }
-        Util.tryConnect(this);
     }
 
     @Override

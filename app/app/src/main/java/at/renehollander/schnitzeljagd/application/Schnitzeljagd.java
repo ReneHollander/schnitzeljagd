@@ -14,8 +14,6 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.util.Date;
 
-import at.renehollander.schnitzeljagd.activity.Activities;
-import at.renehollander.schnitzeljagd.activity.MainActivity;
 import at.renehollander.schnitzeljagd.location.LocationChangeListener;
 
 public class Schnitzeljagd extends Application {
@@ -25,7 +23,7 @@ public class Schnitzeljagd extends Application {
     private static final int LOC_MIN_UPDATE_TIME = 1000 * 5;
     private static final int LOC_MIN_LOC_DIFFERENCE = 0;
 
-    private Credentials teamCredentials;
+    private Credentials credentials;
 
     //private Station currentstation;
 
@@ -36,7 +34,7 @@ public class Schnitzeljagd extends Application {
     public void onCreate() {
         super.onCreate();
 
-        this.teamCredentials = new Credentials(this, "Credentials");
+        this.credentials = new Credentials(this, "Credentials");
 
         this.apiConnection = new APIConnection(this);
 
@@ -61,8 +59,8 @@ public class Schnitzeljagd extends Application {
         return apiConnection;
     }
 
-    public Credentials getTeamCredentials() {
-        return teamCredentials;
+    public Credentials getCredentials() {
+        return credentials;
     }
 
     /*

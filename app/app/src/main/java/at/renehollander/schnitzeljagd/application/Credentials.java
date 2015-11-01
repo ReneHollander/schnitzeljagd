@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class Credentials {
 
-    private static final String NAME = "name";
+    private static final String EMAIL = "email";
     private static final String PASSWORD = "password";
 
     private Context context;
@@ -18,16 +18,16 @@ public class Credentials {
         this.storeName = storeName;
     }
 
-    public void setName(String newName) {
-        getPreferences().edit().putString(NAME, newName).commit();
+    public void setEmail(String newName) {
+        getPreferences().edit().putString(EMAIL, newName).commit();
     }
 
     public void setPassword(String newPassword) {
         getPreferences().edit().putString(PASSWORD, newPassword).commit();
     }
 
-    public String getName() {
-        return getPreferences().getString(NAME, null);
+    public String getEmail() {
+        return getPreferences().getString(EMAIL, null);
     }
 
     public String getPassword() {
@@ -35,7 +35,7 @@ public class Credentials {
     }
 
     public boolean hasCredentials() {
-        return getName() != null && getPassword() != null;
+        return getEmail() != null && getPassword() != null;
     }
 
     public String getStoreName() {

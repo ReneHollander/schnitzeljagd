@@ -18,8 +18,17 @@ import io.socket.client.Socket;
 
 public class LoginFragment extends Fragment implements View.OnKeyListener {
 
-    private EditText teamName;
+    private EditText email;
     private EditText password;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Schnitzeljagd sj = Util.getSchnitzeljagd();
+        if (sj.getCredentials().hasCredentials()) {
+            Util.tryConnect(getActivity());
+        }
+    }
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -32,14 +41,14 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
-        this.teamName = (EditText) rootView.findViewById(R.id.teamName);
+        this.email = (EditText) rootView.findViewById(R.id.email);
         this.password = (EditText) rootView.findViewById(R.id.password);
         Button btnLogin = (Button) rootView.findViewById(R.id.btnLogin);
 
         Schnitzeljagd sj = Util.getSchnitzeljagd();
-        if (sj.getTeamCredentials().hasCredentials()) {
-            this.teamName.setText(sj.getTeamCredentials().getName());
-            this.password.setText(sj.getTeamCredentials().getPassword());
+        if (sj.getCredentials().hasCredentials()) {
+            this.email.setText(sj.getCredentials().getEmail());
+            this.password.setText(sj.getCredentials().getPassword());
         }
 
         btnLogin.setOnClickListener(this::onLoginButtonClick);
@@ -54,12 +63,12 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
             imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
         }
 
-        String teamNameString = this.teamName.getText().toString();
+        String emailString = this.email.getText().toString();
         String passwordString = this.password.getText().toString();
 
         Schnitzeljagd sj = Util.getSchnitzeljagd();
-        sj.getTeamCredentials().setName(teamNameString);
-        sj.getTeamCredentials().setPassword(passwordString);
+        sj.getCredentials().setEmail(emailString);
+        sj.getCredentials().setPassword(passwordString);
 
         if (sj.getApiConnection().getSocket().connected()) {
             sj.getApiConnection().getSocket().once(Socket.EVENT_DISCONNECT, (objects) -> this.getActivity().runOnUiThread(() -> Util.tryConnect(this.getActivity())));

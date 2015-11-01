@@ -1,5 +1,4 @@
 var Promise = require('bluebird');
-var extend = require('extend');
 var mongoose = Promise.promisifyAll(require('mongoose'));
 
 function requireSchema(name) {

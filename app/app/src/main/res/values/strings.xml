@@ -10,7 +10,7 @@
     <string name="action_compass">Compass</string>
 
     <string name="action_logindata">Login Data</string>
-    <string name="hint_email">Team Name</string>
+    <string name="hint_email">E-Mail</string>
     <string name="hint_password">Password</string>
     <string name="btn_login">LOGIN</string>
 

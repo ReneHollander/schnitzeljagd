@@ -16,7 +16,7 @@ public class APIConnection {
     public static final String SOCKET_UNAUTHORIZED = "unauthorized";
     public static final String SOCKET_AUTHENTICATION = "authentication";
 
-    private static final String API_URL = "http://10.0.0.3:3000/user";
+    private static final String API_URL = "http://10.0.0.42:3000/user";
 
     private Schnitzeljagd schnitzeljagd;
     private Socket socket;
@@ -29,8 +29,8 @@ public class APIConnection {
         socket.on(Socket.EVENT_CONNECT, (objects) -> {
             JSONObject credentials = new JSONObject();
             try {
-                credentials.put("name", schnitzeljagd.getTeamCredentials().getName());
-                credentials.put("password", schnitzeljagd.getTeamCredentials().getPassword());
+                credentials.put("email", schnitzeljagd.getCredentials().getEmail());
+                credentials.put("password", schnitzeljagd.getCredentials().getPassword());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -39,7 +39,7 @@ public class APIConnection {
     }
 
     public void connect() {
-        if (!schnitzeljagd.getTeamCredentials().hasCredentials()) {
+        if (!schnitzeljagd.getCredentials().hasCredentials()) {
             throw new IllegalStateException("no credentials set");
         }
         Log.d("networking", "connecting to socketio at " + API_URL);

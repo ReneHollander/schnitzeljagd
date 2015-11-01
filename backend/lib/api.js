@@ -16,9 +16,9 @@ module.exports.init = function () {
 
     socketioauth(userIO, {
         authenticate: function (socket, authData, callback) {
-            console.log("name: " + authData.name);
+            console.log("email: " + authData.email);
             console.log("password: " + authData.password);
-            auth.authenticate(authData.name, authData.password, function (err, data) {
+            auth.authenticate(authData.email, authData.password, function (err, data) {
                 if (err) return callback(err, false);
                 if (!data) return callback(new Error("an unknown error occured"), false);
                 return callback(null, true);
