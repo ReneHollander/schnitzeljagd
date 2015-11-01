@@ -2,60 +2,25 @@ extends ../layout/admin
 
 mixin stationRow(station)
     tr(stationid='#{station.id}')
-        td(style="vertical-align: middle;") #{station.name}
-        td(style="vertical-align: middle;") #{station.description}
-        td(style="vertical-align: middle;") #{station.navigation.type}
-        td(style="vertical-align: middle;") #{station.answer.type}
-        td(style="vertical-align: middle;")
-            form.form-horizontal(action="/admin/station", method="post")
+        td.vertical-align #{station.name}
+        td.vertical-align #{station.description}
+        td.vertical-align #{station.navigation.type}
+        td.vertical-align #{station.answer.type}
+        td.vertical-align
+            form(action="/admin/station", method="post")
                 input(type='hidden', name='stationid', value='#{station.id}')
-                button.btn.btn-sm.btn-danger(type='submit', name='removestation')
+                button.btn.btn-danger(type='submit', name='removestation')
                     i.fa.fa-remove
                     |  Remove
+        td.vertical-align
+            form(action="/admin/station", method="post")
+                input(type='hidden', name='stationid', value='#{station.id}')
+                button.btn.btn-primary(type='submit', name='editstation')
+                    i.fa.fa-edit
+                    |  Edit
 
 block head
-    script.
-        $(function () {
-            var orderField = $("#order");
-            var stations = $("#stations").find("tbody");
-
-            function applyOrder() {
-                var order = [];
-                stations.children().each(function (key, value) {
-                    order.push($(value).attr('stationid'));
-                });
-                orderField.attr('value', order);
-            }
-            applyOrder();
-
-            stations.sortable({
-                helper: function (e, tr) {
-                    var $originals = tr.children();
-                    var $helper = tr.clone();
-                    $helper.children().each(function (index) {
-                        $(this).width($originals.eq(index).width())
-                    });
-                    return $helper;
-                },
-                stop: applyOrder
-            }).disableSelection();
-
-            $('input').iCheck({
-                checkboxClass: 'icheckbox_square-blue',
-                radioClass: 'iradio_square-blue',
-                increaseArea: '20%'
-            });
-
-            function tabnameSetter(targettab, targetinput) {
-                targettab.on('shown.bs.tab', function (e) {
-                    var target = $(e.target);
-                    targetinput.attr('value', target.attr('tabname'));
-                })
-            }
-
-            tabnameSetter($('#navigationTabs'), $('#navigationtype'));
-            tabnameSetter($('#answerTabs'), $('#answertype'));
-        });
+    script(src='/javascripts/admin/station.js')
 
 block content
     section.content-header
@@ -82,34 +47,16 @@ block content
             .box-body.table-responsive
                 table#stations.table.table-bordered.table-hover
                     thead
-                        tr.nodrop.nodrag
+                        tr
                             th(style='width: 200px') Name
                             th Description
                             th(style='width: 200px') Navigation
                             th(style='width: 200px') Answer
-                            th(style='width: 10px') Remove
+                            th(style='width: 1px') Remove
+                            th(style='width: 1px') Edit
                     tbody
-                        +stationRow({
-                            id: 1,
-                            name: 'Station 1',
-                            description: 'This is Station 1',
-                            navigation: {type: 'text'},
-                            answer: {type: 'qr'}
-                        })
-                        +stationRow({
-                            id: 2,
-                            name: 'Station 2',
-                            description: 'This is Station 2',
-                            navigation: {type: 'compass'},
-                            answer: {type: 'area'}
-                        })
-                        +stationRow({
-                            id: 3,
-                            name: 'Station 3',
-                            description: 'This is Station 3',
-                            navigation: {type: 'map'},
-                            answer: {type: 'question'}
-                        })
+                        each station in stations
+                            +stationRow(station)
             .box-footer
                 form(action="/admin/station", method="post")
                     +input('order', 'order', 'hidden')

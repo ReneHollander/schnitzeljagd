@@ -26,7 +26,7 @@ if (false) {
             return schema.Answer.QR({title: "Find the QR Code!"}).save()
                 .then(function (answer) {
                     return schema.Station({
-                        title: "Titel",
+                        name: "Name",
                         description: "Beschreibung",
                         answer: answer,
                         navigation: navigation
@@ -42,9 +42,7 @@ if (false) {
         .catch(function (err) {
             throw err;
         });
-}
 
-if (false) {
     module.exports()
         .then(function () {
             return schema.User.createUser("rene.hollander@hotmail.de", "Rene8888", "1234", 'admin');

@@ -2,11 +2,11 @@ extends layout/admin
 
 mixin memberRow(member, deletebutton)
     tr
-        td(style="vertical-align: middle;")
+        td.vertical-align
             img(src='#{member.profilepicture}', width='40px', height='40px', alt="User Image")
-        td(style="vertical-align: middle;") #{member.username}
-        td(style="vertical-align: middle;") #{member.email}
-        td(style="vertical-align: middle;")
+        td.vertical-align #{member.username}
+        td.vertical-align #{member.email}
+        td.vertical-align
             if deletebutton
                 form.form-horizontal(action="/team", method="post")
                     input(type='hidden', name='userid', value='#{member.id}')
