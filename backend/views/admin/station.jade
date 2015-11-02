@@ -21,6 +21,7 @@ mixin stationRow(station)
 
 block head
     script(src='/javascripts/admin/station.js')
+    script(src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAvLxvXHa-3HY58fI7fqK3wgfreF5PTB2I')
 
 block content
     section.content-header
@@ -86,9 +87,11 @@ block content
                                         +input('compass_lat', 'compass[lat]', 'text', 'Latitude')
                                         +input('compass_long', 'compass[long]', 'text', 'Longitude')
                                         +input('compass_showdistance', 'compass[showdistance]', 'checkbox', 'Show Distance')
+                                        div(id='navigationCompassMap', style='height: 600px;')
                                     #tabMap.tab-pane
                                         +input('map_lat', 'map[lat]', 'number', 'Latitude')
                                         +input('map_long', 'map[long]', 'number','Longitude')
+                                        div(id='navigationMapMap', style='height: 600px;')
                                     #tabText.tab-pane
                                         +input('text_html', 'text[html]', 'wysiwyg','Place some text here')
 
@@ -117,5 +120,6 @@ block content
                                         +input('area_text', 'area[text]', 'text', 'Text')
                                         +input('area_timetostay', 'area[timetostay]', 'number', 'Time to Stay')
                                         +input('area_showonmap', 'area[showonmap]', 'checkbox', 'Show on Map')
+                                        div(id='answerAreaMap', style='height: 600px;')
                 .box-footer
                     button.btn.btn-info.pull-right(name='createstation', type='submit') Create Station

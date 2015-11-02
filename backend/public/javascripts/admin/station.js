@@ -40,4 +40,54 @@ $(function () {
 
     tabnameSetter($('#navigationTabs'), $('#navigationtype'));
     tabnameSetter($('#answerTabs'), $('#answertype'));
+
+    var navigationCompassMap = new google.maps.Map(document.getElementById('navigationCompassMap'), {
+        center: {lat: 48.305277, lng: 16.326468},
+        zoom: 16
+    });
+    var navigationCompassMapMarker = new google.maps.Marker({map: navigationCompassMap});
+    navigationCompassMap.addListener('click', function (e) {
+        navigationCompassMapMarker.setPosition(e.latLng);
+        $('#compass_lat').val(e.latLng.lat());
+        $('#compass_long').val(e.latLng.lng());
+    });
+
+    var navigationMapMap;
+    $('#navigationTabs').on('shown.bs.tab', function (e) {
+        if ($(e.target).attr('tabname') === 'map' && !navigationMapMap) {
+            navigationMapMap = new google.maps.Map(document.getElementById('navigationMapMap'), {
+                center: {lat: 48.305277, lng: 16.326468},
+                zoom: 16
+            });
+        }
+    });
+
+
+    var answerAreaMap;
+    var areaPolygon = new google.maps.Polygon({
+        paths: [],
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 3,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        draggable: true,
+        editable: true
+    });
+    $('#answerTabs').on('shown.bs.tab', function (e) {
+        if ($(e.target).attr('tabname') === 'area' && !answerAreaMap) {
+            answerAreaMap = new google.maps.Map(document.getElementById('answerAreaMap'), {
+                center: {lat: 48.305277, lng: 16.326468},
+                zoom: 16
+            });
+            areaPolygon.setMap(answerAreaMap);
+            answerAreaMap.addListener('click', function (e) {
+                var path = areaPolygon.getPath();
+                if (!path) path = [];
+                path.push(e.latLng);
+                areaPolygon.setPath(path);
+            });
+        }
+    })
+
 });
