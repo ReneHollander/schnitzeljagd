@@ -9,14 +9,19 @@ module.exports = function (schemas) {
         email: {
             type: String,
             index: true,
-            unique: true
+            unique: true,
+            required: true
         },
         username: {
             type: String,
             index: true,
-            unique: true
+            unique: true,
+            required: true
         },
-        passwordHash: String,
+        passwordHash: {
+            type: String,
+            required: true
+        },
         registrationDate: {
             type: Date,
             default: Date.now

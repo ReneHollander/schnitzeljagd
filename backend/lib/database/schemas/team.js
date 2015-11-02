@@ -9,17 +9,26 @@ module.exports = function (schemas) {
         teamname: {
             type: String,
             index: true,
-            unique: true
+            unique: true,
+            required: true
         },
         creationDate: {
             type: Date,
             default: Date.now
         },
         teampasswordHash: {
-            type: String
+            type: String,
+            required: true
         },
-        founder: {type: ObjectId, ref: 'User'},
-        members: [{type: ObjectId, ref: 'User'}],
+        founder: {
+            type: ObjectId,
+            ref: 'User',
+            required: true
+        },
+        members: [{
+            type: ObjectId,
+            ref: 'User'
+        }],
         currentstation: {
             type: ObjectId,
             ref: 'Station'

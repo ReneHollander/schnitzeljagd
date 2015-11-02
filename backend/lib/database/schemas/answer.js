@@ -4,7 +4,6 @@ var mongoose = Promise.promisifyAll(require('mongoose'));
 var bcrypt = Promise.promisifyAll(require('bcrypt'));
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
-
 module.exports = function (schemas) {
     var options = {
         discriminatorKey: 'type'

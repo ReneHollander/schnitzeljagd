@@ -6,15 +6,23 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 
 module.exports = function (schemas) {
     var schema = mongoose.Schema({
-        name: String,
-        description: String,
+        name: {
+            type: String,
+            required: true
+        },
+        description: {
+            type: String,
+            required: true
+        },
         navigation: {
             type: ObjectId,
-            ref: 'Navigation'
+            ref: 'Navigation',
+            required: true
         },
         answer: {
             type: ObjectId,
-            ref: 'Answer'
+            ref: 'Answer',
+            required: true
         }
     });
 
