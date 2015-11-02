@@ -117,9 +117,14 @@ block content
                                     #tabQuestion.tab-pane
                                         +input('question_text', 'question[text]', 'text', 'Text')
                                     #tabArea.tab-pane
+                                        div#area_hidden_vertices
                                         +input('area_text', 'area[text]', 'text', 'Text')
                                         +input('area_timetostay', 'area[timetostay]', 'number', 'Time to Stay')
                                         +input('area_showonmap', 'area[showonmap]', 'checkbox', 'Show on Map')
+                                        +input('area_vertices', 'area[vertices]', 'textarea', 'Vertices (Lat, Long)', {
+                                            rows: 8,
+                                            disabled: true
+                                        })
                                         div(id='answerAreaMap', style='height: 600px;')
                 .box-footer
                     button.btn.btn-info.pull-right(name='createstation', type='submit') Create Station

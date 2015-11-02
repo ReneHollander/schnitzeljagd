@@ -16,7 +16,7 @@ router.get('/', auth.checkUserMiddleware('admin'), function (req, res, next) {
 });
 
 router.post('/', auth.checkUserMiddleware('admin'), function (req, res, next) {
-    console.log(req.body);
+    console.log(JSON.stringify(req.body, null, 2));
     schema.StationOrder.getOrder()
         .then(function (stations) {
             res.render('admin/station', {user: req.user, stations: stations});

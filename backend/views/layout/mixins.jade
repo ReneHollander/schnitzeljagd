@@ -40,13 +40,12 @@ mixin input(id, name, type, text, extra)
             .col-sm-10
                 if type == 'checkbox'
                     .checkbox.icheck
-                        if extra.checked == true
-                            input(id='#{id}', name='#{name}', type='checkbox', checked)
-                        else
-                            input(id='#{id}', name='#{name}', type='checkbox')
+                        input(id='#{id}', name='#{name}', type='checkbox', checked=extra.checked)
                 else if type == 'textarea'
                     if !extra.rows
                         - extra.rows = 4
-                    textarea.form-control(id='#{id}', name='#{name}', rows='#{extra.rows}', placeholder='#{text}')
+                    if !extra.disabled
+                        - extra.disabled = false
+                    textarea.form-control(id='#{id}', name='#{name}', rows='#{extra.rows}', placeholder='#{text}', value='#{extra.value}', disabled=extra.disabled)
                 else
                     input.form-control(id='#{id}', name='#{name}', type='#{type}', placeholder='#{text}', value='#{extra.value}')
