@@ -29,17 +29,32 @@ module.exports = function (schemas) {
                 type: ObjectId,
                 default: ObjectId
             },
-            text: String
+            text: {
+                type: String,
+                required: true
+            }
         }]
     }, options);
     var Question = Base.discriminator('question', QuestionSchema);
 
     var AreaSchema = new mongoose.Schema({
-        timetostay: Number,
-        showonmap: Boolean,
+        timetostay: {
+            type: Number,
+            default: 30
+        },
+        showonmap: {
+            type: Boolean,
+            default: true
+        },
         area: [{
-            lat: Number,
-            lang: Number
+            lat: {
+                type: Number,
+                required: true
+            },
+            lang: {
+                type: Number,
+                required: true
+            }
         }]
     }, options);
     var Area = Base.discriminator('area', AreaSchema);

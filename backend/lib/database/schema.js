@@ -10,3 +10,4 @@ module.exports.Team = requireSchema('team');
 module.exports.Navigation = requireSchema('navigation');
 module.exports.Answer = requireSchema('answer');
 module.exports.Station = requireSchema('station');
+module.exports.StationOrder = requireSchema('stationorder');

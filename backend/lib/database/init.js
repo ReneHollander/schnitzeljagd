@@ -20,24 +20,68 @@ var schema = require('./schema.js');
 if (false) {
     module.exports()
         .then(function () {
-            return schema.Navigation.Text({content: "Hello World!"}).save();
+            return schema.Navigation.Text({content: "This is the navigation of Station 1"}).save();
         })
         .then(function (navigation) {
-            return schema.Answer.QR({title: "Find the QR Code!"}).save()
+            return schema.Answer.QR({title: "Find the QR Code to solve Station 1"}).save()
                 .then(function (answer) {
                     return schema.Station({
-                        name: "Name",
-                        description: "Beschreibung",
+                        name: "Station 1",
+                        description: "This is Station 1",
                         answer: answer,
                         navigation: navigation
                     }).save();
                 });
         })
         .then(function (station) {
-            return schema.Station.populate(station, ['navigation', 'answer']);
+            return schema.StationOrder.addStation(station);
+        })
+        .then(function () {
+            return schema.StationOrder.getStations();
         })
         .then(function (stations) {
-            console.log(stations);
+            console.log(stations)
+        })
+        .then(function () {
+            return module.exports()
+                .then(function () {
+                    return schema.Navigation.Compass({
+                        text: 'Find your way to the Stift Klosterneuburg',
+                        target: {
+                            lat: 48.307311,
+                            lang: 16.325416
+                        }
+                    }).save();
+                })
+                .then(function (navigation) {
+                    return schema.Answer.Area({
+                        area: [
+                            {lat: 48.307537, lang: 16.325878},
+                            {lat: 48.307300, lang: 16.325518},
+                            {lat: 48.307044, lang: 16.325672},
+                            {lat: 48.306828, lang: 16.325299},
+                            {lat: 48.306563, lang: 16.325630},
+                            {lat: 48.307253, lang: 16.326877}
+                        ]
+                    }).save()
+                        .then(function (answer) {
+                            return schema.Station({
+                                name: "Station 2",
+                                description: "This is Station 2",
+                                answer: answer,
+                                navigation: navigation
+                            }).save();
+                        });
+                })
+                .then(function (station) {
+                    return schema.StationOrder.addStation(station);
+                })
+                .then(function () {
+                    return schema.StationOrder.getStations();
+                })
+                .then(function (stations) {
+                    console.log(stations)
+                })
         })
         .catch(function (err) {
             throw err;

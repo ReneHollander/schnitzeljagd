@@ -1,3 +1,6 @@
+var Promise = require('bluebird');
+var mongoose = Promise.promisifyAll(require('mongoose'));
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var randomstring = require('randomstring');
 
 module.exports.randomStringGenerator = function (chars) {
@@ -41,4 +44,20 @@ module.exports.normalizePort = function (val) {
         return port;
     }
     return false;
+};
+
+module.exports.registerMongoosePlugins = function (schema) {
+    schema.plugin(deepPopulate);
+};
+
+module.exports.promisePopulate = function (fields) {
+    return function (data) {
+        return data.deepPopulate(fields);
+    }
+};
+
+module.exports.promiseDeepPopulate = function (fields) {
+    return function (data) {
+        return data.populate(fields);
+    }
 };

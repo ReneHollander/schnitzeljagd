@@ -9,7 +9,7 @@ var schema = require('../../database/schema.js');
 var router = express.Router();
 
 router.get('/', auth.checkUserMiddleware('admin'), function (req, res, next) {
-    schema.Station.find().populate(['navigation', 'answer'])
+    schema.StationOrder.getOrder()
         .then(function (stations) {
             res.render('admin/station', {user: req.user, stations: stations});
         });
@@ -17,7 +17,7 @@ router.get('/', auth.checkUserMiddleware('admin'), function (req, res, next) {
 
 router.post('/', auth.checkUserMiddleware('admin'), function (req, res, next) {
     console.log(req.body);
-    schema.Station.find().populate(['navigation', 'answer'])
+    schema.StationOrder.getOrder()
         .then(function (stations) {
             res.render('admin/station', {user: req.user, stations: stations});
         });

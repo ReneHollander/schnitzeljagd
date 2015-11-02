@@ -9,28 +9,48 @@ module.exports = function (schemas) {
         discriminatorKey: 'type'
     };
 
-    var BaseSchema = new mongoose.Schema({}, options);
+    var BaseSchema = new mongoose.Schema({
+        text: String
+    }, options);
     var Base = mongoose.model('Navigation', BaseSchema);
 
     var CompassSchema = new mongoose.Schema({
         "target": {
-            "lat": Number,
-            "lang": Number
+            "lat": {
+                type: Number,
+                required: true
+            },
+            "lang": {
+                type: Number,
+                required: true
+            }
         },
-        "showdistance": Boolean
+        "showdistance": {
+            type: Boolean,
+            default: true
+        }
     }, options);
     var Compass = Base.discriminator('compass', CompassSchema);
 
     var MapSchema = new mongoose.Schema({
         "target": {
-            "lat": Number,
-            "lang": Number
+            "lat": {
+                type: Number,
+                required: true
+            },
+            "lang": {
+                type: Number,
+                required: true
+            }
         }
     }, options);
     var Map = Base.discriminator('map', MapSchema);
 
     var TextSchema = new mongoose.Schema({
-        content: String
+        content: {
+            type: String,
+            required: true
+        }
     }, options);
     var Text = Base.discriminator('text', TextSchema);
 
