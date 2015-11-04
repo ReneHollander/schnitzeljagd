@@ -34,15 +34,9 @@ if (false) {
                 });
         })
         .then(function (station) {
-            return schema.StationOrder.addStation(station);
+            return schema.StationCluster.createCluster("Station 1 und 2", "In diesem Cluster sind Station 1 und 2 enthalten", [station]);
         })
-        .then(function () {
-            return schema.StationOrder.getStations();
-        })
-        .then(function (stations) {
-            console.log(stations)
-        })
-        .then(function () {
+        .then(function (cluster) {
             return module.exports()
                 .then(function () {
                     return schema.Navigation.Compass({
@@ -74,13 +68,10 @@ if (false) {
                         });
                 })
                 .then(function (station) {
-                    return schema.StationOrder.addStation(station);
+                    return cluster.addStation(station);
                 })
                 .then(function () {
-                    return schema.StationOrder.getStations();
-                })
-                .then(function (stations) {
-                    console.log(stations)
+                    console.log(JSON.stringify(cluster, null, 2));
                 })
         })
         .catch(function (err) {

@@ -3,6 +3,7 @@ var mongoose = Promise.promisifyAll(require('mongoose'));
 var gravatar = require('gravatar');
 var bcrypt = Promise.promisifyAll(require('bcrypt'));
 var ObjectId = mongoose.Schema.Types.ObjectId;
+var util = require('../../util.js');
 
 module.exports = function (schemas) {
     var schema = mongoose.Schema({
@@ -61,10 +62,7 @@ module.exports = function (schemas) {
                                 founder: founder,
                                 members: founder,
                                 teampasswordHash: hash
-                            }).save()
-                                .then(function (team) {
-                                    return schemas.Team.populate(team, ['members', 'founder']);
-                                });
+                            }).save().then(util.promisePopulate(['members', 'founder']));
                         });
                 }
             });

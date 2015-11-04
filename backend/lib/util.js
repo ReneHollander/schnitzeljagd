@@ -52,12 +52,17 @@ module.exports.registerMongoosePlugins = function (schema) {
 
 module.exports.promisePopulate = function (fields) {
     return function (data) {
-        return data.deepPopulate(fields);
+        return data.populate(fields);
     }
 };
 
 module.exports.promiseDeepPopulate = function (fields) {
     return function (data) {
-        return data.populate(fields);
+        return new Promise(function (resolve, reject) {
+            data.deepPopulate(fields, function (err) {
+                if (err) reject(err);
+                else resolve(data);
+            });
+        });
     }
 };
