@@ -80,9 +80,9 @@ public class MainActivity extends Activity {
             getFragmentManager().beginTransaction().replace(R.id.container, Fragments.QUESTION).commit();
             return true;
         } else if (id == R.id.action_force_update) {
-            final ProgressDialog progressDialog = Util.createProgressDialog(this);
+            // TODO final ProgressDialog progressDialog = Util.createProgressDialog(this);
             final Schnitzeljagd sj = (Schnitzeljagd) this.getApplication();
-            sj.updateCurrentStation(this, null, progressDialog);
+            // TODO sj.updateCurrentStation(this, null, progressDialog);
             getFragmentManager().beginTransaction().detach(Fragments.CONTENT).commit();
             getFragmentManager().beginTransaction().attach(Fragments.CONTENT).commit();
             return true;

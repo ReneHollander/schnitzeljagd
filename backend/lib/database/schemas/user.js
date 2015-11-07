@@ -76,6 +76,14 @@ module.exports = function (schemas) {
             });
     };
 
+    schema.statics.getUserByEmail = function (email) {
+        return this.findOne({email: email})
+            .then(function (user) {
+                if (!user) return Promise.reject("User not found!");
+                else return user;
+            });
+    };
+
     schema.statics.verifyToken = function (token) {
         return this.findOne({validationToken: token})
             .then(function (user) {

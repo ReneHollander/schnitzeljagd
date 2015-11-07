@@ -14,6 +14,7 @@ import java.util.Arrays;
 import at.renehollander.schnitzeljagd.R;
 import at.renehollander.schnitzeljagd.activity.Activities;
 import at.renehollander.schnitzeljagd.fragment.Fragments;
+import at.renehollander.schnitzeljagd.network.Connection;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
@@ -125,10 +126,6 @@ public class Util {
         return progressDialog;
     }
 
-    public static Schnitzeljagd getSchnitzeljagd() {
-        return (Schnitzeljagd) Activities.MAIN.getApplication();
-    }
-
     public static void addFragment(Activity activity, int id, Fragment target) {
         activity.getFragmentManager().beginTransaction().add(id, target).commit();
     }
@@ -151,13 +148,13 @@ public class Util {
 
         public Worker(Activity activity) {
             this.activity = activity;
-            this.socket = Util.getSchnitzeljagd().getApiConnection().getSocket();
+            this.socket = Schnitzeljagd.instance().getConnection().getSocket();
         }
 
         public void destroyListeners() {
             socket.off(Socket.EVENT_CONNECT_ERROR, connectError);
-            socket.off(APIConnection.SOCKET_AUTHENTICATED, authenticated);
-            socket.off(APIConnection.SOCKET_UNAUTHORIZED, unautorized);
+            socket.off(Connection.SOCKET_AUTHENTICATED, authenticated);
+            socket.off(Connection.SOCKET_UNAUTHORIZED, unautorized);
         }
 
         public void work() {
@@ -180,7 +177,7 @@ public class Util {
                 progressDialog.dismiss();
                 Util.replaceFragment(activity, R.id.container, Fragments.CONTENT);
             };
-            socket.once(APIConnection.SOCKET_AUTHENTICATED, authenticated);
+            socket.once(Connection.SOCKET_AUTHENTICATED, authenticated);
 
             unautorized = (object) -> {
                 destroyListeners();
@@ -188,9 +185,9 @@ public class Util {
                 Util.displayErrorDialogFromString(activity, "Error connecting to API Server", "Invalid Teamname or Password");
                 progressDialog.dismiss();
             };
-            socket.once(APIConnection.SOCKET_UNAUTHORIZED, unautorized);
+            socket.once(Connection.SOCKET_UNAUTHORIZED, unautorized);
 
-            Util.getSchnitzeljagd().getApiConnection().connect();
+            Schnitzeljagd.instance().getConnection().connect();
         }
 
     }

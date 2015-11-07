@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.webkit.WebView;
+
+import com.squareup.okhttp.MediaType;
 
 import at.renehollander.schnitzeljagd.R;
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
+import at.renehollander.schnitzeljagd.network.Station;
 
 public class ContentFragment extends Fragment {
 
@@ -26,8 +30,15 @@ public class ContentFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Schnitzeljagd sj = (Schnitzeljagd) getActivity().getApplication();
-        //this.contentView.loadData(sj.getCurrentStationContent(), "text/html", "utf8");
+        Station.getCurrentStation((err, station) -> {
+            getActivity().runOnUiThread(() -> {
+                if (err != null) {
+                    contentView.loadData(err.toString(), "plain/text", "utf-8");
+                } else {
+                    contentView.loadData(station, "application/json", "utf-8");
+                }
+            });
+        });
     }
 
 

@@ -14,6 +14,7 @@ import android.widget.EditText;
 import at.renehollander.schnitzeljagd.R;
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import at.renehollander.schnitzeljagd.application.Util;
+import at.renehollander.schnitzeljagd.network.Connection;
 import io.socket.client.Socket;
 
 public class LoginFragment extends Fragment implements View.OnKeyListener {
@@ -24,7 +25,7 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Schnitzeljagd sj = Util.getSchnitzeljagd();
+        Schnitzeljagd sj = Schnitzeljagd.instance();
         if (sj.getCredentials().hasCredentials()) {
             Util.tryConnect(getActivity());
         }
@@ -45,7 +46,7 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
         this.password = (EditText) rootView.findViewById(R.id.password);
         Button btnLogin = (Button) rootView.findViewById(R.id.btnLogin);
 
-        Schnitzeljagd sj = Util.getSchnitzeljagd();
+        Schnitzeljagd sj = Schnitzeljagd.instance();
         if (sj.getCredentials().hasCredentials()) {
             this.email.setText(sj.getCredentials().getEmail());
             this.password.setText(sj.getCredentials().getPassword());
@@ -66,13 +67,14 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
         String emailString = this.email.getText().toString();
         String passwordString = this.password.getText().toString();
 
-        Schnitzeljagd sj = Util.getSchnitzeljagd();
+        Schnitzeljagd sj = Schnitzeljagd.instance();
+        Connection connection = sj.getConnection();
         sj.getCredentials().setEmail(emailString);
         sj.getCredentials().setPassword(passwordString);
 
-        if (sj.getApiConnection().getSocket().connected()) {
-            sj.getApiConnection().getSocket().once(Socket.EVENT_DISCONNECT, (objects) -> this.getActivity().runOnUiThread(() -> Util.tryConnect(this.getActivity())));
-            sj.getApiConnection().disconnect();
+        if (connection.getSocket().connected()) {
+            connection.getSocket().once(Socket.EVENT_DISCONNECT, (objects) -> this.getActivity().runOnUiThread(() -> Util.tryConnect(this.getActivity())));
+            connection.disconnect();
         } else {
             this.getActivity().runOnUiThread(() -> Util.tryConnect(this.getActivity()));
         }
