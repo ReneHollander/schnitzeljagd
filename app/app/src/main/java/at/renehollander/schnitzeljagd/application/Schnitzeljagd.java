@@ -2,7 +2,6 @@ package at.renehollander.schnitzeljagd.application;
 
 import android.app.Activity;
 import android.location.Location;
-import android.util.Log;
 
 import at.renehollander.schnitzeljagd.network.Connection;
 import at.renehollander.schnitzeljagd.sensor.CurrentLocationManager;
@@ -35,19 +34,8 @@ public class Schnitzeljagd {
         return credentials;
     }
 
-    public Location getCurrentLocation() {
-        return currentLocation;
-    }
-
-    public void updateLocation(Location loc) {
-        if (loc == null)
-            return;
-
-        this.currentLocation = loc;
-        Log.i("location", String.valueOf(loc));
-        Log.i("location", "Bearing: " + loc.getBearing());
-
-        // TODO implement
+    public CurrentLocationManager getLocationManager() {
+        return locationManager;
     }
 
     public void destroy() {

@@ -43,14 +43,15 @@ public class CompassSensor implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        Location loc = schnitzeljagd.getLocationManager().getLocation();
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
             float[] rMat = new float[9];
             float[] orientation = new float[3];
             SensorManager.getRotationMatrixFromVector(rMat, event.values);
             double azimut = Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]);
-            GeomagneticField geoField = new GeomagneticField((float) schnitzeljagd.getCurrentLocation().getLatitude(), (float) schnitzeljagd.getCurrentLocation().getLongitude(), (float) schnitzeljagd.getCurrentLocation().getAltitude(), System.currentTimeMillis());
+            GeomagneticField geoField = new GeomagneticField((float) loc.getLatitude(), (float) loc.getLongitude(), (float) loc.getAltitude(), System.currentTimeMillis());
             azimut += geoField.getDeclination();
-            float bearing = schnitzeljagd.getCurrentLocation().bearingTo(target);
+            float bearing = schnitzeljagd.getLocationManager().getLocation().bearingTo(target);
             float direction = (float) (azimut - bearing);
             //float direction = (float) azimut;
             if (changeListener != null) {

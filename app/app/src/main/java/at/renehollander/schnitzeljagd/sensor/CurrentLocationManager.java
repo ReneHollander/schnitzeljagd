@@ -30,7 +30,7 @@ public class CurrentLocationManager implements android.location.LocationListener
         locationManager = (android.location.LocationManager) getSchnitzeljagd().getActivity().getSystemService(Context.LOCATION_SERVICE);
         Log.i("location", "provider=" + LOC_USED_LOCATION_PROVIDER + ", enabled=" + locationManager.isProviderEnabled(LOC_USED_LOCATION_PROVIDER));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getSchnitzeljagd().getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && getSchnitzeljagd().getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (getSchnitzeljagd().getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || getSchnitzeljagd().getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
         }
@@ -43,6 +43,7 @@ public class CurrentLocationManager implements android.location.LocationListener
     }
 
     private void updateLocation(Location location) {
+        Log.d("location", "updateLocation: " + location);
         this.location = location;
     }
 
@@ -55,7 +56,7 @@ public class CurrentLocationManager implements android.location.LocationListener
         Location bestLocation = null;
         for (String provider : providers) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (getSchnitzeljagd().getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && getSchnitzeljagd().getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (getSchnitzeljagd().getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || getSchnitzeljagd().getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return null;
                 }
             }
