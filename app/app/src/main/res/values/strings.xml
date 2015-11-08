@@ -13,5 +13,7 @@
     <string name="hint_email">E-Mail</string>
     <string name="hint_password">Password</string>
     <string name="btn_login">LOGIN</string>
+    <string name="action_read_nfc">Read NFC Chip</string>
+    <string name="nfc_waiting">Waiting...</string>
 
 </resources>
