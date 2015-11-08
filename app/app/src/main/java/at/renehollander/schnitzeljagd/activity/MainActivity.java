@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
     private MenuItem scanQr;
     private MenuItem submitAnswer;
     private MenuItem forceUpdate;
+    private MenuItem readNFC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class MainActivity extends Activity {
         this.scanQr = menu.findItem(R.id.action_scan_qrcode);
         this.submitAnswer = menu.findItem(R.id.action_submit_answer);
         this.forceUpdate = menu.findItem(R.id.action_force_update);
+        this.readNFC = menu.findItem(R.id.action_read_nfc);
 
         return true;
     }
@@ -75,6 +77,9 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
         if (id == R.id.action_scan_qrcode) {
             getFragmentManager().beginTransaction().replace(R.id.container, Fragments.QR_CODE).commit();
+            return true;
+        } else if (id == R.id.action_read_nfc) {
+            getFragmentManager().beginTransaction().replace(R.id.container, Fragments.NFC).commit();
             return true;
         } else if (id == R.id.action_submit_answer) {
             getFragmentManager().beginTransaction().replace(R.id.container, Fragments.QUESTION).commit();
