@@ -1,13 +1,9 @@
 package at.renehollander.schnitzeljagd.network;
 
-import android.location.Location;
+import org.json.JSONObject;
 
-import java.util.Arrays;
-
-import io.socket.client.Socket;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 @Builder
@@ -16,25 +12,58 @@ public class Station {
     private final String name;
     private final String description;
     private final Navigation navigation;
+    private final Answer answer;
 
-    public static Station getCurrentStation(Connection.Callback<String> cb) {
-
-        Socket socket = Connection.instance().getSocket();
-
-        socket.emit("get_current_station", null, (data) -> {
-            System.out.println(Arrays.toString(data));
-            if (data.length >= 1) {
-                Object obj = data[0];
+    public static void getCurrentStation(Connection.Callback<Station> cb) {
+        Connection.instance().getSocket().emit("get_current_station", null, (data) -> {
+            try {
+                JSONObject obj = Connection.validateData(data);
                 if (obj == null) {
-                    cb.call(new NullPointerException("data recieved from server was null"));
+                    cb.call(null, null);
                 } else {
-                    cb.call(obj.toString());
-                }
-            }
-            // TODO parse data
-        });
 
-        return null;
+                    Navigation navigation = null;
+                    {
+                        JSONObject navObj = obj.getJSONObject("navigation");
+                        String type = navObj.getString("type");
+                        String text = null;
+                        if (navObj.has("text")) {
+                            text = navObj.getString("text");
+                        }
+                        switch (type) {
+                            case "text":
+                                String content = navObj.getString("content");
+                                navigation = new Navigation.Text(text, content);
+                                break;
+                            default:
+                                throw new IllegalStateException("unknown navigation type " + type);
+                        }
+                    }
+
+                    Answer answer = null;
+                    {
+                        JSONObject answerObj = obj.getJSONObject("answer");
+                        String type = answerObj.getString("type");
+                        String text = null;
+                        if (answerObj.has("text")) {
+                            text = answerObj.getString("text");
+                        }
+                        switch (type) {
+                            case "qr":
+                                answer = new Answer.QR(text);
+                                break;
+                            default:
+                                throw new IllegalStateException("unknown answer type " + type);
+                        }
+                    }
+
+                    Station station = new StationBuilder().name(obj.getString("name")).description(obj.getString("description")).navigation(navigation).answer(answer).build();
+                    cb.call(station);
+                }
+            } catch (Exception e) {
+                cb.call(e);
+            }
+        });
     }
 
 }

@@ -10,7 +10,10 @@ var adminIO;
 
 function catchErrorMiddleware(cb) {
     return function (err) {
-        if (err instanceof Error) cb({error: err.message});
+        if (err instanceof Error) {
+            cb({error: err.message});
+            throw err;
+        }
         else cb({error: err});
     }
 }
@@ -54,11 +57,33 @@ module.exports.init = function () {
         socket.on('get_current_station', function (ack) {
             socket.client.getTeam()
                 .then(function (team) {
-                    ack(team.currentstation);
+                    return team.nextStation()
+                        .then(function (station) {
+                            var data = station.toJSON();
+                            delete data.__v;
+                            delete data.navigation._id;
+                            delete data.navigation.__v;
+                            delete data.answer._id;
+                            delete data.answer.__v;
+                            if (data.answer.type === 'qr') {
+                                delete data.answer.token;
+                            }
+                            ack(data);
+                        });
+                    /*
+                     if (!team.currentstation) {
+                     team.nextStation()
+                     .then(function (station) {
+                     ack(station);
+                     })
+                     .catch(catchErrorMiddleware(ack));
+                     } else {
+                     ack(team.currentstation);
+                     }
+                     */
                 })
                 .catch(catchErrorMiddleware(ack));
         });
-
     });
 };
 

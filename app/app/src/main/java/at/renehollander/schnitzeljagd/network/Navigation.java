@@ -2,19 +2,18 @@ package at.renehollander.schnitzeljagd.network;
 
 import android.location.Location;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @Data
-public class Navigation {
+public abstract class Navigation {
 
     private final String text;
 
-    public Navigation(String text) {
-        this.text = text;
-    }
-
+    @ToString
     @EqualsAndHashCode(callSuper = false)
     public static class Compass extends Navigation {
         @Getter
@@ -29,6 +28,7 @@ public class Navigation {
         }
     }
 
+    @ToString
     @EqualsAndHashCode(callSuper = false)
     public static class Map extends Navigation {
         @Getter
@@ -40,6 +40,7 @@ public class Navigation {
         }
     }
 
+    @ToString
     @EqualsAndHashCode(callSuper = false)
     public static class Text extends Navigation {
         @Getter

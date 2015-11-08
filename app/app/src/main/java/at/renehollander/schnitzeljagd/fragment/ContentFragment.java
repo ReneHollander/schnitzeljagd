@@ -2,6 +2,7 @@ package at.renehollander.schnitzeljagd.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,10 +33,11 @@ public class ContentFragment extends Fragment {
         super.onStart();
         Station.getCurrentStation((err, station) -> {
             getActivity().runOnUiThread(() -> {
+                Log.e("networking", "Error getting Station", err);
                 if (err != null) {
                     contentView.loadData(err.toString(), "plain/text", "utf-8");
                 } else {
-                    contentView.loadData(station, "application/json", "utf-8");
+                    contentView.loadData(station.toString(), "application/json", "utf-8");
                 }
             });
         });

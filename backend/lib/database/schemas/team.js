@@ -33,7 +33,11 @@ module.exports = function (schemas) {
         currentstation: {
             type: ObjectId,
             ref: 'Station'
-        }
+        },
+        completedclusters: [{
+            type: ObjectId,
+            ref: 'StationCluster'
+        }]
     });
 
     schema.methods.removeMember = function (member) {
@@ -48,6 +52,17 @@ module.exports = function (schemas) {
 
     schema.methods.deleteTeam = function () {
         return this.remove();
+    };
+
+    schema.methods.nextStation = function () {
+        var that = this;
+        return schemas.StationCluster.nextStation(this.currentstation, this.completedclusters)
+            .then(function (station) {
+                return that.save()
+                    .then(function () {
+                        return station;
+                    })
+            });
     };
 
     schema.statics.createTeam = function (teamname, founder, teampassword) {

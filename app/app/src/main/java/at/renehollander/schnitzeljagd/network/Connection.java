@@ -2,16 +2,19 @@ package at.renehollander.schnitzeljagd.network;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URI;
+import java.util.Arrays;
 
 import at.renehollander.schnitzeljagd.activity.Activities;
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import java8.lang.FunctionalInterface;
+import lombok.NonNull;
 
 public class Connection {
 
@@ -75,6 +78,15 @@ public class Connection {
             call(throwable, null);
         }
 
+    }
+
+    public static <T> T validateData(@NonNull Object[] data) {
+        Log.d("networking", Arrays.toString(data));
+        if (data.length >= 1) {
+            return (T) data[0];
+        } else {
+            throw new IllegalArgumentException("data recieved from server is invalid");
+        }
     }
 
 }
