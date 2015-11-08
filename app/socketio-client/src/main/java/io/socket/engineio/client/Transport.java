@@ -1,15 +1,16 @@
 package io.socket.engineio.client;
 
 
+import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+
 import io.socket.emitter.Emitter;
 import io.socket.engineio.parser.Packet;
 import io.socket.engineio.parser.Parser;
 import io.socket.thread.EventThread;
 import io.socket.utf8.UTF8Exception;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import java.util.Map;
 
 public abstract class Transport extends Emitter {
 

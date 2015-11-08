@@ -1,26 +1,32 @@
 package io.socket.engineio.client.transports;
 
 
-import io.socket.engineio.client.Transport;
-import io.socket.engineio.parser.Packet;
-import io.socket.engineio.parser.Parser;
-import io.socket.parseqs.ParseQS;
-import io.socket.thread.EventThread;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ws.WebSocket.PayloadType;
 import com.squareup.okhttp.ws.WebSocketCall;
 import com.squareup.okhttp.ws.WebSocketListener;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+
+import javax.net.ssl.SSLSocketFactory;
+
+import io.socket.engineio.client.Transport;
+import io.socket.engineio.parser.Packet;
+import io.socket.engineio.parser.Parser;
+import io.socket.parseqs.ParseQS;
+import io.socket.thread.EventThread;
 import io.socket.utf8.UTF8Exception;
 import okio.Buffer;
 import okio.BufferedSource;
-
-import javax.net.ssl.SSLSocketFactory;
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import static com.squareup.okhttp.ws.WebSocket.PayloadType.BINARY;
 import static com.squareup.okhttp.ws.WebSocket.PayloadType.TEXT;

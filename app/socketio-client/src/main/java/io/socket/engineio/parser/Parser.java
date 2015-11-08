@@ -1,14 +1,14 @@
 package io.socket.engineio.parser;
 
 
-import io.socket.utf8.UTF8;
-import io.socket.utf8.UTF8Exception;
-
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.socket.utf8.UTF8;
+import io.socket.utf8.UTF8Exception;
 
 public class Parser {
 
@@ -27,6 +27,7 @@ public class Parser {
     }};
 
     private static final Map<Integer, String> packetslist = new HashMap<Integer, String>();
+
     static {
         for (Map.Entry<String, Integer> entry : packets.entrySet()) {
             packetslist.put(entry.getValue(), entry.getKey());
@@ -36,7 +37,8 @@ public class Parser {
     private static Packet<String> err = new Packet<String>(Packet.ERROR, "parser error");
 
 
-    private Parser() {}
+    private Parser() {
+    }
 
     public static void encodePacket(Packet packet, EncodeCallback callback) throws UTF8Exception {
         encodePacket(packet, false, callback);
@@ -125,23 +127,23 @@ public class Parser {
                         String encodingLength = String.valueOf(((String) packet).length());
                         byte[] sizeBuffer = new byte[encodingLength.length() + 2];
 
-                        sizeBuffer[0] = (byte)0; // is a string
-                        for (int i = 0; i < encodingLength.length(); i ++) {
-                            sizeBuffer[i + 1] = (byte)Character.getNumericValue(encodingLength.charAt(i));
+                        sizeBuffer[0] = (byte) 0; // is a string
+                        for (int i = 0; i < encodingLength.length(); i++) {
+                            sizeBuffer[i + 1] = (byte) Character.getNumericValue(encodingLength.charAt(i));
                         }
-                        sizeBuffer[sizeBuffer.length - 1] = (byte)255;
-                        results.add(Buffer.concat(new byte[][] {sizeBuffer, stringToByteArray((String)packet)}));
+                        sizeBuffer[sizeBuffer.length - 1] = (byte) 255;
+                        results.add(Buffer.concat(new byte[][]{sizeBuffer, stringToByteArray((String) packet)}));
                         return;
                     }
 
-                    String encodingLength = String.valueOf(((byte[])packet).length);
+                    String encodingLength = String.valueOf(((byte[]) packet).length);
                     byte[] sizeBuffer = new byte[encodingLength.length() + 2];
-                    sizeBuffer[0] = (byte)1; // is binary
-                    for (int i = 0; i < encodingLength.length(); i ++) {
-                        sizeBuffer[i + 1] = (byte)Character.getNumericValue(encodingLength.charAt(i));
+                    sizeBuffer[0] = (byte) 1; // is binary
+                    for (int i = 0; i < encodingLength.length(); i++) {
+                        sizeBuffer[i + 1] = (byte) Character.getNumericValue(encodingLength.charAt(i));
                     }
-                    sizeBuffer[sizeBuffer.length - 1] = (byte)255;
-                    results.add(Buffer.concat(new byte[][] {sizeBuffer, (byte[])packet}));
+                    sizeBuffer[sizeBuffer.length - 1] = (byte) 255;
+                    results.add(Buffer.concat(new byte[][]{sizeBuffer, (byte[]) packet}));
                 }
             });
         }
@@ -248,11 +250,11 @@ public class Parser {
             if (buffer instanceof String) {
                 @SuppressWarnings("unchecked")
                 DecodePayloadCallback<String> _callback = callback;
-                _callback.call(decodePacket((String)buffer, true), i, total);
+                _callback.call(decodePacket((String) buffer, true), i, total);
             } else if (buffer instanceof byte[]) {
                 @SuppressWarnings("unchecked")
                 DecodePayloadCallback<byte[]> _callback = callback;
-                _callback.call(decodePacket((byte[])buffer), i, total);
+                _callback.call(decodePacket((byte[]) buffer), i, total);
             }
         }
     }
@@ -269,7 +271,7 @@ public class Parser {
         int len = string.length();
         byte[] bytes = new byte[len];
         for (int i = 0; i < len; i++) {
-            bytes[i] = (byte)Character.codePointAt(string, i);
+            bytes[i] = (byte) Character.codePointAt(string, i);
         }
         return bytes;
     }
@@ -289,7 +291,8 @@ public class Parser {
 
 class Buffer {
 
-    private Buffer() {}
+    private Buffer() {
+    }
 
     public static byte[] concat(byte[][] list) {
         int length = 0;

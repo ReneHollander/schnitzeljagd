@@ -8,4 +8,5 @@ public class Fragments {
     public static final QuestionFragment QUESTION = new QuestionFragment();
     public static final CompassFragment COMPASS = new CompassFragment();
     public static final LoginFragment LOGIN = new LoginFragment();
+
 }

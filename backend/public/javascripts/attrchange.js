@@ -6,20 +6,22 @@
  You may use attrchange plugin under the terms of the MIT Licese.
  https://github.com/meetselva/attrchange/blob/master/MIT-License.txt
  */
-(function($) {
+(function ($) {
     function isDOMAttrModifiedSupported() {
         var p = document.createElement('p');
         var flag = false;
 
         if (p.addEventListener) {
-            p.addEventListener('DOMAttrModified', function() {
+            p.addEventListener('DOMAttrModified', function () {
                 flag = true
             }, false);
         } else if (p.attachEvent) {
-            p.attachEvent('onDOMAttrModified', function() {
+            p.attachEvent('onDOMAttrModified', function () {
                 flag = true
             });
-        } else { return false; }
+        } else {
+            return false;
+        }
         p.setAttribute('id', 'target');
         return flag;
     }
@@ -51,19 +53,23 @@
     var MutationObserver = window.MutationObserver
         || window.WebKitMutationObserver;
 
-    $.fn.attrchange = function(a, b) {
+    $.fn.attrchange = function (a, b) {
         if (typeof a == 'object') {//core
             var cfg = {
-                trackValues : false,
-                callback : $.noop
+                trackValues: false,
+                callback: $.noop
             };
             //backward compatibility
-            if (typeof a === "function") { cfg.callback = a; } else { $.extend(cfg, a); }
+            if (typeof a === "function") {
+                cfg.callback = a;
+            } else {
+                $.extend(cfg, a);
+            }
 
             if (cfg.trackValues) { //get attributes old value
-                this.each(function(i, el) {
+                this.each(function (i, el) {
                     var attributes = {};
-                    for ( var attr, i = 0, attrs = el.attributes, l = attrs.length; i < l; i++) {
+                    for (var attr, i = 0, attrs = el.attributes, l = attrs.length; i < l; i++) {
                         attr = attrs.item(i);
                         attributes[attr.nodeName] = attr.value;
                     }
@@ -73,12 +79,12 @@
 
             if (MutationObserver) { //Modern Browsers supporting MutationObserver
                 var mOptions = {
-                    subtree : false,
-                    attributes : true,
-                    attributeOldValue : cfg.trackValues
+                    subtree: false,
+                    attributes: true,
+                    attributeOldValue: cfg.trackValues
                 };
-                var observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(e) {
+                var observer = new MutationObserver(function (mutations) {
+                    mutations.forEach(function (e) {
                         var _this = e.target;
                         //get new value if trackValues is true
                         if (cfg.trackValues) {
@@ -91,13 +97,15 @@
                 });
 
                 return this.data('attrchange-method', 'Mutation Observer').data('attrchange-status', 'connected')
-                    .data('attrchange-obs', observer).each(function() {
+                    .data('attrchange-obs', observer).each(function () {
                         observer.observe(this, mOptions);
                     });
             } else if (isDOMAttrModifiedSupported()) { //Opera
                 //Good old Mutation Events
-                return this.data('attrchange-method', 'DOMAttrModified').data('attrchange-status', 'connected').on('DOMAttrModified', function(event) {
-                    if (event.originalEvent) { event = event.originalEvent; }//jQuery normalization is not required
+                return this.data('attrchange-method', 'DOMAttrModified').data('attrchange-status', 'connected').on('DOMAttrModified', function (event) {
+                    if (event.originalEvent) {
+                        event = event.originalEvent;
+                    }//jQuery normalization is not required
                     event.attributeName = event.attrName; //property names to be consistent with MutationObserver
                     event.oldValue = event.prevValue; //property names to be consistent with MutationObserver
                     if ($(this).data('attrchange-status') === 'connected') { //disconnected logically
@@ -105,7 +113,7 @@
                     }
                 });
             } else if ('onpropertychange' in document.body) { //works only in IE
-                return this.data('attrchange-method', 'propertychange').data('attrchange-status', 'connected').on('propertychange', function(e) {
+                return this.data('attrchange-method', 'propertychange').data('attrchange-status', 'connected').on('propertychange', function (e) {
                     e.attributeName = window.event.propertyName;
                     //to set the attr old value
                     checkAttributes.call($(this), cfg.trackValues, e);

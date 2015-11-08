@@ -1,19 +1,31 @@
 package io.socket.engineio.client.transports;
 
 
-import io.socket.emitter.Emitter;
-import io.socket.thread.EventThread;
-import io.socket.engineio.client.Transport;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.logging.Logger;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.ByteBuffer;
-import java.util.*;
-import java.util.logging.Logger;
+
+import io.socket.emitter.Emitter;
+import io.socket.engineio.client.Transport;
+import io.socket.thread.EventThread;
 
 public class PollingXHR extends Polling {
 
@@ -85,7 +97,7 @@ public class PollingXHR extends Polling {
                 EventThread.exec(new Runnable() {
                     @Override
                     public void run() {
-                        Exception err = args.length > 0 && args[0] instanceof Exception ? (Exception)args[0] : null;
+                        Exception err = args.length > 0 && args[0] instanceof Exception ? (Exception) args[0] : null;
                         self.onError("xhr post error", err);
                     }
                 });
@@ -108,9 +120,9 @@ public class PollingXHR extends Polling {
                     public void run() {
                         Object arg = args.length > 0 ? args[0] : null;
                         if (arg instanceof String) {
-                            self.onData((String)arg);
+                            self.onData((String) arg);
                         } else if (arg instanceof byte[]) {
-                            self.onData((byte[])arg);
+                            self.onData((byte[]) arg);
                         }
                     }
                 });
@@ -163,7 +175,7 @@ public class PollingXHR extends Polling {
             try {
                 logger.fine(String.format("xhr open %s: %s", this.method, this.uri));
                 URL url = new URL(this.uri);
-                xhr = (HttpURLConnection)url.openConnection();
+                xhr = (HttpURLConnection) url.openConnection();
                 xhr.setRequestMethod(this.method);
             } catch (IOException e) {
                 this.onError(e);
@@ -174,10 +186,10 @@ public class PollingXHR extends Polling {
 
             if (xhr instanceof HttpsURLConnection) {
                 if (this.sslContext != null) {
-                    ((HttpsURLConnection)xhr).setSSLSocketFactory(this.sslContext.getSocketFactory());
+                    ((HttpsURLConnection) xhr).setSSLSocketFactory(this.sslContext.getSocketFactory());
                 }
                 if (this.hostnameVerifier != null) {
-                    ((HttpsURLConnection)xhr).setHostnameVerifier(this.hostnameVerifier);
+                    ((HttpsURLConnection) xhr).setHostnameVerifier(this.hostnameVerifier);
                 }
             }
 
@@ -190,7 +202,7 @@ public class PollingXHR extends Polling {
 
             self.onRequestHeaders(headers);
             for (Map.Entry<String, List<String>> header : headers.entrySet()) {
-                for (String v : header.getValue()){
+                for (String v : header.getValue()) {
                     xhr.addRequestProperty(header.getKey(), v);
                 }
             }
@@ -226,7 +238,8 @@ public class PollingXHR extends Polling {
                     } finally {
                         try {
                             if (output != null) output.close();
-                        } catch (IOException e) {}
+                        } catch (IOException e) {
+                        }
                     }
                 }
             }).start();
@@ -305,12 +318,15 @@ public class PollingXHR extends Polling {
             } finally {
                 try {
                     if (input != null) input.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                }
                 try {
                     if (reader != null) reader.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                }
             }
         }
+
         public void abort() {
             this.cleanup();
         }

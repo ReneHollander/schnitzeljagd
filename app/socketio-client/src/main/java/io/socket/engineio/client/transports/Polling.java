@@ -1,18 +1,18 @@
 package io.socket.engineio.client.transports;
 
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import io.socket.emitter.Emitter;
 import io.socket.engineio.client.Transport;
 import io.socket.engineio.parser.Packet;
 import io.socket.engineio.parser.Parser;
 import io.socket.parseqs.ParseQS;
 import io.socket.thread.EventThread;
-import io.socket.emitter.Emitter;
 import io.socket.utf8.UTF8Exception;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
 
 abstract public class Polling extends Transport {
 
@@ -129,9 +129,9 @@ abstract public class Polling extends Transport {
         if (data instanceof String) {
             @SuppressWarnings("unchecked")
             Parser.DecodePayloadCallback<String> _callback = callback;
-            Parser.decodePayload((String)data, _callback);
+            Parser.decodePayload((String) data, _callback);
         } else if (data instanceof byte[]) {
-            Parser.decodePayload((byte[])data, callback);
+            Parser.decodePayload((byte[]) data, callback);
         }
 
         if (this.readyState != ReadyState.CLOSED) {

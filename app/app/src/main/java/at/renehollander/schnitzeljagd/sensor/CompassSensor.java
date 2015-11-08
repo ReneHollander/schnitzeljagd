@@ -1,4 +1,4 @@
-package at.renehollander.schnitzeljagd.location;
+package at.renehollander.schnitzeljagd.sensor;
 
 import android.content.Context;
 import android.hardware.GeomagneticField;
@@ -11,15 +11,17 @@ import android.location.Location;
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import java8.lang.FunctionalInterface;
 
-public class SensorListener implements SensorEventListener {
+public class CompassSensor implements SensorEventListener {
 
+    private final Schnitzeljagd schnitzeljagd;
     private Context context;
     private Location target;
 
     private SensorManager mSensorManager;
     private Sensor mSensorRotationVector;
 
-    public SensorListener(Context context, Location target) {
+    public CompassSensor(Schnitzeljagd schnitzeljagd, Context context, Location target) {
+        this.schnitzeljagd = schnitzeljagd;
         this.context = context;
         this.target = target;
 
@@ -41,15 +43,14 @@ public class SensorListener implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Schnitzeljagd sj = (Schnitzeljagd) context.getApplicationContext();
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
             float[] rMat = new float[9];
             float[] orientation = new float[3];
             SensorManager.getRotationMatrixFromVector(rMat, event.values);
             double azimut = Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]);
-            GeomagneticField geoField = new GeomagneticField((float) sj.getCurrentLocation().getLatitude(), (float) sj.getCurrentLocation().getLongitude(), (float) sj.getCurrentLocation().getAltitude(), System.currentTimeMillis());
+            GeomagneticField geoField = new GeomagneticField((float) schnitzeljagd.getCurrentLocation().getLatitude(), (float) schnitzeljagd.getCurrentLocation().getLongitude(), (float) schnitzeljagd.getCurrentLocation().getAltitude(), System.currentTimeMillis());
             azimut += geoField.getDeclination();
-            float bearing = sj.getCurrentLocation().bearingTo(target);
+            float bearing = schnitzeljagd.getCurrentLocation().bearingTo(target);
             float direction = (float) (azimut - bearing);
             //float direction = (float) azimut;
             if (changeListener != null) {

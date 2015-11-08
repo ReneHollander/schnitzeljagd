@@ -8,7 +8,8 @@ public class Backoff {
     private double jitter = 0.0;
     private int attempts = 0;
 
-    public Backoff() {}
+    public Backoff() {
+    }
 
     public long duration() {
         long ms = this.ms * (long) Math.pow(this.factor, this.attempts++);

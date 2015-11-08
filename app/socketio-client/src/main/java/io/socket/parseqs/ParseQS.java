@@ -1,14 +1,15 @@
 package io.socket.parseqs;
 
 
-import io.socket.global.Global;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import io.socket.global.Global;
+
 public class ParseQS {
 
-    private ParseQS() {}
+    private ParseQS() {
+    }
 
     public static String encode(Map<String, String> obj) {
         StringBuilder str = new StringBuilder();

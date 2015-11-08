@@ -21,6 +21,7 @@ public class Emitter {
 
     /**
      * Listens on the event.
+     *
      * @param event event name.
      * @param fn
      * @return a reference to this object.
@@ -28,7 +29,7 @@ public class Emitter {
     public Emitter on(String event, Listener fn) {
         ConcurrentLinkedQueue<Listener> callbacks = this.callbacks.get(event);
         if (callbacks == null) {
-            callbacks = new ConcurrentLinkedQueue <Listener>();
+            callbacks = new ConcurrentLinkedQueue<Listener>();
             ConcurrentLinkedQueue<Listener> _callbacks = this.callbacks.putIfAbsent(event, callbacks);
             if (_callbacks != null) {
                 callbacks = _callbacks;

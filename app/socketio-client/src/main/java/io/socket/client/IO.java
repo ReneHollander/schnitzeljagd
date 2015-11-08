@@ -1,15 +1,16 @@
 package io.socket.client;
 
 
-import io.socket.parser.Parser;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+
+import io.socket.parser.Parser;
 
 
 public class IO {
@@ -31,7 +32,8 @@ public class IO {
         Manager.defaultHostnameVerifier = hostnameVerifier;
     }
 
-    private IO() {}
+    private IO() {
+    }
 
     public static Socket socket(String uri) throws URISyntaxException {
         return socket(uri, null);
@@ -48,7 +50,7 @@ public class IO {
     /**
      * Initializes a {@link Socket} from an existing {@link Manager} for multiplexing.
      *
-     * @param uri uri to connect.
+     * @param uri  uri to connect.
      * @param opts options for socket.
      * @return {@link Socket} instance.
      */

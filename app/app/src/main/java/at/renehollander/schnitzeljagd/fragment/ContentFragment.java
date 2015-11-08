@@ -6,18 +6,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.webkit.WebView;
-
-import com.squareup.okhttp.MediaType;
 
 import at.renehollander.schnitzeljagd.R;
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
-import at.renehollander.schnitzeljagd.network.Station;
+import at.renehollander.schnitzeljagd.application.Util;
 
 public class ContentFragment extends Fragment {
 
+    private Schnitzeljagd schnitzeljagd;
     private WebView contentView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.schnitzeljagd = Util.getSchnitzeljagd(this.getActivity());
+    }
+
+    public Schnitzeljagd getSchnitzeljagd() {
+        return schnitzeljagd;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,7 +39,7 @@ public class ContentFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Station.getCurrentStation((err, station) -> {
+        getSchnitzeljagd().getConnection().getCurrentStation((err, station) -> {
             getActivity().runOnUiThread(() -> {
                 Log.e("networking", "Error getting Station", err);
                 if (err != null) {

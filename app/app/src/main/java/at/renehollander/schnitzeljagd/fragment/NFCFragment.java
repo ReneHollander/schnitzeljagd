@@ -13,21 +13,28 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import at.renehollander.schnitzeljagd.R;
-import at.renehollander.schnitzeljagd.nfc.NFCReader;
+import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
+import at.renehollander.schnitzeljagd.application.Util;
+import at.renehollander.schnitzeljagd.sensor.NFCReader;
 
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public class NFCFragment extends Fragment implements NFCReader.AccountCallback{
+public class NFCFragment extends Fragment implements NFCReader.AccountCallback {
     public static final String TAG = "NFCFFragment";
-    // Recommend NfcAdapter flags for reading from other Android devices. Indicates that this
-    // activity is interested in NFC-A devices (including other Android devices).
     public static int READER_FLAGS = NfcAdapter.FLAG_READER_NFC_A;
+
+    private Schnitzeljagd schnitzeljagd;
     public NFCReader nfcReader;
     private TextView contentField;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.schnitzeljagd = Util.getSchnitzeljagd(this.getActivity());
+    }
+
+    public Schnitzeljagd getSchnitzeljagd() {
+        return schnitzeljagd;
     }
 
     @Override
@@ -80,8 +87,6 @@ public class NFCFragment extends Fragment implements NFCReader.AccountCallback{
 
     @Override
     public void onAccountReceived(final String content) {
-        // This callback is run on a background thread, but updates to UI elements must be performed
-        // on the UI thread.
         getActivity().runOnUiThread(() -> contentField.setText(content));
     }
 }

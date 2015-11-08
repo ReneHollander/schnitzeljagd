@@ -159,7 +159,7 @@ public class UTF8 {
         if (codePoint >= 0xD800 && codePoint <= 0xDFFF) {
             throw new UTF8Exception(
                     "Lone surrogate U+" + Integer.toHexString(codePoint).toUpperCase() +
-                    " is not a scalar value"
+                            " is not a scalar value"
             );
         }
     }

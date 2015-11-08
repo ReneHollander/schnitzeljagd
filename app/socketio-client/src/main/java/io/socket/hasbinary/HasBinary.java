@@ -8,7 +8,8 @@ import java.util.Iterator;
 
 public class HasBinary {
 
-    private HasBinary() {}
+    private HasBinary() {
+    }
 
     public static boolean hasBinary(Object data) {
         return _hasBinary(data);
@@ -22,7 +23,7 @@ public class HasBinary {
         }
 
         if (obj instanceof JSONArray) {
-            JSONArray _obj = (JSONArray)obj;
+            JSONArray _obj = (JSONArray) obj;
             int length = _obj.length();
             for (int i = 0; i < length; i++) {
                 Object v;
@@ -36,10 +37,10 @@ public class HasBinary {
                 }
             }
         } else if (obj instanceof JSONObject) {
-            JSONObject _obj = (JSONObject)obj;
+            JSONObject _obj = (JSONObject) obj;
             Iterator keys = _obj.keys();
             while (keys.hasNext()) {
-                String key = (String)keys.next();
+                String key = (String) keys.next();
                 Object v;
                 try {
                     v = _obj.get(key);

@@ -1,5 +1,24 @@
 package io.socket.engineio.client;
 
+import org.json.JSONException;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+
 import io.socket.emitter.Emitter;
 import io.socket.engineio.client.transports.Polling;
 import io.socket.engineio.client.transports.PollingXHR;
@@ -8,18 +27,6 @@ import io.socket.engineio.parser.Packet;
 import io.socket.engineio.parser.Parser;
 import io.socket.parseqs.ParseQS;
 import io.socket.thread.EventThread;
-import org.json.JSONException;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 
 /**
@@ -87,7 +94,8 @@ public class Socket extends Emitter {
 
     private static final Runnable noop = new Runnable() {
         @Override
-        public void run() {}
+        public void run() {
+        }
     };
 
     /**
@@ -157,7 +165,7 @@ public class Socket extends Emitter {
     /**
      * Creates a socket with options.
      *
-     * @param uri URI to connect.
+     * @param uri  URI to connect.
      * @param opts options for socket
      * @throws URISyntaxException
      */
@@ -314,8 +322,8 @@ public class Socket extends Emitter {
 
     private void probe(final String name) {
         logger.fine(String.format("probing transport '%s'", name));
-        final Transport[] transport = new Transport[] {this.createTransport(name)};
-        final boolean[] failed = new boolean[] {false};
+        final Transport[] transport = new Transport[]{this.createTransport(name)};
+        final boolean[] failed = new boolean[]{false};
         final Socket self = this;
 
         Socket.priorWebsocketSuccess = false;
@@ -329,13 +337,13 @@ public class Socket extends Emitter {
 
                 logger.fine(String.format("probe transport '%s' opened", name));
                 Packet<String> packet = new Packet<String>(Packet.PING, "probe");
-                transport[0].send(new Packet[] {packet});
+                transport[0].send(new Packet[]{packet});
                 transport[0].once(Transport.EVENT_PACKET, new Listener() {
                     @Override
                     public void call(Object... args) {
                         if (failed[0]) return;
 
-                        Packet msg = (Packet)args[0];
+                        Packet msg = (Packet) args[0];
                         if (Packet.PONG.equals(msg.type) && "probe".equals(msg.data)) {
                             logger.fine(String.format("probe transport '%s' pong", name));
                             self.upgrading = true;
@@ -344,7 +352,7 @@ public class Socket extends Emitter {
                             Socket.priorWebsocketSuccess = WebSocket.NAME.equals(transport[0].name);
 
                             logger.fine(String.format("pausing current transport '%s'", self.transport.name));
-                            ((Polling)self.transport).pause(new Runnable() {
+                            ((Polling) self.transport).pause(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (failed[0]) return;
@@ -395,9 +403,9 @@ public class Socket extends Emitter {
                 Object err = args[0];
                 EngineIOException error;
                 if (err instanceof Exception) {
-                    error = new EngineIOException("probe error", (Exception)err);
+                    error = new EngineIOException("probe error", (Exception) err);
                 } else if (err instanceof String) {
-                    error = new EngineIOException("probe error: " + (String)err);
+                    error = new EngineIOException("probe error: " + (String) err);
                 } else {
                     error = new EngineIOException("probe error");
                 }
@@ -430,7 +438,7 @@ public class Socket extends Emitter {
         final Listener onupgrade = new Listener() {
             @Override
             public void call(Object... args) {
-                Transport to = (Transport)args[0];
+                Transport to = (Transport) args[0];
                 if (transport[0] != null && !to.name.equals(transport[0].name)) {
                     logger.fine(String.format("'%s' works - aborting '%s'", to.name, transport[0].name));
                     freezeTransport.call();
@@ -468,7 +476,7 @@ public class Socket extends Emitter {
 
         if (this.readyState == ReadyState.OPEN && this.upgrade && this.transport instanceof Polling) {
             logger.fine("starting upgrade probes");
-            for (String upgrade: this.upgrades) {
+            for (String upgrade : this.upgrades) {
                 this.probe(upgrade);
             }
         }
@@ -483,7 +491,7 @@ public class Socket extends Emitter {
 
             if (Packet.OPEN.equals(packet.type)) {
                 try {
-                    this.onHandshake(new HandshakeData((String)packet.data));
+                    this.onHandshake(new HandshakeData((String) packet.data));
                 } catch (JSONException e) {
                     this.emit(EVENT_ERROR, new EngineIOException(e));
                 }
@@ -521,7 +529,7 @@ public class Socket extends Emitter {
     private final Listener onHeartbeatAsListener = new Listener() {
         @Override
         public void call(Object... args) {
-            Socket.this.onHeartbeat(args.length > 0 ? (Long)args[0]: 0);
+            Socket.this.onHeartbeat(args.length > 0 ? (Long) args[0] : 0);
         }
     };
 
@@ -646,7 +654,7 @@ public class Socket extends Emitter {
      * Sends a message.
      *
      * @param msg
-     * @param fn callback to be called on drain
+     * @param fn  callback to be called on drain
      */
     public void send(final String msg, final Runnable fn) {
         EventThread.exec(new Runnable() {
@@ -722,7 +730,7 @@ public class Socket extends Emitter {
                     final Listener[] cleanupAndClose = new Listener[1];
                     cleanupAndClose[0] = new Listener() {
                         @Override
-                        public void call(Object ...args) {
+                        public void call(Object... args) {
                             self.off(EVENT_UPGRADE, cleanupAndClose[0]);
                             self.off(EVENT_UPGRADE_ERROR, cleanupAndClose[0]);
                             close.run();
@@ -816,7 +824,7 @@ public class Socket extends Emitter {
         }
     }
 
-    /*package*/ List<String > filterUpgrades(List<String> upgrades) {
+    /*package*/ List<String> filterUpgrades(List<String> upgrades) {
         List<String> filteredUpgrades = new ArrayList<String>();
         for (String upgrade : upgrades) {
             if (this.transports.contains(upgrade)) {

@@ -1,4 +1,4 @@
-package at.renehollander.schnitzeljagd.nfc;
+package at.renehollander.schnitzeljagd.sensor;
 
 /*
  * Copyright (C) 2013 The Android Open Source Project
@@ -76,8 +76,7 @@ public class NFCReader implements NfcAdapter.ReaderCallback {
         }
     }
 
-    private static String getTextFromNdefRecord(NdefRecord ndefRecord)
-    {
+    private static String getTextFromNdefRecord(NdefRecord ndefRecord) {
         String tagContent = null;
         try {
             byte[] payload = ndefRecord.getPayload();

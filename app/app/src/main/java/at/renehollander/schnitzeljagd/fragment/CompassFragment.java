@@ -10,12 +10,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import at.renehollander.schnitzeljagd.R;
-import at.renehollander.schnitzeljagd.location.SensorListener;
+import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
+import at.renehollander.schnitzeljagd.application.Util;
+import at.renehollander.schnitzeljagd.sensor.CompassSensor;
 
 public class CompassFragment extends Fragment {
 
+    private Schnitzeljagd schnitzeljagd;
     private ImageView arrowImage;
     private TextView orientationText;
+    private CompassSensor compassSensor;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.schnitzeljagd = Util.getSchnitzeljagd(this.getActivity());
+    }
+
+    public Schnitzeljagd getSchnitzeljagd() {
+        return schnitzeljagd;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,8 +39,6 @@ public class CompassFragment extends Fragment {
         return rootView;
     }
 
-    SensorListener sl;
-
     @Override
     public void onStart() {
         super.onStart();
@@ -35,22 +47,21 @@ public class CompassFragment extends Fragment {
         target.setLatitude(48.305407);
         target.setLongitude(16.326075);
 
-        sl = new SensorListener(this.getActivity(), target);
+        compassSensor = new CompassSensor(Util.getSchnitzeljagd(getActivity()), this.getActivity(), target);
 
-        sl.setChangeListener((rotation) -> {
+        compassSensor.setChangeListener((rotation) -> {
             orientationText.setText(Math.round(rotation) + "°");
             rotation *= -1;
             arrowImage.setRotation(rotation);
 
         });
 
-        sl.start();
+        compassSensor.start();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
-        sl.stop();
+        compassSensor.stop();
     }
 }

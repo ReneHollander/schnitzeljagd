@@ -2,7 +2,6 @@ package at.renehollander.schnitzeljagd.network;
 
 import android.location.Location;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

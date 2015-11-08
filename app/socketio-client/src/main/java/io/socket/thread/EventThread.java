@@ -61,11 +61,11 @@ public class EventThread extends Thread {
     public static void nextTick(final Runnable task) {
         ExecutorService executor;
         synchronized (EventThread.class) {
-          counter++;
-          if (service == null) {
-              service = Executors.newSingleThreadExecutor(THREAD_FACTORY);
-          }
-          executor = service;
+            counter++;
+            if (service == null) {
+                service = Executors.newSingleThreadExecutor(THREAD_FACTORY);
+            }
+            executor = service;
         }
 
         executor.execute(new Runnable() {

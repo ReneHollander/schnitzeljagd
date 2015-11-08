@@ -4,7 +4,8 @@ import io.socket.emitter.Emitter;
 
 public class On {
 
-    private On() {}
+    private On() {
+    }
 
     public static Handle on(final Emitter obj, final String ev, final Emitter.Listener fn) {
         obj.on(ev, fn);

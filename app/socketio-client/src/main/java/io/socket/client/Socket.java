@@ -1,16 +1,23 @@
 package io.socket.client;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.logging.Logger;
+
 import io.socket.emitter.Emitter;
 import io.socket.hasbinary.HasBinary;
 import io.socket.parser.Packet;
 import io.socket.parser.Parser;
 import io.socket.thread.EventThread;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * The socket class for Socket.IO Client.
@@ -31,10 +38,10 @@ public class Socket extends Emitter {
 
     /**
      * Called on a connection error.
-     *
+     * <p>
      * <p>Parameters:</p>
      * <ul>
-     *   <li>(Exception) error data.</li>
+     * <li>(Exception) error data.</li>
      * </ul>
      */
     public static final String EVENT_ERROR = "error";
@@ -154,7 +161,7 @@ public class Socket extends Emitter {
      * Emits an event. When you pass {@link Ack} at the last argument, then the acknowledge is done.
      *
      * @param event an event name.
-     * @param args data to send.
+     * @param args  data to send.
      * @return a reference to this object.
      */
     @Override
@@ -180,7 +187,7 @@ public class Socket extends Emitter {
 
                 if (_args.get(_args.size() - 1) instanceof Ack) {
                     logger.fine(String.format("emitting packet with ack id %d", Socket.this.ids));
-                    Socket.this.acks.put(Socket.this.ids, (Ack)_args.remove(_args.size() - 1));
+                    Socket.this.acks.put(Socket.this.ids, (Ack) _args.remove(_args.size() - 1));
                     jsonArgs = remove(jsonArgs, jsonArgs.length() - 1);
                     packet.data = jsonArgs;
                     packet.id = Socket.this.ids++;
@@ -198,7 +205,7 @@ public class Socket extends Emitter {
 
     private static JSONArray remove(JSONArray a, int pos) {
         JSONArray na = new JSONArray();
-        for (int i = 0; i < a.length(); i++){
+        for (int i = 0; i < a.length(); i++) {
             if (i != pos) {
                 Object v;
                 try {
@@ -216,8 +223,8 @@ public class Socket extends Emitter {
      * Emits an event with an acknowledge.
      *
      * @param event an event name
-     * @param args data to send.
-     * @param ack the acknowledgement to be called
+     * @param args  data to send.
+     * @param ack   the acknowledgement to be called
      * @return a reference to this object.
      */
     public Emitter emit(final String event, final Object[] args, final Ack ack) {
@@ -230,7 +237,7 @@ public class Socket extends Emitter {
                         addAll(Arrays.asList(args));
                     }
                 }};
-                
+
                 JSONArray jsonArgs = new JSONArray();
                 for (Object _arg : _args) {
                     jsonArgs.put(_arg);
@@ -322,7 +329,7 @@ public class Socket extends Emitter {
 
     private Ack ack(final int id) {
         final Socket self = this;
-        final boolean[] sent = new boolean[] {false};
+        final boolean[] sent = new boolean[]{false};
         return new Ack() {
             @Override
             public void call(final Object... args) {
@@ -362,7 +369,7 @@ public class Socket extends Emitter {
     private void emitBuffered() {
         List<Object> data;
         while ((data = this.receiveBuffer.poll()) != null) {
-            String event = (String)data.get(0);
+            String event = (String) data.get(0);
             super.emit(event, data.toArray());
         }
         this.receiveBuffer.clear();
@@ -435,7 +442,7 @@ public class Socket extends Emitter {
 
     /**
      * A property on the socket instance that is equal to the underlying engine.io socket id.
-     *
+     * <p>
      * The value is present once the socket has connected, is removed when the socket disconnects and is updated if the socket reconnects.
      *
      * @return a socket id

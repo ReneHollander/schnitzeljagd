@@ -19,14 +19,21 @@ import at.renehollander.schnitzeljagd.application.Util;
 
 public class QuestionFragment extends Fragment implements Button.OnClickListener, View.OnKeyListener {
 
+    private Schnitzeljagd schnitzeljagd;
     private FragmentManager fm;
-
     private TextView question;
     private RadioGroup answerGroup;
     private RadioButton[] answerRadios;
     private Button submit;
 
-    public QuestionFragment() {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.schnitzeljagd = Util.getSchnitzeljagd(this.getActivity());
+    }
+
+    public Schnitzeljagd getSchnitzeljagd() {
+        return schnitzeljagd;
     }
 
     @Override
@@ -55,7 +62,6 @@ public class QuestionFragment extends Fragment implements Button.OnClickListener
     @Override
     public void onStart() {
         super.onResume();
-        Schnitzeljagd sj = (Schnitzeljagd) getActivity().getApplication();
         /*
         if (sj.getCurrentStation() instanceof QuestionStation) {
             QuestionStation qs = (QuestionStation) sj.getCurrentStation();
@@ -83,49 +89,8 @@ public class QuestionFragment extends Fragment implements Button.OnClickListener
         if (checkedButtonId == -1) {
             Util.displayErrorDialogFromString(this.getActivity(), "Error submitting Answer", "You didn't choose an answer!");
         } else {
-
             final ProgressDialog progressDialog = Util.createProgressDialog(this.getActivity());
-            final Schnitzeljagd sj = (Schnitzeljagd) getActivity().getApplication();
-
             int pos = this.findAnswerRadioPosById(checkedButtonId);
-            /*
-            SubmitQuestion submitQuestion = new SubmitQuestion(pos);
-            sj.getRestApiClient().post(Static.submitUrl(sj.getTeamKey()), SubmitRequest.class, submitQuestion, SubmitResponse.class, new RestApiResponseCallback<SubmitResponse>() {
-                @Override
-                public void onSuccess(SubmitResponse object) {
-                    if (object.getType() == SubmitResponse.Type.SUCCESS) {
-                        Success success = (Success) object;
-                        if (success.getSuccess() == true) {
-                            sj.updateCurrentStation(QuestionFragment.this.getActivity(), fm, progressDialog);
-                        }
-                    } else if (object.getType() == SubmitResponse.Type.WON) {
-                        fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
-                        progressDialog.dismiss();
-                        Util.displayWonDialog(QuestionFragment.this.getActivity());
-                    }
-                }
-
-                @Override
-                public void onError(ErrorType errorType, int code, String msg) {
-                    Log.e("schnitzeljagd", errorType + ", " + code + ", " + msg);
-                    fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
-                    progressDialog.dismiss();
-                    Util.displayErrorDialogFromJson(QuestionFragment.this.getActivity(), Util.ERROR_SUBMITTING_QUSTION, msg);
-                }
-
-                @Override
-                public void onException(Exception e) {
-                    Log.e("schnitzeljagd", "", e);
-                    fm.beginTransaction().replace(R.id.container, Fragments.CONTENT).commit();
-                    progressDialog.dismiss();
-                    Util.displayErrorDialogFromThrowable(QuestionFragment.this.getActivity(), Util.EXCEPTION_SUBMITTING_QUSTION, e);
-                }
-
-                @Override
-                public void done() {
-                }
-            });
-            */
         }
     }
 

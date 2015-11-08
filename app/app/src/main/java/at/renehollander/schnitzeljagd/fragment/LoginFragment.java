@@ -21,13 +21,18 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
 
     private EditText email;
     private EditText password;
+    private Schnitzeljagd schnitzeljagd;
+
+    public Schnitzeljagd getSchnitzeljagd() {
+        return schnitzeljagd;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Schnitzeljagd sj = Schnitzeljagd.instance();
-        if (sj.getCredentials().hasCredentials()) {
-            Util.tryConnect(getActivity());
+        this.schnitzeljagd = Util.getSchnitzeljagd(getActivity());
+        if (getSchnitzeljagd().getCredentials().hasCredentials()) {
+            getSchnitzeljagd().getConnection().tryConnect(getActivity());
         }
     }
 
@@ -46,10 +51,9 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
         this.password = (EditText) rootView.findViewById(R.id.password);
         Button btnLogin = (Button) rootView.findViewById(R.id.btnLogin);
 
-        Schnitzeljagd sj = Schnitzeljagd.instance();
-        if (sj.getCredentials().hasCredentials()) {
-            this.email.setText(sj.getCredentials().getEmail());
-            this.password.setText(sj.getCredentials().getPassword());
+        if (getSchnitzeljagd().getCredentials().hasCredentials()) {
+            this.email.setText(getSchnitzeljagd().getCredentials().getEmail());
+            this.password.setText(getSchnitzeljagd().getCredentials().getPassword());
         }
 
         btnLogin.setOnClickListener(this::onLoginButtonClick);
@@ -67,16 +71,15 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
         String emailString = this.email.getText().toString();
         String passwordString = this.password.getText().toString();
 
-        Schnitzeljagd sj = Schnitzeljagd.instance();
-        Connection connection = sj.getConnection();
-        sj.getCredentials().setEmail(emailString);
-        sj.getCredentials().setPassword(passwordString);
+        Connection connection = getSchnitzeljagd().getConnection();
+        getSchnitzeljagd().getCredentials().setEmail(emailString);
+        getSchnitzeljagd().getCredentials().setPassword(passwordString);
 
         if (connection.getSocket().connected()) {
-            connection.getSocket().once(Socket.EVENT_DISCONNECT, (objects) -> this.getActivity().runOnUiThread(() -> Util.tryConnect(this.getActivity())));
+            connection.getSocket().once(Socket.EVENT_DISCONNECT, (objects) -> this.getActivity().runOnUiThread(() -> getSchnitzeljagd().getConnection().tryConnect(getActivity())));
             connection.disconnect();
         } else {
-            this.getActivity().runOnUiThread(() -> Util.tryConnect(this.getActivity()));
+            this.getActivity().runOnUiThread(() -> getSchnitzeljagd().getConnection().tryConnect(getActivity()));
         }
 
     }

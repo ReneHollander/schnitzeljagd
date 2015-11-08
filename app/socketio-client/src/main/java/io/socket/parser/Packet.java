@@ -9,7 +9,8 @@ public class Packet<T> {
     public T data;
     public int attachments;
 
-    public Packet() {}
+    public Packet() {
+    }
 
     public Packet(int type) {
         this.type = type;

@@ -7,7 +7,8 @@ import java.net.URLEncoder;
 
 public class Global {
 
-    private Global() {}
+    private Global() {
+    }
 
     public static String encodeURIComponent(String str) {
         try {

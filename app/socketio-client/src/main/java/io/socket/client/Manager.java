@@ -1,18 +1,26 @@
 package io.socket.client;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+
 import io.socket.backo.Backoff;
 import io.socket.emitter.Emitter;
 import io.socket.parser.Packet;
 import io.socket.parser.Parser;
 import io.socket.thread.EventThread;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import java.net.URI;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Manager class represents a connection to a given Socket.IO server.
@@ -232,7 +240,7 @@ public class Manager extends Emitter {
         }
     }
 
-    public Manager open(){
+    public Manager open() {
         return open(null);
     }
 
@@ -247,7 +255,8 @@ public class Manager extends Emitter {
             @Override
             public void run() {
                 logger.fine(String.format("readyState %s", Manager.this.readyState));
-                if (Manager.this.readyState == ReadyState.OPEN || Manager.this.readyState == ReadyState.OPENING) return;
+                if (Manager.this.readyState == ReadyState.OPEN || Manager.this.readyState == ReadyState.OPENING)
+                    return;
 
                 logger.fine(String.format("opening %s", Manager.this.uri));
                 Manager.this.engine = new Engine(Manager.this.uri, Manager.this.opts);
@@ -343,9 +352,9 @@ public class Manager extends Emitter {
             public void call(Object... objects) {
                 Object data = objects[0];
                 if (data instanceof String) {
-                    Manager.this.ondata((String)data);
+                    Manager.this.ondata((String) data);
                 } else if (data instanceof byte[]) {
-                    Manager.this.ondata((byte[])data);
+                    Manager.this.ondata((byte[]) data);
                 }
             }
         }));
@@ -358,13 +367,13 @@ public class Manager extends Emitter {
         this.subs.add(On.on(socket, Engine.EVENT_ERROR, new Listener() {
             @Override
             public void call(Object... objects) {
-                Manager.this.onerror((Exception)objects[0]);
+                Manager.this.onerror((Exception) objects[0]);
             }
         }));
         this.subs.add(On.on(socket, Engine.EVENT_CLOSE, new Listener() {
             @Override
             public void call(Object... objects) {
-                Manager.this.onclose((String)objects[0]);
+                Manager.this.onclose((String) objects[0]);
             }
         }));
     }
@@ -432,9 +441,9 @@ public class Manager extends Emitter {
                 public void call(Object[] encodedPackets) {
                     for (Object packet : encodedPackets) {
                         if (packet instanceof String) {
-                            self.engine.write((String)packet);
+                            self.engine.write((String) packet);
                         } else if (packet instanceof byte[]) {
-                            self.engine.write((byte[])packet);
+                            self.engine.write((byte[]) packet);
                         }
                     }
                     self.encoding = false;

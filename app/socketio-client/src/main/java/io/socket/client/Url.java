@@ -11,7 +11,8 @@ public class Url {
     private static Pattern PATTERN_HTTP = Pattern.compile("^http|ws$");
     private static Pattern PATTERN_HTTPS = Pattern.compile("^(http|ws)s$");
 
-    private Url() {}
+    private Url() {
+    }
 
     public static URL parse(String uri) throws URISyntaxException {
         return parse(new URI(uri));

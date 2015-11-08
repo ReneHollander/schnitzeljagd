@@ -20,7 +20,7 @@ public class HandshakeData {
         JSONArray upgrades = data.getJSONArray("upgrades");
         int length = upgrades.length();
         String[] _upgrades = new String[length];
-        for (int i = 0; i < length; i ++) {
+        for (int i = 0; i < length; i++) {
             _upgrades[i] = upgrades.getString(i);
         }
 
