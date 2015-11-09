@@ -26,7 +26,7 @@ public class Connection {
     public static final String SOCKET_UNAUTHORIZED = "unauthorized";
     public static final String SOCKET_AUTHENTICATION = "authentication";
 
-    private static final String API_URL = "http://10.0.0.76:3000/user";
+    private static final String API_URL = "http://10.0.0.81:3000/user";
 
     private Schnitzeljagd schnitzeljagd;
     private Socket socket;
@@ -94,9 +94,11 @@ public class Connection {
         private Emitter.Listener authenticated = null;
         private Emitter.Listener unautorized = null;
 
-        private Activity activity;
+        private final Callback<Boolean> cb;
+        private final Activity activity;
 
-        public Worker(Activity activity) {
+        public Worker(Activity activity, Callback<Boolean> cb) {
+            this.cb = cb;
             this.activity = activity;
         }
 
@@ -114,25 +116,25 @@ public class Connection {
 
             connectError = (object) -> {
                 destroyListeners();
+                progressDialog.dismiss();
                 Log.d("networking", "Error connecting to API Server: " + Arrays.toString(object));
                 Util.displayErrorDialogFromString(activity, "Error connecting to API Server", Arrays.toString(object));
-                progressDialog.dismiss();
             };
             socket.once(Socket.EVENT_CONNECT_ERROR, connectError);
 
             authenticated = (object) -> {
                 destroyListeners();
-                Log.d("networking", "Successfully logged in!");
                 progressDialog.dismiss();
-                Util.replaceFragment(activity, R.id.container, Fragments.CONTENT);
+                Log.d("networking", "Successfully logged in!");
+                cb.call(null, true);
             };
             socket.once(Connection.SOCKET_AUTHENTICATED, authenticated);
 
             unautorized = (object) -> {
                 destroyListeners();
+                progressDialog.dismiss();
                 Log.d("networking", "Invalid Teamname or Password");
                 Util.displayErrorDialogFromString(activity, "Error connecting to API Server", "Invalid Teamname or Password");
-                progressDialog.dismiss();
             };
             socket.once(Connection.SOCKET_UNAUTHORIZED, unautorized);
 
@@ -141,8 +143,8 @@ public class Connection {
 
     }
 
-    public void tryConnect(Activity activity) {
-        new Worker(activity).work();
+    public void tryConnect(Activity activity, Callback<Boolean> cb) {
+        new Worker(activity, cb).work();
     }
 
     public void getCurrentStation(Connection.Callback<Station> cb) {
@@ -181,7 +183,7 @@ public class Connection {
                         }
                         switch (type) {
                             case "qr":
-                                answer = new Answer.QR(text);
+                                answer = new Answer.Scan(text);
                                 break;
                             default:
                                 throw new IllegalStateException("unknown answer type " + type);

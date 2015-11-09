@@ -2,6 +2,7 @@ package at.renehollander.schnitzeljagd.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import at.renehollander.schnitzeljagd.R;
+import at.renehollander.schnitzeljagd.activity.MainActivity;
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import at.renehollander.schnitzeljagd.application.Util;
 import at.renehollander.schnitzeljagd.network.Connection;
@@ -32,7 +34,7 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
         super.onCreate(savedInstanceState);
         this.schnitzeljagd = Util.getSchnitzeljagd(getActivity());
         if (getSchnitzeljagd().getCredentials().hasCredentials()) {
-            getSchnitzeljagd().getConnection().tryConnect(getActivity());
+            getSchnitzeljagd().getConnection().tryConnect(getActivity(), (err, bool) -> LoginFragment.this.getActivity().runOnUiThread(() -> startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class))));
         }
     }
 
@@ -76,10 +78,12 @@ public class LoginFragment extends Fragment implements View.OnKeyListener {
         getSchnitzeljagd().getCredentials().setPassword(passwordString);
 
         if (connection.getSocket().connected()) {
-            connection.getSocket().once(Socket.EVENT_DISCONNECT, (objects) -> this.getActivity().runOnUiThread(() -> getSchnitzeljagd().getConnection().tryConnect(getActivity())));
+            connection.getSocket().once(Socket.EVENT_DISCONNECT, (objects) -> this.getActivity().runOnUiThread(() -> {
+                getSchnitzeljagd().getConnection().tryConnect(getActivity(), (err, bool) -> LoginFragment.this.getActivity().runOnUiThread(() -> startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class))));
+            }));
             connection.disconnect();
         } else {
-            this.getActivity().runOnUiThread(() -> getSchnitzeljagd().getConnection().tryConnect(getActivity()));
+            getSchnitzeljagd().getConnection().tryConnect(getActivity(), (err, bool) -> LoginFragment.this.getActivity().runOnUiThread(() -> startActivity(new Intent(LoginFragment.this.getActivity(), MainActivity.class))));
         }
 
     }

@@ -1,4 +1,4 @@
-package at.renehollander.schnitzeljagd.fragment;
+package at.renehollander.schnitzeljagd.fragment.answer;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -16,8 +16,9 @@ import android.widget.TextView;
 import at.renehollander.schnitzeljagd.R;
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import at.renehollander.schnitzeljagd.application.Util;
+import at.renehollander.schnitzeljagd.fragment.Fragments;
 
-public class QuestionFragment extends Fragment implements Button.OnClickListener, View.OnKeyListener {
+public class QuestionAnswerFragment extends Fragment implements Button.OnClickListener, View.OnKeyListener {
 
     private Schnitzeljagd schnitzeljagd;
     private FragmentManager fm;

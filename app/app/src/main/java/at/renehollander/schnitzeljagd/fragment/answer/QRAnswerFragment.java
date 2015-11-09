@@ -1,4 +1,4 @@
-package at.renehollander.schnitzeljagd.fragment;
+package at.renehollander.schnitzeljagd.fragment.answer;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -12,9 +12,10 @@ import com.google.zxing.client.android.fragment.BarCodeScannerFragment;
 import at.renehollander.schnitzeljagd.R;
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import at.renehollander.schnitzeljagd.application.Util;
+import at.renehollander.schnitzeljagd.fragment.Fragments;
 
 
-public class QRCodeFragment extends BarCodeScannerFragment implements BarCodeScannerFragment.IResultCallback, View.OnKeyListener {
+public class QRAnswerFragment extends BarCodeScannerFragment implements BarCodeScannerFragment.IResultCallback, View.OnKeyListener {
 
     private Schnitzeljagd schnitzeljagd;
     private FragmentManager fm;

@@ -11,8 +11,24 @@ public abstract class Answer {
 
     @ToString
     @EqualsAndHashCode(callSuper = false)
-    public static class QR extends Answer {
-        public QR(String text) {
+    public static class Scan extends Answer {
+        public Scan(String text) {
+            super(text);
+        }
+    }
+
+    @ToString
+    @EqualsAndHashCode(callSuper = false)
+    public static class Question extends Answer {
+        public Question(String text) {
+            super(text);
+        }
+    }
+
+    @ToString
+    @EqualsAndHashCode(callSuper = false)
+    public static class Area extends Answer {
+        public Area(String text) {
             super(text);
         }
     }

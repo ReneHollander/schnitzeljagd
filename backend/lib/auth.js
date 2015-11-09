@@ -91,6 +91,6 @@ function authenticate(email, password, done) {
             done(null, user);
         }).catch(function (err) {
             done(err);
-        })
+        });
 }
 module.exports.authenticate = authenticate;

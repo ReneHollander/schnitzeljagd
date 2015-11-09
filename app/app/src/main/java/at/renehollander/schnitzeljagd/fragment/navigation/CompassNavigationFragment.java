@@ -1,4 +1,4 @@
-package at.renehollander.schnitzeljagd.fragment;
+package at.renehollander.schnitzeljagd.fragment.navigation;
 
 import android.app.Fragment;
 import android.location.Location;
@@ -14,7 +14,7 @@ import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import at.renehollander.schnitzeljagd.application.Util;
 import at.renehollander.schnitzeljagd.sensor.CompassSensor;
 
-public class CompassFragment extends Fragment {
+public class CompassNavigationFragment extends Fragment {
 
     private Schnitzeljagd schnitzeljagd;
     private ImageView arrowImage;

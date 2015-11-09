@@ -13,12 +13,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import at.renehollander.schnitzeljagd.application.SchnitzeljagdApplication;
 import at.renehollander.schnitzeljagd.util.ArrayUtil;
 import java8.util.stream.Collectors;
 import java8.util.stream.IntStreams;
 import java8.util.stream.StreamSupport;
 
-public class PermissionActivity extends Activity {
+public class EntryActivity extends Activity {
 
     private static final List<String> NEEDED_PERMISSIONS = Arrays.asList(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -27,8 +28,10 @@ public class PermissionActivity extends Activity {
     );
     private static final int PERMISSION_REQUEST_CODE = 0;
 
-    private void startMainActivity() {
-        startActivity(new Intent(this, MainActivity.class));
+    private void accessGranted() {
+        SchnitzeljagdApplication sa = (SchnitzeljagdApplication) getApplication();
+        sa.setup();
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     @Override
@@ -41,10 +44,10 @@ public class PermissionActivity extends Activity {
             if (missingPermissions.length >= 1) {
                 requestPermissions(missingPermissions, PERMISSION_REQUEST_CODE);
             } else {
-                startMainActivity();
+                accessGranted();
             }
         } else {
-            startMainActivity();
+            accessGranted();
         }
     }
 
@@ -69,7 +72,7 @@ public class PermissionActivity extends Activity {
             AlertDialog error = builder.create();
             error.show();
         } else {
-            startMainActivity();
+            accessGranted();
         }
     }
 }

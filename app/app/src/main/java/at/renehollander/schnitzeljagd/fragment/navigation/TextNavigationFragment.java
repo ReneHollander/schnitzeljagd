@@ -1,4 +1,4 @@
-package at.renehollander.schnitzeljagd.fragment;
+package at.renehollander.schnitzeljagd.fragment.navigation;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import at.renehollander.schnitzeljagd.R;
 import at.renehollander.schnitzeljagd.application.Schnitzeljagd;
 import at.renehollander.schnitzeljagd.application.Util;
 
-public class ContentFragment extends Fragment {
+public class TextNavigationFragment extends Fragment {
 
     private Schnitzeljagd schnitzeljagd;
     private WebView contentView;

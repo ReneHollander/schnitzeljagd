@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import at.renehollander.schnitzeljagd.activity.SchnitzeljagdActivity;
 
 public class Util {
 
@@ -118,10 +117,11 @@ public class Util {
     }
 
     public static Schnitzeljagd getSchnitzeljagd(Activity activity) {
-        if (activity instanceof SchnitzeljagdActivity) {
-            return ((SchnitzeljagdActivity) activity).getSchnitzeljagd();
+
+        if (activity.getApplication() instanceof SchnitzeljagdApplication) {
+            return ((SchnitzeljagdApplication) activity.getApplication()).getSchnitzeljagd();
         } else {
-            throw new IllegalArgumentException("activity is not an SchnitzeljagdActivity");
+            throw new IllegalArgumentException("ApplicationClass is not of type SchnitzeljagdApplication");
         }
     }
 

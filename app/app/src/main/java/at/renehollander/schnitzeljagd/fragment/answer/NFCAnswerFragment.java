@@ -1,4 +1,4 @@
-package at.renehollander.schnitzeljagd.fragment;
+package at.renehollander.schnitzeljagd.fragment.answer;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -19,7 +19,7 @@ import at.renehollander.schnitzeljagd.sensor.NFCReader;
 
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public class NFCFragment extends Fragment implements NFCReader.AccountCallback {
+public class NFCAnswerFragment extends Fragment implements NFCReader.AccountCallback {
     public static final String TAG = "NFCFFragment";
     public static int READER_FLAGS = NfcAdapter.FLAG_READER_NFC_A;
 

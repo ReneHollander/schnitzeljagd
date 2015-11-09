@@ -15,5 +15,6 @@
     <string name="btn_login">LOGIN</string>
     <string name="action_read_nfc">Read NFC Chip</string>
     <string name="nfc_waiting">Waiting...</string>
+    <string name="action_navigation">Navigation</string>
 
 </resources>
